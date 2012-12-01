@@ -61,6 +61,7 @@ public class UIGame implements MoveListener {
 		
 		if(game.getWinner() == 0 && game.getCurrentPlayer() == 2 && uisettings.againstAI()) {
 			ai.doMove();
+			updateStatus();
 		}
 	}
 	
