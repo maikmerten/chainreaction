@@ -17,12 +17,11 @@ public class UIField extends JPanel implements FieldListener, MoveListener {
 	private Field field;
 	private List<UICell> cells = new ArrayList<UICell>();
 
-	public UIField(MoveListener game, Field field) {
+	public UIField(MoveListener listener, Field field) {
 		super();
-		this.moveListener = game;
+		this.moveListener = listener;
 
 		this.setLayout(new GridLayout(field.getHeight(), field.getWidth()));
-
 
 		for (int y = 0; y < field.getHeight(); ++y) {
 			for (int x = 0; x < field.getWidth(); ++x) {
