@@ -68,9 +68,9 @@ public class UIGame implements MoveListener {
 	
 	private void updateStatus() {
 		if(game.getWinner() != 0) {
-			status.setText("Player " + game.getWinner() + " won!");
+			status.setText("Player " + game.getWinner() + " won in round " + game.getRound());
 		} else {
-			status.setText("Active player: " + game.getCurrentPlayer());
+			status.setText("Round " + game.getRound() + ", active player: " + game.getCurrentPlayer());
 		}
 	}
 

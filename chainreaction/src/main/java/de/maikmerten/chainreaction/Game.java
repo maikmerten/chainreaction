@@ -12,6 +12,7 @@ public class Game implements MoveListener {
 	private Field field;
 	private byte player = 1;
 	private Set<Byte> moved = new HashSet<Byte>();
+	private int round = 1;
 
 	public Game(int width, int height) {
 		field = new Field(width, height);
@@ -24,6 +25,10 @@ public class Game implements MoveListener {
 	
 	public byte getCurrentPlayer() {
 		return player;
+	}
+	
+	public int getRound() {
+		return round;
 	}
 	
 	public void onMoveSelected(int x, int y) {
@@ -45,7 +50,7 @@ public class Game implements MoveListener {
 		field.react();
 		
 		moved.add(player);
-		
+		++round;
 		// next player
 		player = player == 1 ? (byte) 2 : (byte) 1;
 	}
