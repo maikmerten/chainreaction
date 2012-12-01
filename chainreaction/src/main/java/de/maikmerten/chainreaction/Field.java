@@ -50,9 +50,7 @@ public class Field {
 	public byte[][] getAtomField() {
 		byte[][] result = new byte[width][height];
 		for (int x = 0; x < width; ++x) {
-			for (int y = 0; y < height; ++y) {
-				result[x][y] = atoms[x][y];
-			}
+            System.arraycopy(atoms[x], 0, result[x], 0, height);
 		}
 		return result;
 	}
@@ -60,9 +58,7 @@ public class Field {
 	public byte[][] getOwnerField() {
 		byte[][] result = new byte[width][height];
 		for (int x = 0; x < width; ++x) {
-			for (int y = 0; y < height; ++y) {
-				result[x][y] = owner[x][y];
-			}
+            System.arraycopy(owner[x], 0, result[x], 0, height);
 		}
 		return result;
 	}
