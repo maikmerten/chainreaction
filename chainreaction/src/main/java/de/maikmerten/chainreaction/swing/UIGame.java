@@ -11,7 +11,7 @@ import javax.swing.JLabel;
  *
  * @author maik
  */
-public class UIGame {
+public class UIGame implements MoveListener {
 
 	private JFrame frame;
 	private JLabel status;
@@ -49,8 +49,8 @@ public class UIGame {
 		updateStatus();
 	}
 	
-	
-	public void makeMove(int x, int y) {
+
+	public void onMoveSelected(int x, int y) {
 		
 		if(winner != 0) {
 			startGame();
@@ -69,10 +69,8 @@ public class UIGame {
 		
 		if(player == 2 && uisettings.againstAI()) {
 			int[] aicoords = ai.thinkAI(field, (byte)2, (byte)1);
-			makeMove(aicoords[0], aicoords[1]);
+			onMoveSelected(aicoords[0], aicoords[1]);
 		}
-		
-		
 	}
 	
 	
@@ -86,7 +84,6 @@ public class UIGame {
 
 	public static void main(String[] args) {
 		UIGame g = new UIGame();
-
-
 	}
+
 }

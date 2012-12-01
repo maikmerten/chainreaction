@@ -11,31 +11,30 @@ import javax.swing.JPanel;
  *
  * @author maik
  */
-public class UIField extends JPanel implements FieldListener {
+public class UIField extends JPanel implements FieldListener, MoveListener {
 
-	private UIGame game;
+	private MoveListener moveListener;
 	private Field field;
 	private List<UICell> cells = new ArrayList<UICell>();
 
-	public UIField(UIGame game, Field field) {
+	public UIField(MoveListener game, Field field) {
 		super();
-		this.game = game;
+		this.moveListener = game;
 
 		this.setLayout(new GridLayout(field.getHeight(), field.getWidth()));
 
 
 		for (int y = 0; y < field.getHeight(); ++y) {
 			for (int x = 0; x < field.getWidth(); ++x) {
-				UICell cell = new UICell(this, field, x, y);
+				UICell cell = new UICell(this, x, y);
 				cells.add(cell);
 				this.add(cell);
 			}
 		}
 		setField(field);
-
 	}
 	
-	public void setField(Field f) {
+	public final void setField(Field f) {
 		this.field = f;
 		field.addFieldListener(this);
 		onFieldChange(f);
@@ -56,8 +55,8 @@ public class UIField extends JPanel implements FieldListener {
 		}
 	}
 	
-	public void makeMove(int x, int y) {
-		game.makeMove(x, y);
+	public void onMoveSelected(int x, int y) {
+		moveListener.onMoveSelected(x, y);
 	}
 
 

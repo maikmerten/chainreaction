@@ -15,7 +15,7 @@ public class UICell extends JButton implements ActionListener {
 	private UIField uifield;
 	private int x, y;
 
-	public UICell(UIField uifield, Field field, int x, int y) {
+	public UICell(UIField uifield, int x, int y) {
 		super();
 		this.uifield = uifield;
 		this.x = x;
@@ -44,6 +44,6 @@ public class UICell extends JButton implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		uifield.makeMove(x, y);
+		uifield.onMoveSelected(x, y);
 	}
 }
