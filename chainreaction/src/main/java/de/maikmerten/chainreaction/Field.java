@@ -1,8 +1,6 @@
 package de.maikmerten.chainreaction;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
@@ -14,7 +12,6 @@ public class Field {
 	private byte[][] atoms;
 	private byte[][] owner;
 	private ArrayList<FieldListener> listeners = new ArrayList<FieldListener>();
-	private Set<Byte> moved = new HashSet<Byte>();
 
 	public Field(int width, int height) {
 		this.width = width;
@@ -110,7 +107,6 @@ public class Field {
 		for(FieldListener l : listeners) {
 			l.onFieldChange(this);
 		}
-		moved.add(player);
 	}
 
 	public byte getCapacity(int x, int y) {
@@ -160,16 +156,6 @@ public class Field {
 				}
 			}
 		}
-	}
-	
-	public byte getWinner() {
-		byte winner = 0;
-		if(moved.contains((byte)1) && getPlayerAtoms((byte)1) == 0) {
-			winner = 2;
-		} else if (moved.contains((byte)2) && getPlayerAtoms((byte)2) == 0) {
-			winner = 1;
-		}
-		return winner;
 	}
 	
 	

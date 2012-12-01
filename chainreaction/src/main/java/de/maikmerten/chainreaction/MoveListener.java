@@ -1,4 +1,4 @@
-package de.maikmerten.chainreaction.swing;
+package de.maikmerten.chainreaction;
 
 /**
  *

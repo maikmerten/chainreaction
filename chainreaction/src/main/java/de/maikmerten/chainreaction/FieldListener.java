@@ -6,7 +6,6 @@ package de.maikmerten.chainreaction;
  */
 public interface FieldListener {
 	
-	
 	public void onFieldChange(Field f);
 	
 }
