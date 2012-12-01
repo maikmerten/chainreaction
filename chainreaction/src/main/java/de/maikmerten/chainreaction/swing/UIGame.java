@@ -6,8 +6,7 @@ import de.maikmerten.chainreaction.ai.AI;
 import de.maikmerten.chainreaction.ai.StandardAI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 /**
  *
@@ -15,8 +14,7 @@ import javax.swing.JLabel;
  */
 public class UIGame implements MoveListener {
 
-	private JFrame frame;
-	private JLabel status;
+    private JLabel status;
 	private Game game;
 	private UIField uifield;
 	private UISettings uisettings;
@@ -24,9 +22,9 @@ public class UIGame implements MoveListener {
 
 	public UIGame() {
 		game = new Game(6, 5);
-		frame = new JFrame("Chain reaction");
+        JFrame frame = new JFrame("Chain reaction");
 		frame.setMinimumSize(new Dimension(640, 480));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 
 		uifield = new UIField(this, game);
@@ -67,11 +65,17 @@ public class UIGame implements MoveListener {
 	
 	
 	private void updateStatus() {
+        StringBuilder sb = new StringBuilder();
+
 		if(game.getWinner() != 0) {
-			status.setText("Player " + game.getWinner() + " won in round " + game.getRound());
+            sb.append("Player ").append(game.getWinner()).append(" won in round ").append(game.getRound());
 		} else {
-			status.setText("Round " + game.getRound() + ", active player: " + game.getCurrentPlayer());
+            sb.append("Round ").append(game.getRound()).append(" | Active player: ").append(game.getCurrentPlayer());
+            sb.append(" | Current Score: ").append(game.getField().getPlayerAtoms((byte) 1));
+            sb.append(":").append(game.getField().getPlayerAtoms((byte)2));
 		}
+
+        status.setText(sb.toString());
 	}
 
 	public static void main(String[] args) {

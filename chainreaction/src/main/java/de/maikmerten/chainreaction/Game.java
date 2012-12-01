@@ -21,8 +21,7 @@ public class Game implements MoveListener {
 	public Field getField() {
 		return field;
 	}
-	
-	
+
 	public byte getCurrentPlayer() {
 		return player;
 	}
