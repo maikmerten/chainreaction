@@ -1,8 +1,9 @@
 package de.maikmerten.chainreaction.swing;
 
-import de.maikmerten.chainreaction.AI;
 import de.maikmerten.chainreaction.Game;
 import de.maikmerten.chainreaction.MoveListener;
+import de.maikmerten.chainreaction.ai.AI;
+import de.maikmerten.chainreaction.ai.StandardAI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -19,7 +20,7 @@ public class UIGame implements MoveListener {
 	private Game game;
 	private UIField uifield;
 	private UISettings uisettings;
-	private AI ai = new AI();
+	private AI ai;
 
 	public UIGame() {
 		game = new Game(6, 5);
@@ -42,6 +43,7 @@ public class UIGame implements MoveListener {
 
 	private void startNewGame() {
 		game = new Game(6,5);
+		ai = new StandardAI(game);
 		uifield.setGame(game);
 		updateStatus();
 	}
@@ -56,11 +58,9 @@ public class UIGame implements MoveListener {
 		
 		game.onMoveSelected(x, y);
 		updateStatus();
-	
 		
 		if(game.getWinner() == 0 && game.getCurrentPlayer() == 2 && uisettings.againstAI()) {
-			int[] aicoords = ai.thinkAI(game.getField(), (byte)2, (byte)1);
-			onMoveSelected(aicoords[0], aicoords[1]);
+			ai.doMove();
 		}
 	}
 	

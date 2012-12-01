@@ -1,14 +1,23 @@
-package de.maikmerten.chainreaction;
+package de.maikmerten.chainreaction.ai;
 
+import de.maikmerten.chainreaction.Field;
+import de.maikmerten.chainreaction.Game;
 import java.util.Random;
 
 /**
  *
  * @author maik
  */
-public class AI {
+public class StandardAI implements AI {
 
-	public int computeDanger(Field f, byte player, int x, int y) {
+	private Game game;
+	
+	public StandardAI(Game game) {
+		this.game = game;
+	}
+	
+	
+	private int computeDanger(Field f, byte player, int x, int y) {
 		int danger = 0;
 		
 		if (x > 0 && f.getOwner(x - 1, y) != player && f.isCritical(x - 1, y)) {
@@ -29,7 +38,7 @@ public class AI {
 	}
 	
 	
-	public int countEndangeredFields(Field f, byte player) {
+	private int countEndangeredFields(Field f, byte player) {
 		int endangered = 0;
 		
 		for(int x = 0; x < f.getWidth(); ++x) {
@@ -45,7 +54,7 @@ public class AI {
 	}
 	
 	
-	public int[] thinkAI(Field f, byte playerAI, byte playerOpposing) {
+	private int[] think(Field f, byte playerAI, byte playerOpposing) {
 		Random r = new Random();
 		int opposingAtoms = f.getPlayerAtoms(playerOpposing);
 		int score = Integer.MIN_VALUE;
@@ -73,6 +82,15 @@ public class AI {
 		}
 		
 		return coords;
+	}
+
+	public void doMove() {
+		Field field = game.getField();
+		byte playerAI = game.getCurrentPlayer();
+		byte playerOpposing = playerAI == 2 ? (byte)1 : (byte)2;
+		
+		int[] coords = think(field, playerAI, playerOpposing);
+		game.onMoveSelected(coords[0], coords[1]);
 	}
 	
 	
