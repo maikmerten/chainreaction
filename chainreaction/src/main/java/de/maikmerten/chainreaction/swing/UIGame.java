@@ -47,6 +47,7 @@ public class UIGame implements MoveListener {
 		game = new Game(6, 5);
 		ai = new StandardAI(game);
 		uifield.setGame(game);
+		blockMoves = false;
 		updateStatus();
 	}
 
