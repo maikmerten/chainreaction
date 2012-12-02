@@ -69,7 +69,7 @@ public class StandardAI implements AI {
 					int tmp = fieldAI.getPlayerFields(playerAI);
 					tmp += fieldAI.getPlayerAtoms(playerAI);
 					tmp += opposingAtoms - fieldAI.getPlayerAtoms(playerOpposing);
-					tmp += ((x == 0 && x == fieldAI.getWidth() - 1) || (y == 0 && y == fieldAI.getHeight() - 1)) ? 1 : 0;
+					tmp += ((x == 0 || x == fieldAI.getWidth() - 1) && (y == 0 || y == fieldAI.getHeight() - 1)) ? 1 : 0;
 					tmp -= computeDanger(fieldAI, playerAI, x, y) * 4;
 					tmp -= countEndangeredFields(fieldAI, playerAI);
 					if(tmp > score || (r.nextBoolean() && tmp >= score)) {
