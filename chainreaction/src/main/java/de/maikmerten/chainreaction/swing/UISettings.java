@@ -13,13 +13,12 @@ public class UISettings extends JPanel {
 	
 	private JCheckBox checkBoxAI;
 	
-	
 	public UISettings() {
 		super();
 		this.setMinimumSize(new Dimension(640, 30));
 		this.setLayout(new GridLayout(1, 1));
 		
-		checkBoxAI = new JCheckBox("play against AI");
+		checkBoxAI = new JCheckBox("Play against AI");
 		this.add(checkBoxAI);
 	}
 	
