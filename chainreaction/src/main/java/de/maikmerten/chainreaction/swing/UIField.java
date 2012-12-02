@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -34,31 +35,35 @@ public class UIField extends JPanel implements FieldListener, MoveListener {
 		}
 		setGame(game);
 	}
-	
+
 	public final void setGame(Game game) {
 		this.game = game;
 		game.getField().addFieldListener(this);
 		onFieldChange(game.getField());
 	}
-	
-	
+
 	public Field getField() {
 		return game.getField();
 	}
-	
 
 	public void onFieldChange(Field f) {
+
 		if (game.getField() != f) {
 			return;
 		}
-		for (UICell c : cells) {
-			c.updateCell();
-		}
+
+		Runnable updateRunner = new Runnable() {
+			public void run() {
+				for (UICell c : cells) {
+					c.updateCell();
+				}
+			}
+		};
+		
+		SwingUtilities.invokeLater(updateRunner);
 	}
-	
+
 	public void onMoveSelected(int x, int y) {
 		moveListener.onMoveSelected(x, y);
 	}
-
-
 }
