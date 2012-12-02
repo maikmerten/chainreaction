@@ -4,9 +4,9 @@ import de.maikmerten.chainreaction.Game;
 import de.maikmerten.chainreaction.MoveListener;
 import de.maikmerten.chainreaction.ai.AI;
 import de.maikmerten.chainreaction.ai.StandardAI;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
 import javax.swing.*;
+import java.awt.*;
 
 /**
  *
@@ -31,7 +31,7 @@ public class UIGame implements MoveListener {
 		frame.add(uifield, BorderLayout.CENTER);
 		status = new JLabel();
 		frame.add(status, BorderLayout.SOUTH);
-		uisettings = new UISettings();
+		uisettings = new UISettings(this);
 		frame.add(uisettings, BorderLayout.NORTH);
 
 		startNewGame();
@@ -39,7 +39,7 @@ public class UIGame implements MoveListener {
 		frame.setVisible(true);
 	}
 
-	private void startNewGame() {
+    void startNewGame() {
 		game = new Game(6,5);
 		ai = new StandardAI(game);
 		uifield.setGame(game);
@@ -79,7 +79,7 @@ public class UIGame implements MoveListener {
 	}
 
 	public static void main(String[] args) {
-		UIGame g = new UIGame();
+		new UIGame();
 	}
 
 }
