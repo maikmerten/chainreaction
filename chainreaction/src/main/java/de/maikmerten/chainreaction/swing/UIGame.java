@@ -14,25 +14,31 @@ import java.util.logging.Logger;
 /**
  *
  * @author maik
+ * @author jonny
  */
 public class UIGame implements MoveListener {
 
 	private JLabel status;
 	private Game game;
-	private UIField uifield;
 	private UISettings uisettings;
 	private AI ai;
 	private boolean blockMoves = false;
+//	private UIField uifield;
+	private UIFieldNew uifield;
 
 	public UIGame() {
 		game = new Game(6, 5);
 		JFrame frame = new JFrame("Chain reaction");
-		frame.setMinimumSize(new Dimension(640, 480));
+		frame.setMinimumSize(new Dimension(790, 720));
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 
-		uifield = new UIField(this, game);
+//		uifield = new UIField(this, game);
+//		frame.add(uifield, BorderLayout.CENTER);
+		
+		uifield = new UIFieldNew(this, game);
 		frame.add(uifield, BorderLayout.CENTER);
+		
 		status = new JLabel();
 		frame.add(status, BorderLayout.SOUTH);
 		uisettings = new UISettings(this);

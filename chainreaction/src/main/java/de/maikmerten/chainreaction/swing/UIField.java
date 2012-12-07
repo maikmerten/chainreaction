@@ -1,14 +1,16 @@
 package de.maikmerten.chainreaction.swing;
 
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import de.maikmerten.chainreaction.Field;
 import de.maikmerten.chainreaction.FieldListener;
 import de.maikmerten.chainreaction.Game;
 import de.maikmerten.chainreaction.MoveListener;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -65,5 +67,23 @@ public class UIField extends JPanel implements FieldListener, MoveListener {
 
 	public void onMoveSelected(int x, int y) {
 		moveListener.onMoveSelected(x, y);
+	}
+
+	@Override
+	public void onAtomAdded(byte player, int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAtomMoved(int x1, int y1, int x2, int y2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onOwnerChanged(byte player, int x, int y) {
+		// TODO Auto-generated method stub
+		
 	}
 }
