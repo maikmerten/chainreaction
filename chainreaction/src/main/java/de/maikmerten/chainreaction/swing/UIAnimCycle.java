@@ -5,15 +5,15 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 
-public class UIAnimation extends AbstractUIAnimation {
+public class UIAnimCycle extends AbstractUIAnimation {
 
-	public UIAnimation(final String fileName, final int animCount) {
+	public UIAnimCycle(final String fileName, final int animCount) {
 		super(fileName, animCount);
 	}
 
 	@Override
 	protected Image[] initAnimImages(String fileName, int animCount) {
-		Image[] images = new Image[animCount];
+		Image[] images = new Image[animCount <= 0 ? 0 : (2*animCount)-1];
 		if(animCount <= 0) {
 			return images;
 		}
@@ -21,6 +21,10 @@ public class UIAnimation extends AbstractUIAnimation {
 			final ImageIcon curr = 
 					new ImageIcon(this.getClass().getResource(String.format(fileName, i)));
 			images[i] = curr.getImage();
+		}
+		int j = animCount-1;
+		for(int i = animCount; i < (2*animCount)-1; i++) {
+			images[i] = images[j--];
 		}
 		return images;
 	}

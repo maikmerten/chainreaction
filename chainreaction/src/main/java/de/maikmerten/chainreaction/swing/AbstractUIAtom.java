@@ -8,14 +8,16 @@ import java.util.Properties;
 public abstract class AbstractUIAtom implements UIDrawable {
 	
 	public enum Mode {
-		ENTER("enter"),
-		LEAVE("leave"),
-		IDLE("idle");
+		ENTER("enter", false),
+		LEAVE("leave", false),
+		IDLE("idle", true);
 		
-		private String name;
+		private final String name;
+		private final boolean cyclic;
 		
-		private Mode(String name) {
+		private Mode(final String name, final boolean cyclic) {
 			this.name = name;
+			this.cyclic = cyclic;
 		}
 		
 		public String getAnimName() {
@@ -24,6 +26,10 @@ public abstract class AbstractUIAtom implements UIDrawable {
 		
 		public String getCountName() {
 			return this.name + ".count";
+		}
+		
+		public boolean isCyclic() {
+			return cyclic;
 		}
 
 		@Override
@@ -44,9 +50,11 @@ public abstract class AbstractUIAtom implements UIDrawable {
 			throw new IllegalStateException("could not load properties for '" + this.getClass().getSimpleName() + "'", e);
 		}
 		for(final Mode mode : Mode.values()) {
-			modes[mode.ordinal()] = new UIAnimation(
-					props.getProperty(mode.getAnimName()), 
-					Integer.parseInt(props.getProperty(mode.getCountName())));
+			final String animFN = props.getProperty(mode.getAnimName());
+			final int count = Integer.parseInt(props.getProperty(mode.getCountName()));
+			modes[mode.ordinal()] = mode.isCyclic() ? 
+					new UIAnimCycle(animFN, count) :
+						new UIAnimation(animFN, count);
 		}
 	}
 	
