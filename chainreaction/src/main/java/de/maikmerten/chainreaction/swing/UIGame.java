@@ -24,7 +24,7 @@ public class UIGame implements MoveListener {
 	private AI ai;
 	private boolean blockMoves = false;
 //	private UIField uifield;
-	private UIFieldNew uifield;
+	private UIField uifield;
 
 	public UIGame() {
 		game = new Game(6, 5);
@@ -36,7 +36,7 @@ public class UIGame implements MoveListener {
 //		uifield = new UIField(this, game);
 //		frame.add(uifield, BorderLayout.CENTER);
 		
-		uifield = new UIFieldNew(this, game);
+		uifield = new UIField(this, game);
 		frame.add(uifield, BorderLayout.CENTER);
 		
 		status = new JLabel();

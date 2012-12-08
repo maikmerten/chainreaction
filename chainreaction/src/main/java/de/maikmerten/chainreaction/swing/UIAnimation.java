@@ -12,27 +12,14 @@ import javax.swing.ImageIcon;
  */
 public class UIAnimation implements UIDrawable {
 	private Image[] images;
-	private final long delay;
+	private static final int DELAY = 50;
 	private long lastAnim;
 	private int animCounter = 0;
 
-	/**
-	 * 
-	 */
-	public UIAnimation(final String fileName, final int animCount, final long delay) {
-		this.delay = delay;
+	public UIAnimation(final String fileName, final int animCount) {
 		initAnimImages(fileName, animCount);
 	}
 
-	private void initAnimImages(final String fileName, final int animCount) {
-		this.images = new Image[animCount];
-		for(int i = 0; i < images.length; i++) {
-			final ImageIcon curr = 
-					new ImageIcon(this.getClass().getResource(String.format(fileName, i)));
-			images[i] = curr.getImage();
-		}
-	}
-	
 	@Override
 	public void draw(Graphics2D g2d) {
 		g2d.drawImage(getImage(), 0, 0, null);
@@ -41,10 +28,26 @@ public class UIAnimation implements UIDrawable {
 	private Image getImage() {
 		final long currentTimeMillis = System.currentTimeMillis();
 		final long diff = currentTimeMillis - lastAnim;
-		if(diff > delay) {
+		if(diff > DELAY) {
 			lastAnim = currentTimeMillis;
-			animCounter = (animCounter + ((int)(diff/delay)))%images.length;
+			animCounter = (animCounter + ((int)(diff/DELAY)))%images.length;
 		}
 		return images[animCounter];
+	}
+
+	private void initAnimImages(final String fileName, final int animCount) {
+		this.images = new Image[animCount <= 0 ? 0 : (2*animCount)-1];
+		if(animCount <= 0) {
+			return;
+		}
+		for(int i = 0; i < animCount; i++) {
+			final ImageIcon curr = 
+					new ImageIcon(this.getClass().getResource(String.format(fileName, i)));
+			images[i] = curr.getImage();
+		}
+		int j = animCount-1;
+		for(int i = animCount; i < (2*animCount)-1; i++) {
+			images[i] = images[j--];
+		}
 	}
 }

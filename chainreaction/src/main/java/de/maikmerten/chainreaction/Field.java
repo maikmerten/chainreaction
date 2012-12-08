@@ -105,7 +105,6 @@ public class Field {
 		count = count > 4 ? 4 : count;
 		atoms[x][y] = count;
 		owner[x][y] = player;
-		fireOnFieldChange();
 	}
 
 	public byte getCapacity(int x, int y) {
@@ -174,13 +173,6 @@ public class Field {
 	
 	public void addFieldListener(FieldListener l) {
 		this.listeners.add(l);
-	}
-	
-
-	private void fireOnFieldChange() {
-		for(FieldListener l : listeners) {
-			l.onFieldChange(this);
-		}
 	}
 	
 	private void fireOnAtomAdded(byte player, int x, int y) {

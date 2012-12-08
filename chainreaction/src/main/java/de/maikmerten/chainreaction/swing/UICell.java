@@ -1,49 +1,93 @@
 package de.maikmerten.chainreaction.swing;
 
-import de.maikmerten.chainreaction.Field;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
+
 
 /**
+ * @author jonny
  *
- * @author maik
  */
-public class UICell extends JButton implements ActionListener {
-
-	private UIField uifield;
-	private int x, y;
-
-	public UICell(UIField uifield, int x, int y) {
-		super();
-		this.uifield = uifield;
+public class UICell implements UIDrawable {
+	private AbstractUIAtom[] atoms;
+	private int count;
+	
+	private byte player;
+	
+	private final int x;
+	private final int y;
+	
+	public UICell(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.addActionListener(this);
+		this.count = 0;
+		this.player = 0;
+		atoms = new AbstractUIAtom[4];
 	}
-
-	public void updateCell() {
-		Field field = uifield.getField();
-		String text = "";
-		setBackground(Color.BLACK);
-		setForeground(Color.WHITE);
-		int count = field.getAtoms(x, y);
-		if (count > 0) {
-			for (int i = 0; i < count; ++i) {
-				text += "O";
-			}
-			if (field.getOwner(x, y) == 1) {
-				setBackground(Color.RED);
-			} else if (field.getOwner(x, y) == 2) {
-				setBackground(Color.BLUE);
-			}
+	
+	public boolean isEmpty() {
+		return count == 0;
+	}
+	
+	public void setOwner(byte player) {
+		if(this.player == player) {
+			return;
 		}
-		this.setText(text);
-
+		this.player = player;
+		// TODO do assimilation animation.
+		for(int i = 0; i < count; i++) {
+			putAtomInternal(i);
+		}
+	}
+	
+	public void addAdtom() {
+		putAtomInternal(count++);
+	}
+	
+	public void moveTo(final UICell otherCell) {
+		// TODO do the move animation instead!
+		atoms[--count] = null;
+		if(otherCell.isEmpty()) {
+			otherCell.setOwner(player);
+		}
+		otherCell.addAdtom();
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		uifield.onMoveSelected(x, y);
+	// draw the atoms on the cell.
+	@Override
+	public void draw(Graphics2D g2d) {
+		final AffineTransform transform = g2d.getTransform();
+		g2d.translate((double)x, (double)y);
+		
+		if(count > 0) {
+			atoms[0].draw(g2d);
+		}
+		g2d.translate((double)CELL_SIZE, 0d);
+		if(count > 1) {
+			atoms[1].draw(g2d);
+		}
+		
+		g2d.translate((double)-CELL_SIZE, (double)CELL_SIZE);
+		if(count > 2) {
+			atoms[2].draw(g2d);
+		}
+		g2d.translate((double)CELL_SIZE, 0d);
+		if(count > 3) {
+			atoms[3].draw(g2d);
+		}
+		g2d.setTransform(transform);
+	}
+	
+	private void putAtomInternal(int cellIndex) {
+		if(player == 1) {
+			atoms[cellIndex] = new UIGoodMouse();
+		}
+		else if(player == 2) {
+			atoms[cellIndex] = new UIEvilMouse();
+		}
+		else {
+			throw new IllegalStateException("neither player 1 or 2, but: " + player);
+		}
 	}
 }
