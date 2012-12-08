@@ -207,7 +207,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		            try {
 		                Thread.sleep(sleep);
 		            } catch (InterruptedException e) {
-		                System.out.println("interrupted");
+		                System.err.println("interrupted");
 		            }
 	            } 
 
