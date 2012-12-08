@@ -102,7 +102,11 @@ public class Field {
 	}
 
 	public void setAtoms(byte player, byte count, int x, int y) {
-		count = count > 4 ? 4 : count;
+		if(count > 4) {
+			// TODO logging?
+			System.err.println("Count greater than 4: " + count);
+			count = 4;
+		}
 		atoms[x][y] = count;
 		owner[x][y] = player;
 	}
