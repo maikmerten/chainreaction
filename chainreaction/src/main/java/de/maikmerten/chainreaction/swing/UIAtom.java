@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 
-public abstract class AbstractUIAtom implements UIDrawable {
+public class UIAtom implements UIDrawable {
 	
 	public enum Mode {
 		ENTER("enter", false),
@@ -41,7 +41,7 @@ public abstract class AbstractUIAtom implements UIDrawable {
 	private Mode mode = Mode.IDLE;
 	private UIDrawable[] modes = new UIDrawable[Mode.values().length];
 
-	public AbstractUIAtom(final String propertyFile) {
+	public UIAtom(final String propertyFile) {
 		final Properties props = new Properties();
 		try {
 			props.load(this.getClass().getResourceAsStream(propertyFile));
@@ -58,6 +58,10 @@ public abstract class AbstractUIAtom implements UIDrawable {
 		}
 	}
 	
+	private UIAtom(UIDrawable[] modes) {
+		this.modes = modes;
+	}
+	
 	@Override
 	public void draw(Graphics2D g2d) {
 		modes[mode.ordinal()].draw(g2d);
@@ -65,5 +69,9 @@ public abstract class AbstractUIAtom implements UIDrawable {
 
 	public void setMode(Mode mode) {
 		this.mode = mode;
+	}
+
+	public UIAtom copy() {
+		return new UIAtom(modes.clone());
 	}
 }

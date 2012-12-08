@@ -1,8 +1,11 @@
 package de.maikmerten.chainreaction.swing;
 
+import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
+
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
+
+import de.maikmerten.chainreaction.Player;
 
 
 /**
@@ -10,7 +13,7 @@ import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
  *
  */
 public class UICell implements UIDrawable {
-	private AbstractUIAtom[] atoms;
+	private UIAtom[] atoms;
 	private int count;
 	
 	private byte player;
@@ -23,7 +26,7 @@ public class UICell implements UIDrawable {
 		this.y = y;
 		this.count = 0;
 		this.player = 0;
-		atoms = new AbstractUIAtom[4];
+		atoms = new UIAtom[4];
 	}
 	
 	public boolean isEmpty() {
@@ -80,14 +83,6 @@ public class UICell implements UIDrawable {
 	}
 	
 	private void putAtomInternal(int cellIndex) {
-		if(player == 1) {
-			atoms[cellIndex] = new UIGoodMouse();
-		}
-		else if(player == 2) {
-			atoms[cellIndex] = new UIEvilMouse();
-		}
-		else {
-			throw new IllegalStateException("neither player 1 or 2, but: " + player);
-		}
+		atoms[cellIndex] = Player.getPlayer(player).createAtom();
 	}
 }

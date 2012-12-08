@@ -23,7 +23,6 @@ public class UIGame implements MoveListener {
 	private UISettings uisettings;
 	private AI ai;
 	private boolean blockMoves = false;
-//	private UIField uifield;
 	private UIField uifield;
 
 	public UIGame() {
@@ -32,9 +31,6 @@ public class UIGame implements MoveListener {
 		frame.setMinimumSize(new Dimension(790, 720));
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
-
-//		uifield = new UIField(this, game);
-//		frame.add(uifield, BorderLayout.CENTER);
 		
 		uifield = new UIField(this, game);
 		frame.add(uifield, BorderLayout.CENTER);

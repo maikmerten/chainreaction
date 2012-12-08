@@ -13,7 +13,7 @@ public abstract class AbstractUIAnimation implements UIDrawable {
 	private static final int DELAY = 50;
 	private long lastAnim;
 	private int animCounter = 0;
-
+	
 	public AbstractUIAnimation(final String fileName, final int animCount) {
 		images = initAnimImages(fileName, animCount);
 	}

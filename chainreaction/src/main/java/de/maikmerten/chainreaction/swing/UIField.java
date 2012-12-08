@@ -25,12 +25,12 @@ import de.maikmerten.chainreaction.MoveListener;
  */
 public class UIField extends JPanel implements Runnable, FieldListener, MoveListener, UIDrawable {
 
-	static final int CELL_SIZE = 64;
 	private static final long serialVersionUID = 6726303350914771035L;
-	private MoveListener moveListener;
-	private UICell[][] cells;
+	static final int CELL_SIZE = 64;
 	private final int DELAY = 25;
+	private MoveListener moveListener;
 	private Game game;
+	private UICell[][] cells;
 	
 	public UIField(MoveListener listener, Game game) {
 		this.moveListener = listener;

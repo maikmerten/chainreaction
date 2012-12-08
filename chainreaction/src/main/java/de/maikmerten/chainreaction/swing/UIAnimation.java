@@ -24,7 +24,5 @@ public class UIAnimation extends AbstractUIAnimation {
 		}
 		return images;
 	}
-	
-	
 
 }
