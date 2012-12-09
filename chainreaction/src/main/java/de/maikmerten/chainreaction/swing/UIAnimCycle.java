@@ -19,7 +19,6 @@ public class UIAnimCycle extends AbstractUIAnimation {
 		}
 		for(int i = 0; i < animCount; i++) {
 			final String fileFN = String.format(fileName, i);
-			System.out.println("i: " + i + ", fileFN: " + fileFN);
 			final ImageIcon curr = 
 					new ImageIcon(this.getClass().getResource(fileFN));
 			images[i] = curr.getImage();
@@ -30,7 +29,4 @@ public class UIAnimCycle extends AbstractUIAnimation {
 		}
 		return images;
 	}
-	
-	
-
 }

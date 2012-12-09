@@ -177,24 +177,24 @@ public class Field {
 		}
 	}
 	
-	public void addFieldListener(FieldListener l) {
+	public void addFieldListener(final FieldListener l) {
 		this.listeners.add(l);
 	}
 	
 	private void fireOnAtomAdded(byte player, int x, int y) {
-		for(FieldListener l : listeners) {
+		for(final FieldListener l : listeners) {
 			l.onAtomAdded(player, x, y);
 		}
 	}
 	
 	private void fireOnAtomsMoved(List<Move> moves) {
-		for(FieldListener l : listeners) {
+		for(final FieldListener l : listeners) {
 			l.onAtomsMoved(moves);
 		}
 	}
 	
 	private void fireOnOwnerChange(byte player, int x, int y) {
-		for(FieldListener l : listeners) {
+		for(final FieldListener l : listeners) {
 			l.onOwnerChanged(player, x, y);
 		}
 	}

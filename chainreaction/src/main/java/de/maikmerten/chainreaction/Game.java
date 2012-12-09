@@ -39,7 +39,7 @@ public class Game implements MoveListener {
 		
 		byte owner = field.getOwner(x, y);
 	
-		// only allow moves into fields that are either unowend
+		// only allow moves into fields that are either unowned
 		// or belong to the current player
 		if(owner != 0 && owner != player) {
 			return;
