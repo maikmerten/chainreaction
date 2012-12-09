@@ -1,6 +1,5 @@
 package de.maikmerten.chainreaction.swing;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -23,77 +22,34 @@ public class SwingFieldListener implements FieldListener {
 
 	@Override
 	public void onAtomAdded(final byte player, final int x, final int y) {
-		if(SwingUtilities.isEventDispatchThread()) {
-			listener.onAtomAdded(player, x, y);
-			return;
-		}
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 
-				@Override
-				public void run() {
-					listener.onAtomAdded(player, x, y);
-				}
-			});
-		}
-		catch (InterruptedException e) {
-			// TODO logging?
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e) {
-			// TODO logging?
-			e.printStackTrace();
-		}
+			@Override
+			public void run() {
+				listener.onAtomAdded(player, x, y);
+			}
+		});
 	}
 
 	@Override
 	public void onAtomsMoved(final List<Move> moves) {
-		if(SwingUtilities.isEventDispatchThread()) {
-			listener.onAtomsMoved(moves);
-			return;
-		}
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 
-				@Override
-				public void run() {
-					listener.onAtomsMoved(moves);
-				}
-			});
-		}
-		catch (InterruptedException e) {
-			// TODO logging?
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e) {
-			// TODO logging?
-			e.printStackTrace();
-		}
+			@Override
+			public void run() {
+				listener.onAtomsMoved(moves);
+			}
+		});
 	}
 
 	@Override
 	public void onOwnerChanged(final byte player, final int x, final int y) {
-		if(SwingUtilities.isEventDispatchThread()) {
-			listener.onOwnerChanged(player, x, y);
-			return;
-		}
-		try {
+		SwingUtilities.invokeLater(new Runnable() {
 
-			SwingUtilities.invokeAndWait(new Runnable() {
-
-				@Override
-				public void run() {
-					listener.onOwnerChanged(player, x, y);
-				}
-			});
-		}
-		catch (InterruptedException e) {
-			// TODO logging?
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e) {
-			// TODO logging?
-			e.printStackTrace();
-		}
+			@Override
+			public void run() {
+				listener.onOwnerChanged(player, x, y);
+			}
+		});
 	}
 }
