@@ -49,7 +49,7 @@ public class UICell implements UIDrawable {
 	}
 	
 	public void moveTo(final UICell otherCell) {
-		// TODO do the move animation instead!
+		// TODO do the move animation instead (another leaving array...)!
 		atoms[--count] = null;
 		if(otherCell.isEmpty()) {
 			otherCell.setOwner(player);

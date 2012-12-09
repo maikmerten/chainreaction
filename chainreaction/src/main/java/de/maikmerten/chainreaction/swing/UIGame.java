@@ -22,6 +22,8 @@ public class UIGame implements MoveListener {
 	private Game game;
 	private UISettings uisettings;
 	private AI ai;
+	
+	// TODO not thread save.
 	private boolean blockMoves = false;
 	private UIField uifield;
 
@@ -108,6 +110,12 @@ public class UIGame implements MoveListener {
 	}
 
 	public static void main(String[] args) {
-		new UIGame();
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				new UIGame();
+			}
+		});
 	}
 }

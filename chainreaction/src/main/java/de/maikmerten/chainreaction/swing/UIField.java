@@ -9,6 +9,7 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -70,7 +71,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	
 	public final void setGame(Game game) {
 		this.game = game;
-		getField().addFieldListener(this);
+		getField().addFieldListener(new SwingFieldListener(this));
 		initField();
 	}
 
@@ -80,39 +81,21 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 	@Override
 	public void onAtomAdded(final byte player, final int x, final int y) {
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				if(cells[x][y].isEmpty()) {
-					cells[x][y].setOwner(player);
-				}
-				cells[x][y].addAdtom();
-			}
-		});
+		if(cells[x][y].isEmpty()) {
+			cells[x][y].setOwner(player);
+		}
+		cells[x][y].addAdtom();
 	}
 
 	@Override
 	public void onAtomMoved(final int x1, final int y1, 
 			final int x2, final int y2) {
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				cells[x1][y1].moveTo(cells[x2][y2]);
-			}
-		});
+		cells[x1][y1].moveTo(cells[x2][y2]);
 	}
 
 	@Override
 	public void onOwnerChanged(final byte player, final int x, final int y) {
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				cells[x][y].setOwner(player);
-			}
-		});
+		cells[x][y].setOwner(player);
 	}
 
 	// draw the grid.
@@ -126,21 +109,9 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 				RenderingHints.VALUE_RENDER_QUALITY);
 
 		g2d.setRenderingHints(rh);
-
-		g2d.setStroke(new BasicStroke(1));
-		g2d.setColor(Color.darkGray);
 		
 		final int fieldWidth = getField().getWidth();
 		final int fieldHeight = getField().getHeight();
-		
-		// draw vertical lines (fine)
-		for(int i = 0; i <= (fieldWidth*2); i++) {
-			g2d.drawLine(i*CELL_SIZE, 0, i*CELL_SIZE, 2*fieldHeight*CELL_SIZE);
-		}
-		// draw horizontal lines (fine)
-		for(int i = 0; i <= (fieldHeight*2); i++) {
-			g2d.drawLine(0, i*CELL_SIZE, 2*fieldWidth*CELL_SIZE, i*CELL_SIZE);
-		}
 		
 		g2d.setStroke(new BasicStroke(4));
 		g2d.setColor(Color.gray);

@@ -43,9 +43,9 @@ public class Player {
 	}
 	
 	public static Player getPlayer(byte player) {
-		if(players[player] == null) {
-			players[player] = new Player((byte)1);
+		if(players[player-1] == null) {
+			players[player-1] = new Player((byte)player);
 		}
-		return players[player];
+		return players[player-1];
 	}
 }

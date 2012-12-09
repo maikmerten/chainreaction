@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class UIAtom implements UIDrawable {
 	
-	public enum Mode {
+	public enum Mode { // TODO following mode?
 		ENTER("enter", false),
 		LEAVE("leave", false),
 		IDLE("idle", true);
