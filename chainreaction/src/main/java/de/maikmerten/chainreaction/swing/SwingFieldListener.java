@@ -1,10 +1,12 @@
 package de.maikmerten.chainreaction.swing;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
 import de.maikmerten.chainreaction.FieldListener;
+import de.maikmerten.chainreaction.Move;
 
 
 /**
@@ -45,10 +47,9 @@ public class SwingFieldListener implements FieldListener {
 	}
 
 	@Override
-	public void onAtomMoved(final int x1, final int y1, 
-			final int x2, final int y2) {
+	public void onAtomsMoved(final List<Move> moves) {
 		if(SwingUtilities.isEventDispatchThread()) {
-			listener.onAtomMoved(x1, y1, x2, y2);
+			listener.onAtomsMoved(moves);
 			return;
 		}
 		try {
@@ -56,7 +57,7 @@ public class SwingFieldListener implements FieldListener {
 
 				@Override
 				public void run() {
-					listener.onAtomMoved(x1, y1, x2, y2);
+					listener.onAtomsMoved(moves);
 				}
 			});
 		}

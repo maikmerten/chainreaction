@@ -1,5 +1,7 @@
 package de.maikmerten.chainreaction;
 
+import java.util.List;
+
 /**
  * A listener being informed of changes to the game field like adding an atom, moving an atom and 
  * changing the owner of a cell.
@@ -22,18 +24,12 @@ public interface FieldListener {
 	public void onAtomAdded(byte player, int x, int y);
 	
 	/**
-	 * An atom has been moved.
+	 * A list of atom moves occured.
 	 * 
-	 * @param x1
-	 * 		old horizontal coordinate of the cell.
-	 * @param y1
-	 * 		old vertical coordinate of the cell.
-	 * @param x2
-	 * 		new horizontal coordinate of the cell.
-	 * @param y2
-	 * 		new vertical coordinate of the cell.
+	 * @param moves
+	 * 		list of atom moves.
 	 */
-	public void onAtomMoved(int x1, int y1, int x2, int y2);
+	public void onAtomsMoved(List<Move> moves);
 	
 	/**
 	 * The owner of a field has changed.

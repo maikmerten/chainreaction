@@ -9,12 +9,14 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import de.maikmerten.chainreaction.Field;
 import de.maikmerten.chainreaction.FieldListener;
 import de.maikmerten.chainreaction.Game;
+import de.maikmerten.chainreaction.Move;
 import de.maikmerten.chainreaction.MoveListener;
 
 
@@ -86,9 +88,10 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	}
 
 	@Override
-	public void onAtomMoved(final int x1, final int y1, 
-			final int x2, final int y2) {
-		cells[x1][y1].moveTo(cells[x2][y2]);
+	public void onAtomsMoved(final List<Move> moves) {
+		for(final Move move : moves) {
+			cells[move.getX1()][move.getY1()].moveTo(cells[move.getX2()][move.getY2()]);
+		}
 	}
 
 	@Override

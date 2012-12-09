@@ -1,6 +1,8 @@
 package de.maikmerten.chainreaction;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -130,31 +132,32 @@ public class Field {
 		byte player = getOwner(x, y);
 		// clear cell
 		setAtoms((byte) 0, (byte) 0, x, y);
-		
+		List<Move> moves = new LinkedList<Move>();
 		// move left
 		if (x > 0) {
-			moveAtom(player, x, y, x - 1, y);
+			moveAtom(player, x, y, x - 1, y, moves);
 		}
 		// move right
 		if (x < getWidth() - 1) {
-			moveAtom(player, x, y, x + 1, y);
+			moveAtom(player, x, y, x + 1, y, moves);
 		}
 		// move up
 		if (y > 0) {
-			moveAtom(player, x, y, x, y - 1);
+			moveAtom(player, x, y, x, y - 1, moves);
 		}
 		// move down
 		if (y < getHeight() - 1) {
-			moveAtom(player, x, y, x, y + 1);
+			moveAtom(player, x, y, x, y + 1, moves);
 		}
+		fireOnAtomsMoved(moves);
 	}
 
-	private void moveAtom(byte player, int x1, int y1, int x2, int y2) {
+	private void moveAtom(byte player, int x1, int y1, int x2, int y2, List<Move> moves) {
 		if(getOwner(x2, y2) != player) {
 			fireOnOwnerChange(player, x2, y2);
 		}
 		putAtomInternal(player, x2, y2);
-		fireOnAtomMoved(x1, y1, x2, y2);
+		moves.add(new Move(x1, y1, x2, y2));
 	}
 
 	public void react() {
@@ -174,7 +177,6 @@ public class Field {
 		}
 	}
 	
-	
 	public void addFieldListener(FieldListener l) {
 		this.listeners.add(l);
 	}
@@ -185,9 +187,9 @@ public class Field {
 		}
 	}
 	
-	private void fireOnAtomMoved(int x1, int y1, int x2, int y2) {
+	private void fireOnAtomsMoved(List<Move> moves) {
 		for(FieldListener l : listeners) {
-			l.onAtomMoved(x1, y1, x2, y2);
+			l.onAtomsMoved(moves);
 		}
 	}
 	
