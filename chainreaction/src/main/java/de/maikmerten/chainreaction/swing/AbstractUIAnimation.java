@@ -29,6 +29,7 @@ public abstract class AbstractUIAnimation implements UIDrawable {
 		if(diff > DELAY) {
 			lastAnim = currentTimeMillis;
 			animCounter = (animCounter + ((int)(diff/DELAY)))%images.length;
+			System.out.println(animCounter);
 		}
 		return images[animCounter];
 	}

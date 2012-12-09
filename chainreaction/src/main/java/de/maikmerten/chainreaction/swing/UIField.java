@@ -9,10 +9,8 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import de.maikmerten.chainreaction.Field;
 import de.maikmerten.chainreaction.FieldListener;
