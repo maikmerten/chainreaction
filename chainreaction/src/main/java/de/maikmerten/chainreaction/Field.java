@@ -132,7 +132,7 @@ public class Field {
 		byte player = getOwner(x, y);
 		// clear cell
 		setAtoms((byte) 0, (byte) 0, x, y);
-		List<Move> moves = new LinkedList<Move>();
+		final List<Move> moves = new LinkedList<Move>();
 		// move left
 		if (x > 0) {
 			moveAtom(player, x, y, x - 1, y, moves);

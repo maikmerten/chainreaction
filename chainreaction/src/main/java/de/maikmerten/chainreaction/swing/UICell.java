@@ -13,6 +13,7 @@ import de.maikmerten.chainreaction.Player;
  *
  */
 public class UICell implements UIDrawable {
+	private static final int ATOMS_PER_CELL = 4;
 	private UIAtom[] atoms;
 	private int count;
 	
@@ -26,7 +27,7 @@ public class UICell implements UIDrawable {
 		this.y = y;
 		this.count = 0;
 		this.player = 0;
-		atoms = new UIAtom[4];
+		atoms = new UIAtom[ATOMS_PER_CELL];
 	}
 	
 	public boolean isEmpty() {
@@ -45,7 +46,9 @@ public class UICell implements UIDrawable {
 	}
 	
 	public void addAdtom() {
-		putAtomInternal(count++);
+		if(count < ATOMS_PER_CELL) {
+			putAtomInternal(count++);
+		}
 	}
 	
 	public void moveTo(final UICell otherCell) {
