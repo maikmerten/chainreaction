@@ -2,8 +2,6 @@ package de.maikmerten.chainreaction.swing;
 
 import java.awt.Image;
 
-import javax.swing.ImageIcon;
-
 
 public class UIAnimation extends AbstractUIAnimation {
 
@@ -18,9 +16,7 @@ public class UIAnimation extends AbstractUIAnimation {
 			return images;
 		}
 		for(int i = 0; i < animCount; i++) {
-			final ImageIcon curr = 
-					new ImageIcon(this.getClass().getResource(String.format(fileName, i)));
-			images[i] = curr.getImage();
+			images[i] = UIImageCache.loadImage(String.format(fileName, i));
 		}
 		return images;
 	}

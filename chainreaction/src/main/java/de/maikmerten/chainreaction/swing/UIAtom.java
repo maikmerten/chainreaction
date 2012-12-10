@@ -58,10 +58,6 @@ public class UIAtom implements UIDrawable {
 		}
 	}
 	
-	private UIAtom(UIDrawable[] modes) {
-		this.modes = modes;
-	}
-	
 	@Override
 	public void draw(Graphics2D g2d) {
 		modes[mode.ordinal()].draw(g2d);
@@ -69,9 +65,5 @@ public class UIAtom implements UIDrawable {
 
 	public void setMode(Mode mode) {
 		this.mode = mode;
-	}
-
-	public UIAtom copy() {
-		return new UIAtom(modes.clone());
 	}
 }

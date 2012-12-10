@@ -5,7 +5,6 @@ import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import de.maikmerten.chainreaction.Player;
 
 
 /**
@@ -86,6 +85,6 @@ public class UICell implements UIDrawable {
 	}
 	
 	private void putAtomInternal(int cellIndex) {
-		atoms[cellIndex] = Player.getPlayer(player).createAtom();
+		atoms[cellIndex] = UIPlayer.getPlayer(player).createAtom();
 	}
 }
