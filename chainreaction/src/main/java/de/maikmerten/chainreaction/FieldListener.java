@@ -42,4 +42,14 @@ public interface FieldListener {
 	 * 		the vertical coordinate of the cell.
 	 */
 	public void onOwnerChanged(byte player, int x, int y);
+	
+	/**
+	 * A cell has been cleared.
+	 * 
+	 * @param x
+	 * 		the horizontal coordinate of the cell that has been cleared.
+	 * @param y
+	 * 		the vertical coordinate of the cell that has been cleared.
+	 */
+	public void onCellCleared(int x, int y);
 }

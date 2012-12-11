@@ -13,10 +13,13 @@ import java.awt.geom.AffineTransform;
  */
 public class UICell implements UIDrawable {
 	private static final int ATOMS_PER_CELL = 4;
+
 	private UIAtom[] atoms;
+	private UICellBG background = null;
 	private int count;
 	
 	private byte player;
+	
 	
 	private final int x;
 	private final int y;
@@ -38,24 +41,35 @@ public class UICell implements UIDrawable {
 			return;
 		}
 		this.player = player;
+		if(player != (byte)0) {
+			this.background = new UICellBG(player);
+		}
+		else {
+			this.background = null;
+		}
 		// TODO do assimilation animation.
 		for(int i = 0; i < count; i++) {
 			putAtomInternal(i);
 		}
 	}
 	
-	public void addAdtom() {
-		if(count < ATOMS_PER_CELL) {
-			putAtomInternal(count++);
+	public void clear() {
+		while(count > 0 ) {
+			removeAtom();
 		}
+	}
+	
+	public void addAdtom() {
+		putAtomInternal(count++);
+	}
+	
+	private void removeAtom() {
+		atoms[--count] = null;
 	}
 	
 	public void moveTo(final UICell otherCell) {
 		// TODO do the move animation instead (another leaving array...)!
-		atoms[--count] = null;
-		if(otherCell.isEmpty()) {
-			otherCell.setOwner(player);
-		}
+		removeAtom();
 		otherCell.addAdtom();
 	}
 
@@ -64,6 +78,10 @@ public class UICell implements UIDrawable {
 	public void draw(Graphics2D g2d) {
 		final AffineTransform transform = g2d.getTransform();
 		g2d.translate((double)x, (double)y);
+		
+		if(background != null) {
+			background.draw(g2d);
+		}
 		
 		if(count > 0) {
 			atoms[0].draw(g2d);
@@ -83,7 +101,7 @@ public class UICell implements UIDrawable {
 		}
 		g2d.setTransform(transform);
 	}
-	
+
 	private void putAtomInternal(int cellIndex) {
 		atoms[cellIndex] = UIPlayer.getPlayer(player).createAtom();
 	}

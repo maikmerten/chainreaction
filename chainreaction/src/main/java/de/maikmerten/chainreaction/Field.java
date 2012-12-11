@@ -94,23 +94,25 @@ public class Field {
 
 	public void putAtom(byte player, int x, int y) {
 		putAtomInternal(player, x, y);
+		if(getAtoms(x, y) == 1) {
+			fireOnOwnerChange(player, x, y);
+		}
 		fireOnAtomAdded(player, x, y);
 	}
 
-	private void putAtomInternal(byte player, int x, int y) {
+	private boolean putAtomInternal(byte player, int x, int y) {
 		byte cnt = getAtoms(x, y);
 		++cnt;
-		setAtoms(player, cnt, x, y);
-	}
-
-	public void setAtoms(byte player, byte count, int x, int y) {
-		if(count > 4) {
-			// TODO logging?
-			System.err.println("Count greater than 4: " + count);
-			count = 4;
-		}
-		atoms[x][y] = count;
+		atoms[x][y] = cnt > 4 ? 4 : cnt;
 		owner[x][y] = player;
+		return cnt <=4;
+	}
+	
+	private void clearCell(int x, int y) {
+		atoms[x][y] = 0;
+		owner[x][y] = (byte)0;
+		fireOnCellCleared(x, y);
+		fireOnOwnerChange((byte)0, x, y);
 	}
 
 	public byte getCapacity(int x, int y) {
@@ -130,8 +132,6 @@ public class Field {
 
 	private void spreadAtoms(int x, int y) {
 		byte player = getOwner(x, y);
-		// clear cell
-		setAtoms((byte) 0, (byte) 0, x, y);
 		final List<Move> moves = new LinkedList<Move>();
 		// move left
 		if (x > 0) {
@@ -150,14 +150,19 @@ public class Field {
 			moveAtom(player, x, y, x, y + 1, moves);
 		}
 		fireOnAtomsMoved(moves);
+		// clear cell
+		clearCell(x, y);
+		
 	}
 
 	private void moveAtom(byte player, int x1, int y1, int x2, int y2, List<Move> moves) {
 		if(getOwner(x2, y2) != player) {
 			fireOnOwnerChange(player, x2, y2);
 		}
-		putAtomInternal(player, x2, y2);
-		moves.add(new Move(x1, y1, x2, y2));
+		if (putAtomInternal(player, x2, y2)) {
+			// move
+			moves.add(new Move(x1, y1, x2, y2));
+		}
 	}
 
 	public void react() {
@@ -190,6 +195,12 @@ public class Field {
 	private void fireOnAtomsMoved(List<Move> moves) {
 		for(final FieldListener l : listeners) {
 			l.onAtomsMoved(moves);
+		}
+	}
+	
+	private void fireOnCellCleared(int x, int y) {
+		for(final FieldListener l : listeners) {
+			l.onCellCleared(x, y);
 		}
 	}
 	

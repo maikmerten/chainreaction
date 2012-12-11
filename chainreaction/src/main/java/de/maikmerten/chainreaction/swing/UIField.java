@@ -45,13 +45,15 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				int x = (e.getX()/(CELL_SIZE*2)) % getField().getWidth();
+				int x = (e.getX()/(CELL_SIZE*2));
 				if (x >= getField().getWidth()) {
-					x = getField().getWidth()-1;
+					e.consume();
+					return;
 				}
 				int y = (e.getY()/(CELL_SIZE*2));
 				if (y >= getField().getHeight()) {
-					y = getField().getHeight()-1;
+					e.consume();
+					return;
 				}
 				
 				moveListener.onMoveSelected(x, y);
@@ -104,6 +106,12 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	@Override
 	public void onOwnerChanged(final byte player, final int x, final int y) {
 		cells[x][y].setOwner(player);
+	}
+
+	@Override
+	public void onCellCleared(int x, int y) {
+		cells[x][y].clear();
+		
 	}
 
 	// draw the grid.

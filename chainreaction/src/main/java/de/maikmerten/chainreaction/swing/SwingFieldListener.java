@@ -15,6 +15,8 @@ import de.maikmerten.chainreaction.Move;
 public class SwingFieldListener implements FieldListener {
 	private FieldListener listener;
 
+	private int counter = 0;
+	private int swingCounter = 0;
 
 	public SwingFieldListener(FieldListener listener) {
 		this.listener = listener;
@@ -22,10 +24,15 @@ public class SwingFieldListener implements FieldListener {
 
 	@Override
 	public void onAtomAdded(final byte player, final int x, final int y) {
+		final int localCounter = ++counter;
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
+				swingCounter++;
+				if(localCounter != swingCounter) {
+					throw new IllegalStateException(localCounter + ", " + swingCounter);
+				}
 				listener.onAtomAdded(player, x, y);
 			}
 		});
@@ -33,10 +40,15 @@ public class SwingFieldListener implements FieldListener {
 
 	@Override
 	public void onAtomsMoved(final List<Move> moves) {
+		final int localCounter = ++counter;
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
+				swingCounter++;
+				if(localCounter != swingCounter) {
+					throw new IllegalStateException(localCounter + ", " + swingCounter);
+				}
 				listener.onAtomsMoved(moves);
 			}
 		});
@@ -44,11 +56,32 @@ public class SwingFieldListener implements FieldListener {
 
 	@Override
 	public void onOwnerChanged(final byte player, final int x, final int y) {
+		final int localCounter = ++counter;
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
+				swingCounter++;
+				if(localCounter != swingCounter) {
+					throw new IllegalStateException(localCounter + ", " + swingCounter);
+				}
 				listener.onOwnerChanged(player, x, y);
+			}
+		});
+	}
+
+	@Override
+	public void onCellCleared(final int x, final int y) {
+		final int localCounter = ++counter;
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				swingCounter++;
+				if(localCounter != swingCounter) {
+					throw new IllegalStateException(localCounter + ", " + swingCounter);
+				}
+				listener.onCellCleared(x, y);
 			}
 		});
 	}
