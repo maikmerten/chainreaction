@@ -16,6 +16,20 @@ public class StandardAI implements AI {
 		this.game = game;
 	}
 	
+	private int countCritical(Field f, byte player) {
+		int result = 0;
+		for(int x = 0; x < f.getWidth(); ++x) {
+			for(int y = 0; y < f.getHeight(); ++y) {
+				byte owner = f.getOwner(x, y);
+				if(owner == player && f.isCritical(x, y)) {
+					++result;
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	
 	private int computeDanger(Field f, byte player, int x, int y) {
 		int danger = 0;
@@ -70,6 +84,7 @@ public class StandardAI implements AI {
 					tmp += fieldAI.getPlayerAtoms(playerAI);
 					tmp += opposingAtoms - fieldAI.getPlayerAtoms(playerOpposing);
 					tmp += ((x == 0 || x == fieldAI.getWidth() - 1) && (y == 0 || y == fieldAI.getHeight() - 1)) ? 1 : 0;
+					tmp += countCritical(fieldAI, playerAI) * 2;
 					tmp -= computeDanger(fieldAI, playerAI, x, y) * 4;
 					tmp -= countEndangeredFields(fieldAI, playerAI);
 					if(tmp > score || (r.nextBoolean() && tmp >= score)) {
