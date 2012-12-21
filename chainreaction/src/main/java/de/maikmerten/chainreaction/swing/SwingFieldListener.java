@@ -18,7 +18,7 @@ public class SwingFieldListener implements FieldListener {
 	private FieldListener listener;
 	private ExecutorService execService;
 	// TODO ability to change delay in order to accelerate animation.
-	private int delay = 20;
+	private int delay = 10;
 
 	public SwingFieldListener(FieldListener listener) {
 		this.listener = listener;
