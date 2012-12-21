@@ -11,11 +11,11 @@ import java.awt.event.ActionListener;
  */
 public class UISettings extends JPanel {
 	
+	private static final long serialVersionUID = -4840442627860470783L;
 	private JCheckBox checkBoxAI;
 
     public UISettings(final UIGame game) {
 		super();
-		this.setMinimumSize(new Dimension(640, 30));
 		this.setLayout(new GridLayout(1, 1));
 		
 		checkBoxAI = new JCheckBox("Play against AI");

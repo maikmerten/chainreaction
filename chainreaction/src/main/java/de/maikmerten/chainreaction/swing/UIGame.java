@@ -16,8 +16,10 @@ import java.util.logging.Logger;
  * @author maik
  * @author jonny
  */
-public class UIGame implements MoveListener {
+public class UIGame extends JFrame implements MoveListener {
 
+	private static final long serialVersionUID = -2178907135995785292L;
+	
 	private JLabel status;
 	private Game game;
 	private UISettings uisettings;
@@ -28,23 +30,24 @@ public class UIGame implements MoveListener {
 	private UIField uifield;
 
 	public UIGame() {
-		game = new Game(6, 5);
-		JFrame frame = new JFrame("Chain reaction");
-		frame.setMinimumSize(new Dimension(790, 720));
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frame.setLayout(new BorderLayout());
-		
-		uifield = new UIField(this, game);
-		frame.add(uifield, BorderLayout.CENTER);
-		
-		status = new JLabel();
-		frame.add(status, BorderLayout.SOUTH);
-		uisettings = new UISettings(this);
-		frame.add(uisettings, BorderLayout.NORTH);
-
+		initGUI();
 		startNewGame();
-
-		frame.setVisible(true);
+		setVisible(true);
+	}
+	
+	private void initGUI() {
+//		setUndecorated(true);
+		setTitle("ChainReaction");
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setLayout(new BorderLayout(5, 5));
+		
+		uifield = new UIField(this);
+		add(uifield, BorderLayout.CENTER);
+		
+		status = new JLabel(" ");
+		add(status, BorderLayout.SOUTH);
+		uisettings = new UISettings(this);
+		add(uisettings, BorderLayout.NORTH);
 	}
 
 	void startNewGame() {
@@ -53,6 +56,7 @@ public class UIGame implements MoveListener {
 		uifield.setGame(game);
 		blockMoves = false;
 		updateStatus();
+		pack();
 	}
 
 	public void onMoveSelected(final int x, final int y) {

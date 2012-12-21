@@ -32,9 +32,9 @@ public class UICellBG implements UIDrawable {
 		float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), new float[3]);
 		if((now - lastAnim) > DELAY) {
 			int anims = (int)(now - lastAnim)/DELAY;
-			animCounter = animCounter + (raise ? (int)anims : -(int)anims) % animCount;
-			animCounter = animCounter < 0 ? 0 : animCounter;  
-			if(raise ? animCounter == animCount : animCounter == 0) {
+			animCounter = (animCounter + (raise ? (int)anims : -(int)anims)) % animCount;
+			animCounter = animCounter < 0 ? 0 : animCounter;
+			if(raise ? animCounter == (animCount-1) : animCounter == 0) {
 				raise = !raise;
 			}
 			lastAnim = now;

@@ -33,12 +33,10 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	private Game game;
 	private UICell[][] cells;
 	
-	public UIField(MoveListener listener, Game game) {
+	public UIField(MoveListener listener) {
 		this.moveListener = listener;
-		setGame(game);
 		setBackground(Color.BLACK);
 		setDoubleBuffered(true);
-		initField();
 		
 		// Get to know as a cell is clicked.
 		addMouseListener(new MouseAdapter() {
@@ -61,11 +59,12 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 			}
 			
 		});
-		
 	}
 
 	private void initField() {
-		setPreferredSize(new Dimension(getField().getWidth()*CELL_SIZE, getField().getHeight()*CELL_SIZE));
+		setPreferredSize(new Dimension(
+				(getField().getWidth() * CELL_SIZE * 2) + 3, 
+				(getField().getHeight() * CELL_SIZE * 2) + 3));
 		cells = new UICell[getField().getWidth()][getField().getHeight()];
 		
 		for(int x = 0; x < getField().getWidth(); x++) {
@@ -134,11 +133,11 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		
 		// draw vertical lines (coarse)
 		for(int i = 0; i <= (fieldWidth); i++) {
-			g2d.drawLine(2*i*CELL_SIZE, 0, 2*i*CELL_SIZE, 2*fieldHeight*CELL_SIZE);
+			g2d.drawLine((2*i*CELL_SIZE)+1, 0, (2*i*CELL_SIZE)+1, 2*fieldHeight*CELL_SIZE);
 		}
 		// draw horizontal lines (coarse)
 		for(int i = 0; i <= (fieldHeight); i++) {
-			g2d.drawLine(0, 2*i*CELL_SIZE, 2*fieldWidth*CELL_SIZE, 2*i*CELL_SIZE);
+			g2d.drawLine(0, (2*i*CELL_SIZE)+1, 2*fieldWidth*CELL_SIZE, (2*i*CELL_SIZE)+1);
 		}
 	}
 
