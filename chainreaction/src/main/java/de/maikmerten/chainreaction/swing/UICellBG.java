@@ -41,7 +41,7 @@ public class UICellBG implements UIDrawable {
 		}
 		hsb[2] += (animCounter*((float)brightness/animCount)/255);
 		g2d.setColor(new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2])));
-		g2d.fillRect(2, 2, (CELL_SIZE*2)-3, (CELL_SIZE*2)-3);
+		g2d.fillRect(0, 0, (CELL_SIZE*2), (CELL_SIZE*2));
 		g2d.setColor(oldColor);
 	}
 }

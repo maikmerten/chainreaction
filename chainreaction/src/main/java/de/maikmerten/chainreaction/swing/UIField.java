@@ -159,9 +159,6 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		super.paint(g);
 		final Graphics2D g2d = (Graphics2D) g;
 		
-		// draw grid
-		draw(g2d);
-		
 		// draw elements
 		for(final UIDrawable[] drawableRow : cells) {
 			for(final UIDrawable drawable : drawableRow) {
@@ -170,6 +167,9 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 				}
 			}
 		}
+		
+		// draw grid
+		draw(g2d);
 		
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
