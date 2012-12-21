@@ -8,14 +8,16 @@ import java.awt.Image;
  * @author jonny
  *
  */
-public abstract class AbstractUIAnimation implements UIDrawable {
+public abstract class AbstractUIAnimation implements UIAnimation {
 	private Image[] images;
 	private static final int DELAY = 50;
 	private long lastAnim;
 	private int animCounter = 0;
-	
+	private int animCount;
+
 	public AbstractUIAnimation(final String fileName, final int animCount) {
 		images = initAnimImages(fileName, animCount);
+		this.animCount = images.length;
 	}
 
 	@Override
@@ -28,9 +30,13 @@ public abstract class AbstractUIAnimation implements UIDrawable {
 		final long diff = currentTimeMillis - lastAnim;
 		if(diff > DELAY) {
 			lastAnim = currentTimeMillis;
-			animCounter = (animCounter + ((int)(diff/DELAY)))%images.length;
+			animCounter = (animCounter + ((int)(diff/DELAY))) % animCount;
 		}
 		return images[animCounter];
+	}
+	
+	public boolean isFinished() {
+		return false;
 	}
 
 	protected abstract Image[] initAnimImages(final String fileName, final int animCount);

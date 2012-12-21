@@ -4,6 +4,10 @@ import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 
 
@@ -15,11 +19,11 @@ public class UICell implements UIDrawable {
 	private static final int ATOMS_PER_CELL = 4;
 
 	private UIAtom[] atoms;
+	private List<List<UIAtom>> leavingAtoms;
 	private UICellBG background = null;
 	private int count;
 	
 	private byte player;
-	
 	
 	private final int x;
 	private final int y;
@@ -30,6 +34,10 @@ public class UICell implements UIDrawable {
 		this.count = 0;
 		this.player = 0;
 		atoms = new UIAtom[ATOMS_PER_CELL];
+		leavingAtoms = new ArrayList<List<UIAtom>>(ATOMS_PER_CELL);
+		for(int i = 0; i < ATOMS_PER_CELL; i++) {
+			leavingAtoms.add(new LinkedList<UIAtom>());
+		}
 	}
 	
 	public boolean isEmpty() {
@@ -64,11 +72,11 @@ public class UICell implements UIDrawable {
 	}
 	
 	private void removeAtom() {
-		atoms[--count] = null;
+		leavingAtoms.get(--count).add(atoms[count].leave());
+		atoms[count] = null;
 	}
 	
 	public void moveTo(final UICell otherCell) {
-		// TODO do the move animation instead (another leaving array...)!
 		removeAtom();
 		otherCell.addAdtom();
 	}
@@ -86,20 +94,36 @@ public class UICell implements UIDrawable {
 		if(count > 0) {
 			atoms[0].draw(g2d);
 		}
+		drawLeavingAtoms(g2d, 0);
 		g2d.translate((double)CELL_SIZE, 0d);
 		if(count > 1) {
 			atoms[1].draw(g2d);
 		}
-		
+		drawLeavingAtoms(g2d, 1);
 		g2d.translate((double)-CELL_SIZE, (double)CELL_SIZE);
 		if(count > 2) {
 			atoms[2].draw(g2d);
 		}
+		drawLeavingAtoms(g2d, 2);
 		g2d.translate((double)CELL_SIZE, 0d);
 		if(count > 3) {
 			atoms[3].draw(g2d);
 		}
+		drawLeavingAtoms(g2d, 3);
 		g2d.setTransform(transform);
+	}
+
+	private void drawLeavingAtoms(Graphics2D g2d, int cell) {
+		final Iterator<UIAtom> iter = leavingAtoms.get(cell).iterator();
+		while(iter.hasNext()) {
+			final UIAtom leavingAtom = iter.next();
+			if(leavingAtom.isFinished()) {
+				iter.remove();
+			}
+			else {				
+				leavingAtom.draw(g2d);
+			}
+		}
 	}
 
 	private void putAtomInternal(int cellIndex) {
