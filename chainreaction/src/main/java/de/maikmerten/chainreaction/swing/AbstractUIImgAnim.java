@@ -8,14 +8,14 @@ import java.awt.Image;
  * @author jonny
  *
  */
-public abstract class AbstractUIAnimation implements UIAnimation {
+public abstract class AbstractUIImgAnim implements UIAnimation {
 	private Image[] images;
 	private static final int DELAY = 50;
 	private long lastAnim;
 	private int animCounter = 0;
 	private int animCount;
 
-	public AbstractUIAnimation(final String fileName, final int animCount) {
+	public AbstractUIImgAnim(final String fileName, final int animCount) {
 		images = initAnimImages(fileName, animCount);
 		this.animCount = images.length;
 	}

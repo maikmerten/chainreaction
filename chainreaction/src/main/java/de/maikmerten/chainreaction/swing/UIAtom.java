@@ -19,7 +19,7 @@ public class UIAtom implements UIAnimation {
 		}
 		final String animFN = props.getProperty("idle.anim" );
 		final int count = Integer.parseInt(props.getProperty("idle.count"));
-		anim = new UIEnterAnim(new UIAnimCycle(animFN, count));
+		anim = new UIEnterAnim(new UIImgAnim(animFN, count));
 	}
 	
 	@Override

@@ -3,9 +3,9 @@ package de.maikmerten.chainreaction.swing;
 import java.awt.Image;
 
 
-public class UIAnimCycle extends AbstractUIAnimation {
+public class UIImgAnim extends AbstractUIImgAnim {
 
-	public UIAnimCycle(final String fileName, final int animCount) {
+	public UIImgAnim(final String fileName, final int animCount) {
 		super(fileName, animCount);
 	}
 
