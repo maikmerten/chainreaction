@@ -17,6 +17,8 @@ import de.maikmerten.chainreaction.Move;
 public class SwingFieldListener implements FieldListener {
 	private FieldListener listener;
 	private ExecutorService execService;
+	// TODO ability to change delay in order to accelerate animation.
+	private int delay;
 
 	public SwingFieldListener(FieldListener listener) {
 		this.listener = listener;
@@ -31,7 +33,7 @@ public class SwingFieldListener implements FieldListener {
 				listener.onAtomAdded(player, x, y);
 			}
 
-		}, 40);
+		}, delay);
 	}
 
 	@Override
@@ -41,7 +43,7 @@ public class SwingFieldListener implements FieldListener {
 			public void run() {
 				listener.onAtomsMoved(moves);
 			}
-		}, 40);
+		}, delay);
 	}
 
 	@Override
@@ -61,7 +63,7 @@ public class SwingFieldListener implements FieldListener {
 			public void run() {
 				listener.onCellCleared(x, y);
 			}
-		}, 40);
+		}, delay);
 	}
 	
 	private void executeDelayed(final Runnable run, final long delay) {
