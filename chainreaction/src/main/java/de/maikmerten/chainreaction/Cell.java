@@ -1,6 +1,6 @@
 package de.maikmerten.chainreaction;
 
-public class Cell {
+class Cell {
 
 	private byte numberOfAtoms;
 	private Player owningPlayer;
@@ -29,13 +29,21 @@ public class Cell {
 	 *
 	 * @param numberOfAtoms The new number of atoms for this cell
 	 */
-	public void setNumberOfAtoms(byte numberOfAtoms) {
+	void setNumberOfAtoms(byte numberOfAtoms) {
 		if (numberOfAtoms > 4) {
 			this.numberOfAtoms = 4;
 		}
 		else {
 			this.numberOfAtoms = numberOfAtoms;
 		}
+	}
+
+	/**
+	 * Increases the number of atoms for this cell by one, if it is lower
+	 * than the maximum capacity.
+	 */
+	public void increaseNumberOfAtoms() {
+		setNumberOfAtoms((byte)(getNumberOfAtoms() + 1));
 	}
 
 	public Player getOwningPlayer() {

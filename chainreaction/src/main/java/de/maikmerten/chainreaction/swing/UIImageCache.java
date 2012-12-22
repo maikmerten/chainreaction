@@ -1,13 +1,12 @@
 package de.maikmerten.chainreaction.swing;
 
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
 
-
-public class UIImageCache {
+class UIImageCache {
 	private final static Map<String, Image> imageCache;
 	
 	static {

@@ -1,11 +1,11 @@
 package de.maikmerten.chainreaction.swing;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 
 
 public class UIEnterAnim extends AbstractUIAlphaAnim {
 	private int currCounter = 0;
-	private UIAnimation anim;
+	private final UIAnimation anim;
 	
 	public UIEnterAnim(UIAnimation anim) {
 		super(anim);

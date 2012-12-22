@@ -3,15 +3,11 @@ package de.maikmerten.chainreaction;
 import java.util.EnumSet;
 import java.util.Set;
 
-/**
- *
- * @author maik
- */
 public class Game implements MoveListener {
 	
-	private Field field;
+	private final Field field;
 	private Player player = Player.FIRST;
-	private Set<Player> moved = EnumSet.noneOf(Player.class);
+	private final Set<Player> moved = EnumSet.noneOf(Player.class);
 	private int round = 1;
 
 	public Game(int width, int height) {
@@ -55,12 +51,16 @@ public class Game implements MoveListener {
 	}
 	
 	public Player getWinner() {
-		Player winner = Player.NONE;
-		if(moved.contains(Player.FIRST) && field.getPlayerAtoms(Player.FIRST) == 0) {
+		Player winner;
+
+		if (moved.contains(Player.FIRST) && field.getTotalNumberOfAtomsForPlayer(Player.FIRST) == 0) {
 			winner = Player.SECOND;
-		} else if (moved.contains(Player.SECOND) && field.getPlayerAtoms(Player.SECOND) == 0) {
+		} else if (moved.contains(Player.SECOND) && field.getTotalNumberOfAtomsForPlayer(Player.SECOND) == 0) {
 			winner = Player.FIRST;
+		} else {
+			winner = Player.NONE;
 		}
+
 		return winner;
 	}
 

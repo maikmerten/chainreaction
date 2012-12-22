@@ -15,7 +15,7 @@ public class UICellBG implements UIDrawable {
 	private static final int DELAY = 50;
 	private final int animCount = 50;
 	private final int brightness = 75;
-	
+
 	private int animCounter = 0;
 	private long lastAnim = System.currentTimeMillis();
 	private boolean raise = true;
@@ -33,7 +33,7 @@ public class UICellBG implements UIDrawable {
 		float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), new float[3]);
 		if((now - lastAnim) > DELAY) {
 			int anims = (int)(now - lastAnim)/DELAY;
-			animCounter = (animCounter + (raise ? (int)anims : -(int)anims)) % animCount;
+			animCounter = (animCounter + (raise ? anims : - anims)) % animCount;
 			animCounter = animCounter < 0 ? 0 : animCounter;
 			if(raise ? animCounter == (animCount-1) : animCounter == 0) {
 				raise = !raise;

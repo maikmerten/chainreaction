@@ -7,8 +7,8 @@ import java.util.List;
 public class Field {
 
 	private final int width, height;
-	private ArrayList<FieldListener> listeners = new ArrayList<FieldListener>();
-	private List<List<Cell>> rows;
+	private final ArrayList<FieldListener> listeners = new ArrayList<FieldListener>();
+	private final List<List<Cell>> rows;
 
 	public Field(int width, int height) {
 		this.width = width;
@@ -53,7 +53,7 @@ public class Field {
 		row.set(x, cell);
 	}
 
-	public byte getNumerOfAtomsAtPosition(int x, int y) {
+	byte getNumerOfAtomsAtPosition(int x, int y) {
 		return getCellAtPosition(x, y).getNumberOfAtoms();
 	}
 
@@ -61,8 +61,9 @@ public class Field {
 		return getCellAtPosition(x, y).getOwningPlayer();
 	}
 
-	public int getPlayerAtoms(Player player) {
+	public int getTotalNumberOfAtomsForPlayer(Player player) {
 		int count = 0;
+
 		for (int x = 0; x < getWidth(); ++x) {
 			for (int y = 0; y < getHeight(); ++y) {
 				if (getOwnerOfCellAtPosition(x, y) == player) {
@@ -96,34 +97,51 @@ public class Field {
 		fireOnAtomAdded(player, x, y);
 	}
 
-	private boolean putAtomInternal(Player player, int x, int y) {
-		byte cnt = getNumerOfAtomsAtPosition(x, y);
-		++cnt;
+	/**
+	 * Increases the atom count of the cell identified by the x and y coordinates by one
+	 * and alters the owner to the given {@link Player}.
+	 *
+	 * @param player
+	 * 	The new owner of the specified cell.
+	 * @param x
+	 * 	X coordinate of the cell
+	 * @param y
+	 * 	Y coordinate of the cell
+	 */
+	private void putAtomInternal(Player player, int x, int y) {
 		Cell cell = getCellAtPosition(x, y);
-		cell.setNumberOfAtoms(cnt);
+		cell.increaseNumberOfAtoms();
 		cell.setOwningPlayer(player);
-		return cnt <=4;
 	}
 	
-	private void clearCell(int x, int y) {
+	private void clearCellAtPosition(int x, int y) {
 		getCellAtPosition(x, y).clear();
 		fireOnCellCleared(x, y);
 		fireOnOwnerChange(Player.NONE, x, y);
 	}
 
-	public byte getCapacity(int x, int y) {
-		byte cap = 3;
-		if (x == 0 || x == (width - 1)) {
-			--cap;
+	byte getCapacityOfCellAtPosition(int x, int y) {
+		byte capacity = 3;
+
+		boolean firstColumn = (x == 0);
+		boolean lastColumn = (x == (width - 1));
+
+		if (firstColumn || lastColumn) {
+			--capacity;
 		}
-		if (y == 0 || y == (height - 1)) {
-			--cap;
+
+		boolean firstRow = (y == 0);
+		boolean lastRow = (y == (height - 1));
+
+		if (firstRow || lastRow) {
+			--capacity;
 		}
-		return cap;
+
+		return capacity;
 	}
 
 	public boolean isCritical(int x, int y) {
-		return getNumerOfAtomsAtPosition(x, y) == getCapacity(x, y);
+		return getNumerOfAtomsAtPosition(x, y) == getCapacityOfCellAtPosition(x, y);
 	}
 
 	private void spreadAtoms(int x, int y) {
@@ -147,7 +165,7 @@ public class Field {
 		}
 		fireOnAtomsMoved(moves);
 		// clear cell
-		clearCell(x, y);
+		clearCellAtPosition(x, y);
 		
 	}
 
@@ -155,7 +173,9 @@ public class Field {
 		if(getOwnerOfCellAtPosition(x2, y2) != player) {
 			fireOnOwnerChange(player, x2, y2);
 		}
-		if (putAtomInternal(player, x2, y2)) {
+
+		putAtomInternal(player, x2, y2);
+		if (getCellAtPosition(x2, y2).getNumberOfAtoms() <= 4) {
 			// move
 			moves.add(new Move(x1, y1, x2, y2));
 		}
@@ -169,7 +189,7 @@ public class Field {
 			for (int x = 0; x < getWidth(); ++x) {
 				for (int y = 0; y < getHeight(); ++y) {
 					byte count = getNumerOfAtomsAtPosition(x, y);
-					if (count > getCapacity(x, y)) {
+					if (count > getCapacityOfCellAtPosition(x, y)) {
 						stable = false;
 						spreadAtoms(x, y);
 					}

@@ -1,7 +1,6 @@
 package de.maikmerten.chainreaction.swing;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.*;
 
 
 /**
@@ -9,13 +8,13 @@ import java.awt.Image;
  *
  */
 public abstract class AbstractUIImgAnim implements UIAnimation {
-	private Image[] images;
+	private final Image[] images;
 	private static final int DELAY = 50;
 	private long lastAnim;
 	private int animCounter = 0;
-	private int animCount;
+	private final int animCount;
 
-	public AbstractUIImgAnim(final String fileName, final int animCount) {
+	AbstractUIImgAnim(final String fileName, final int animCount) {
 		images = initAnimImages(fileName, animCount);
 		this.animCount = images.length;
 	}

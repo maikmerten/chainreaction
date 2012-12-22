@@ -18,7 +18,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	private static final long serialVersionUID = 6726303350914771035L;
 	static final int CELL_SIZE = 64;
 	private final int DELAY = 25;
-	private MoveListener moveListener;
+	private final MoveListener moveListener;
 	private Game game;
 	private UICell[][] cells;
 	
@@ -72,7 +72,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		initField();
 	}
 
-	public Field getField() {
+	Field getField() {
 		return game.getField();
 	}
 

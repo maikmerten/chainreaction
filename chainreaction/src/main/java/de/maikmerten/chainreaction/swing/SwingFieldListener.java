@@ -15,10 +15,10 @@ import java.util.concurrent.Executors;
  *
  */
 public class SwingFieldListener implements FieldListener {
-	private FieldListener listener;
-	private ExecutorService execService;
+	private final FieldListener listener;
+	private final ExecutorService execService;
 	// TODO ability to change delay in order to accelerate animation.
-	private int delay = 10;
+	private final int delay = 10;
 
 	public SwingFieldListener(FieldListener listener) {
 		this.listener = listener;

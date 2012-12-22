@@ -19,6 +19,7 @@ public interface FieldListener {
 	 * @param x
 	 * 		the horizontal coordinate of the cell the atom has been placed.
 	 * @param y
+	 * 		the vertical coordinate of the cell the atom has been placed.
 	 */
 	public void onAtomAdded(Player player, int x, int y);
 	
@@ -38,6 +39,7 @@ public interface FieldListener {
 	 * @param x
 	 * 		the horizontal coordinate of the cell.
 	 * @param y
+	 * 		the vertical coordinate of the cell that has been cleared.
 	 */
 	public void onOwnerChanged(Player player, int x, int y);
 	

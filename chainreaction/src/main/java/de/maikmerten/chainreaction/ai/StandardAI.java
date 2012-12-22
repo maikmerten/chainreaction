@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class StandardAI implements AI {
 
-	private Game game;
+	private final Game game;
 	
 	public StandardAI(Game game) {
 		this.game = game;
@@ -72,7 +72,7 @@ public class StandardAI implements AI {
 	
 	private int[] think(Field f, Player playerAI, Player playerOpposing) {
 		Random r = new Random();
-		int opposingAtoms = f.getPlayerAtoms(playerOpposing);
+		int opposingAtoms = f.getTotalNumberOfAtomsForPlayer(playerOpposing);
 		int score = Integer.MIN_VALUE;
 		int[] coords = new int[2];
 		for(int x = 0; x < f.getWidth(); ++x) {
@@ -83,8 +83,8 @@ public class StandardAI implements AI {
 					fieldAI.putAtom(playerAI, x, y);
 					fieldAI.react();
 					int tmp = fieldAI.getPlayerFields(playerAI);
-					tmp += fieldAI.getPlayerAtoms(playerAI);
-					tmp += opposingAtoms - fieldAI.getPlayerAtoms(playerOpposing);
+					tmp += fieldAI.getTotalNumberOfAtomsForPlayer(playerAI);
+					tmp += opposingAtoms - fieldAI.getTotalNumberOfAtomsForPlayer(playerOpposing);
 					tmp += ((x == 0 || x == fieldAI.getWidth() - 1) && (y == 0 || y == fieldAI.getHeight() - 1)) ? 1 : 0;
 					tmp += countCritical(fieldAI, playerAI) * 2;
 					tmp -= computeDanger(fieldAI, playerAI, x, y) * 4;

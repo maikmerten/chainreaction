@@ -9,8 +9,8 @@ import java.util.logging.Logger;
  */
 public class AIThread extends Thread {
 
-	private long delay;
-	private AI ai;
+	private final long delay;
+	private final AI ai;
 	
 	public AIThread(AI ai, long delay) {
 		this.ai = ai;

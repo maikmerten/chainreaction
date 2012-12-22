@@ -103,8 +103,8 @@ public class UIGame extends JFrame implements MoveListener {
 			sb.append("Player ").append(game.getWinner()).append(" won in round ").append(game.getRound());
 		} else {
 			sb.append("Round ").append(game.getRound()).append(" | Active player: ").append(game.getCurrentPlayer());
-			sb.append(" | Current Score: ").append(game.getField().getPlayerAtoms(Player.FIRST));
-			sb.append(":").append(game.getField().getPlayerAtoms(Player.SECOND));
+			sb.append(" | Current Score: ").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.FIRST));
+			sb.append(":").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.SECOND));
 		}
 
 		Runnable updateRunner = new Runnable() {

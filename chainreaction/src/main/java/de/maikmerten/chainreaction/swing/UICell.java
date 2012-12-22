@@ -14,8 +14,8 @@ import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
 public class UICell implements UIDrawable {
 	private static final int ATOMS_PER_CELL = 4;
 
-	private UIAtom[] atoms;
-	private List<List<UIAtom>> leavingAtoms;
+	private final UIAtom[] atoms;
+	private final List<List<UIAtom>> leavingAtoms;
 	private UICellBG background = null;
 	private int count;
 	

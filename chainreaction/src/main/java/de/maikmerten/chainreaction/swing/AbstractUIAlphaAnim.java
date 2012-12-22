@@ -1,7 +1,6 @@
 package de.maikmerten.chainreaction.swing;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
@@ -9,9 +8,9 @@ public abstract class AbstractUIAlphaAnim implements UIAnimation {
 	private static final int DELAY = 25;
 	private final UIAnimation anim;
 	private long lastAnim = System.currentTimeMillis();
-	protected final static int MAX_COUNTER = 20;
+	final static int MAX_COUNTER = 20;
 	
-	public AbstractUIAlphaAnim(UIAnimation anim) {
+	AbstractUIAlphaAnim(UIAnimation anim) {
 		this.anim = anim;
 	}
 
@@ -37,7 +36,7 @@ public abstract class AbstractUIAlphaAnim implements UIAnimation {
 		g2d.drawImage(offlineScreen, 0, 0, null);
 	}
 	
-	public abstract int nextCounter(int countOfAnims);
+	protected abstract int nextCounter(int countOfAnims);
 
 	@Override
 	public boolean isFinished() {

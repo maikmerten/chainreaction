@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 public class UISettings extends JPanel {
 	
 	private static final long serialVersionUID = -4840442627860470783L;
-	private JCheckBox checkBoxAI;
+	private final JCheckBox checkBoxAI;
 
     public UISettings(final UIGame game) {
 		super();
