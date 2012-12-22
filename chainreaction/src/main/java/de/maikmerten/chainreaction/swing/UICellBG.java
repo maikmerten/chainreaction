@@ -1,9 +1,10 @@
 package de.maikmerten.chainreaction.swing;
 
-import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
+import de.maikmerten.chainreaction.Player;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
+
+import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
 
 
 /**
@@ -18,9 +19,9 @@ public class UICellBG implements UIDrawable {
 	private int animCounter = 0;
 	private long lastAnim = System.currentTimeMillis();
 	private boolean raise = true;
-	private final byte player;
+	private final Player player;
 
-	public UICellBG(byte player) {
+	public UICellBG(Player player) {
 		this.player = player;
 	}
 

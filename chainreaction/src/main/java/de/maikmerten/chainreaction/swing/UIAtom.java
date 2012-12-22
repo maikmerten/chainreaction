@@ -1,9 +1,8 @@
 package de.maikmerten.chainreaction.swing;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.io.IOException;
 import java.util.Properties;
-
 
 public class UIAtom implements UIAnimation {
 	

@@ -2,6 +2,7 @@ package de.maikmerten.chainreaction.swing;
 
 import de.maikmerten.chainreaction.Game;
 import de.maikmerten.chainreaction.MoveListener;
+import de.maikmerten.chainreaction.Player;
 import de.maikmerten.chainreaction.ai.AI;
 import de.maikmerten.chainreaction.ai.AIThread;
 import de.maikmerten.chainreaction.ai.StandardAI;
@@ -66,7 +67,7 @@ public class UIGame extends JFrame implements MoveListener {
 
 		blockMoves = true;
 
-		if (game.getWinner() != 0) {
+		if (game.getWinner() != Player.NONE) {
 			startNewGame();
 			return;
 		}
@@ -77,7 +78,8 @@ public class UIGame extends JFrame implements MoveListener {
 				game.onMoveSelected(x, y);
 				updateStatus();
 
-				if (game.getWinner() == 0 && game.getCurrentPlayer() == 2 && uisettings.againstAI()) {
+				if (game.getWinner() == Player.NONE && game.getCurrentPlayer() == Player.SECOND
+						&& uisettings.againstAI()) {
 					try {
 						AIThread t = new AIThread(ai, 1500);
 						t.start();
@@ -97,12 +99,12 @@ public class UIGame extends JFrame implements MoveListener {
 	private void updateStatus() {
 		final StringBuilder sb = new StringBuilder();
 
-		if (game.getWinner() != 0) {
+		if (game.getWinner() != Player.NONE) {
 			sb.append("Player ").append(game.getWinner()).append(" won in round ").append(game.getRound());
 		} else {
 			sb.append("Round ").append(game.getRound()).append(" | Active player: ").append(game.getCurrentPlayer());
-			sb.append(" | Current Score: ").append(game.getField().getPlayerAtoms((byte) 1));
-			sb.append(":").append(game.getField().getPlayerAtoms((byte) 2));
+			sb.append(" | Current Score: ").append(game.getField().getPlayerAtoms(Player.FIRST));
+			sb.append(":").append(game.getField().getPlayerAtoms(Player.SECOND));
 		}
 
 		Runnable updateRunner = new Runnable() {

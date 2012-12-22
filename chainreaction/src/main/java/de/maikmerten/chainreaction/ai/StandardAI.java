@@ -2,6 +2,8 @@ package de.maikmerten.chainreaction.ai;
 
 import de.maikmerten.chainreaction.Field;
 import de.maikmerten.chainreaction.Game;
+import de.maikmerten.chainreaction.Player;
+
 import java.util.Random;
 
 /**
@@ -16,11 +18,11 @@ public class StandardAI implements AI {
 		this.game = game;
 	}
 	
-	private int countCritical(Field f, byte player) {
+	private int countCritical(Field f, Player player) {
 		int result = 0;
 		for(int x = 0; x < f.getWidth(); ++x) {
 			for(int y = 0; y < f.getHeight(); ++y) {
-				byte owner = f.getOwner(x, y);
+				Player owner = f.getOwnerOfCellAtPosition(x, y);
 				if(owner == player && f.isCritical(x, y)) {
 					++result;
 				}
@@ -31,20 +33,20 @@ public class StandardAI implements AI {
 	}
 	
 	
-	private int computeDanger(Field f, byte player, int x, int y) {
+	private int computeDanger(Field f, Player player, int x, int y) {
 		int danger = 0;
 		
-		if (x > 0 && f.getOwner(x - 1, y) != player && f.isCritical(x - 1, y)) {
+		if (x > 0 && f.getOwnerOfCellAtPosition(x - 1, y) != player && f.isCritical(x - 1, y)) {
 			++danger;
 		}
-		if( x < (f.getWidth()) - 1 && f.getOwner(x + 1, y) != player && f.isCritical(x + 1, y)) {
+		if( x < (f.getWidth()) - 1 && f.getOwnerOfCellAtPosition(x + 1, y) != player && f.isCritical(x + 1, y)) {
 			++danger;
 		}
 
-		if (y > 0 && f.getOwner(x, y - 1) != player && f.isCritical(x, y - 1)) {
+		if (y > 0 && f.getOwnerOfCellAtPosition(x, y - 1) != player && f.isCritical(x, y - 1)) {
 			++danger;
 		}
-		if( y < (f.getHeight() - 1) && f.getOwner(x, y + 1) != player && f.isCritical(x, y + 1)) {
+		if( y < (f.getHeight() - 1) && f.getOwnerOfCellAtPosition(x, y + 1) != player && f.isCritical(x, y + 1)) {
 			++danger;
 		}
 
@@ -52,12 +54,12 @@ public class StandardAI implements AI {
 	}
 	
 	
-	private int countEndangeredFields(Field f, byte player) {
+	private int countEndangeredFields(Field f, Player player) {
 		int endangered = 0;
 		
 		for(int x = 0; x < f.getWidth(); ++x) {
 			for(int y = 0; y < f.getHeight(); ++y) {
-				byte owner = f.getOwner(x, y);
+				Player owner = f.getOwnerOfCellAtPosition(x, y);
 				if(owner == player && computeDanger(f, player, x, y) > 0) {
 					++endangered;
 				}
@@ -68,15 +70,15 @@ public class StandardAI implements AI {
 	}
 	
 	
-	private int[] think(Field f, byte playerAI, byte playerOpposing) {
+	private int[] think(Field f, Player playerAI, Player playerOpposing) {
 		Random r = new Random();
 		int opposingAtoms = f.getPlayerAtoms(playerOpposing);
 		int score = Integer.MIN_VALUE;
 		int[] coords = new int[2];
 		for(int x = 0; x < f.getWidth(); ++x) {
 			for(int y = 0; y < f.getHeight(); ++y) {
-				byte owner = f.getOwner(x, y);
-				if(owner == 0 || owner == playerAI) {
+				Player owner = f.getOwnerOfCellAtPosition(x, y);
+				if(owner == Player.NONE || owner == playerAI) {
 					Field fieldAI = f.getCopy();
 					fieldAI.putAtom(playerAI, x, y);
 					fieldAI.react();
@@ -101,8 +103,8 @@ public class StandardAI implements AI {
 
 	public void doMove() {
 		Field field = game.getField();
-		byte playerAI = game.getCurrentPlayer();
-		byte playerOpposing = playerAI == 2 ? (byte)1 : (byte)2;
+		Player playerAI = game.getCurrentPlayer();
+		Player playerOpposing = playerAI == Player.SECOND ? Player.FIRST : Player.SECOND;
 		
 		int[] coords = think(field, playerAI, playerOpposing);
 		game.onMoveSelected(coords[0], coords[1]);

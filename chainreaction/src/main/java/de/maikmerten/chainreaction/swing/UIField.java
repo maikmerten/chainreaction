@@ -1,23 +1,12 @@
 package de.maikmerten.chainreaction.swing;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+import de.maikmerten.chainreaction.*;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-
-import javax.swing.JPanel;
-
-import de.maikmerten.chainreaction.Field;
-import de.maikmerten.chainreaction.FieldListener;
-import de.maikmerten.chainreaction.Game;
-import de.maikmerten.chainreaction.Move;
-import de.maikmerten.chainreaction.MoveListener;
 
 
 /**
@@ -88,7 +77,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	}
 
 	@Override
-	public void onAtomAdded(final byte player, final int x, final int y) {
+	public void onAtomAdded(final Player player, final int x, final int y) {
 		if(cells[x][y].isEmpty()) {
 			cells[x][y].setOwner(player);
 		}
@@ -103,7 +92,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	}
 
 	@Override
-	public void onOwnerChanged(final byte player, final int x, final int y) {
+	public void onOwnerChanged(final Player player, final int x, final int y) {
 		cells[x][y].setOwner(player);
 	}
 
