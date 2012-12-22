@@ -47,7 +47,8 @@ public class UIGame extends JFrame implements MoveListener {
 	private Settings loadSettings() {
 		Properties properties = new Properties();
 		try {
-			String configFileName = getConfigurationFileLocation();
+			checkConfigReadability();
+			String configFileName = getConfigurationFileLocation().toString();
 			BufferedInputStream stream = new BufferedInputStream(new FileInputStream(configFileName));
 			properties.load(stream);
 			int delay = Integer.valueOf(properties.getProperty("delay"));
@@ -63,7 +64,7 @@ public class UIGame extends JFrame implements MoveListener {
 	}
 
 	private void storeSettings(Settings settings) {
-		String configFileName = getConfigurationFileLocation();
+		String configFileName = getConfigurationFileLocation().toString();
 		Properties properties = new Properties();
 		properties.setProperty("delay", String.valueOf(settings.getDelay()));
 		try {
@@ -74,10 +75,19 @@ public class UIGame extends JFrame implements MoveListener {
 		}
 	}
 
-	private String getConfigurationFileLocation() {
+	private Path getConfigurationStorageLocation() {
 		String homeDir = System.getProperties().getProperty("user.home");
 		String configDir = ".chainReaction";
-		Path path = FileSystems.getDefault().getPath(homeDir, configDir);
+		return FileSystems.getDefault().getPath(homeDir, configDir);
+	}
+
+	private Path getConfigurationFileLocation() {
+		String filename = "settings.properties";
+		return FileSystems.getDefault().getPath(getConfigurationStorageLocation().toString(), filename);
+	}
+
+	private void checkConfigReadability() {
+		Path path = getConfigurationStorageLocation();
 
 		if (!Files.exists(path)) {
 			try {
@@ -91,15 +101,16 @@ public class UIGame extends JFrame implements MoveListener {
 			throw new ConfigUnreadableException();
 		}
 
-		String filename = "settings.properties";
-		path = FileSystems.getDefault().getPath(homeDir, configDir, filename);
+		path = getConfigurationFileLocation();
 
-		if (Files.exists(path) && !Files.isRegularFile(path)) {
-			System.err.println("Unable to read settings from " + path + ", is not a regular file");
+		if (!Files.exists(path)) {
 			throw new ConfigUnreadableException();
 		}
 
-		return path.toString();
+		if (!Files.isRegularFile(path)) {
+			System.err.println("Unable to read settings from " + path + ", is not a regular file");
+			throw new ConfigUnreadableException();
+		}
 	}
 
 	private void initGUI() {
