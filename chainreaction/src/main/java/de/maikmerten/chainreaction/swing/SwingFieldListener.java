@@ -1,13 +1,13 @@
 package de.maikmerten.chainreaction.swing;
 
+import de.maikmerten.chainreaction.FieldListener;
+import de.maikmerten.chainreaction.Move;
+import de.maikmerten.chainreaction.Player;
+
+import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import javax.swing.SwingUtilities;
-
-import de.maikmerten.chainreaction.FieldListener;
-import de.maikmerten.chainreaction.Move;
 
 
 /**
@@ -26,7 +26,7 @@ public class SwingFieldListener implements FieldListener {
 	}
 
 	@Override
-	public void onAtomAdded(final byte player, final int x, final int y) {
+	public void onAtomAdded(final Player player, final int x, final int y) {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -47,7 +47,7 @@ public class SwingFieldListener implements FieldListener {
 	}
 
 	@Override
-	public void onOwnerChanged(final byte player, final int x, final int y) {
+	public void onOwnerChanged(final Player player, final int x, final int y) {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {

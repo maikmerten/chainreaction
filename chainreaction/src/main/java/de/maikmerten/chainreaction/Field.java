@@ -4,30 +4,32 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author maik
- */
 public class Field {
 
-	private int width, height;
-	private byte[][] atoms;
-	private byte[][] owner;
+	private final int width, height;
 	private ArrayList<FieldListener> listeners = new ArrayList<FieldListener>();
+	private List<List<Cell>> rows;
 
 	public Field(int width, int height) {
 		this.width = width;
 		this.height = height;
-		atoms = new byte[width][height];
-		owner = new byte[width][height];
+		rows = new ArrayList<List<Cell>>(height);
+		for (int y = 0; y < height; y++) {
+			List<Cell> row = new ArrayList<Cell>(width);
+			for (int x = 0; x < width; x++) {
+				row.add(x, new Cell());
+			}
+			rows.add(row);
+		}
 	}
 
 	public Field getCopy() {
 		Field copy = new Field(getWidth(), getHeight());
 		for (int x = 0; x < getWidth(); ++x) {
 			for (int y = 0; y < getHeight(); ++y) {
-				copy.atoms[x][y] = this.atoms[x][y];
-				copy.owner[x][y] = this.owner[x][y];
+				Cell orginalCell = getCellAtPosition(x, y);
+				Cell newCell = new Cell(orginalCell.getNumberOfAtoms(), orginalCell.getOwningPlayer());
+				copy.setCellAtPosition(newCell, x, y);
 			}
 		}
 		return copy;
@@ -41,36 +43,30 @@ public class Field {
 		return height;
 	}
 
-	public byte getAtoms(int x, int y) {
-		return atoms[x][y];
+	private Cell getCellAtPosition(int x, int y) {
+		List<Cell> row = rows.get(y);
+		return row.get(x);
 	}
 
-	public byte getOwner(int x, int y) {
-		return owner[x][y];
+	private void setCellAtPosition(Cell cell, int x, int y) {
+		List<Cell> row = rows.get(y);
+		row.set(x, cell);
 	}
 
-	public byte[][] getAtomField() {
-		byte[][] result = new byte[width][height];
-		for (int x = 0; x < width; ++x) {
-            System.arraycopy(atoms[x], 0, result[x], 0, height);
-		}
-		return result;
+	public byte getNumerOfAtomsAtPosition(int x, int y) {
+		return getCellAtPosition(x, y).getNumberOfAtoms();
 	}
 
-	public byte[][] getOwnerField() {
-		byte[][] result = new byte[width][height];
-		for (int x = 0; x < width; ++x) {
-            System.arraycopy(owner[x], 0, result[x], 0, height);
-		}
-		return result;
+	public Player getOwnerOfCellAtPosition(int x, int y) {
+		return getCellAtPosition(x, y).getOwningPlayer();
 	}
 
-	public int getPlayerAtoms(byte player) {
+	public int getPlayerAtoms(Player player) {
 		int count = 0;
 		for (int x = 0; x < getWidth(); ++x) {
 			for (int y = 0; y < getHeight(); ++y) {
-				if (getOwner(x, y) == player) {
-					count += getAtoms(x, y);
+				if (getOwnerOfCellAtPosition(x, y) == player) {
+					count += getNumerOfAtomsAtPosition(x, y);
 				}
 			}
 		}
@@ -78,11 +74,11 @@ public class Field {
 		return count;
 	}
 	
-	public int getPlayerFields(byte player) {
+	public int getPlayerFields(Player player) {
 		int count = 0;
 		for (int x = 0; x < getWidth(); ++x) {
 			for (int y = 0; y < getHeight(); ++y) {
-				if (getOwner(x, y) == player) {
+				if (getOwnerOfCellAtPosition(x, y) == player) {
 					++count;
 				}
 			}
@@ -92,27 +88,27 @@ public class Field {
 	}
 	
 
-	public void putAtom(byte player, int x, int y) {
+	public void putAtom(Player player, int x, int y) {
 		putAtomInternal(player, x, y);
-		if(getAtoms(x, y) == 1) {
+		if(getNumerOfAtomsAtPosition(x, y) == 1) {
 			fireOnOwnerChange(player, x, y);
 		}
 		fireOnAtomAdded(player, x, y);
 	}
 
-	private boolean putAtomInternal(byte player, int x, int y) {
-		byte cnt = getAtoms(x, y);
+	private boolean putAtomInternal(Player player, int x, int y) {
+		byte cnt = getNumerOfAtomsAtPosition(x, y);
 		++cnt;
-		atoms[x][y] = cnt > 4 ? 4 : cnt;
-		owner[x][y] = player;
+		Cell cell = getCellAtPosition(x, y);
+		cell.setNumberOfAtoms(cnt);
+		cell.setOwningPlayer(player);
 		return cnt <=4;
 	}
 	
 	private void clearCell(int x, int y) {
-		atoms[x][y] = 0;
-		owner[x][y] = (byte)0;
+		getCellAtPosition(x, y).clear();
 		fireOnCellCleared(x, y);
-		fireOnOwnerChange((byte)0, x, y);
+		fireOnOwnerChange(Player.NONE, x, y);
 	}
 
 	public byte getCapacity(int x, int y) {
@@ -127,11 +123,11 @@ public class Field {
 	}
 
 	public boolean isCritical(int x, int y) {
-		return getAtoms(x, y) == getCapacity(x, y);
+		return getNumerOfAtomsAtPosition(x, y) == getCapacity(x, y);
 	}
 
 	private void spreadAtoms(int x, int y) {
-		byte player = getOwner(x, y);
+		Player player = getOwnerOfCellAtPosition(x, y);
 		final List<Move> moves = new LinkedList<Move>();
 		// move left
 		if (x > 0) {
@@ -155,8 +151,8 @@ public class Field {
 		
 	}
 
-	private void moveAtom(byte player, int x1, int y1, int x2, int y2, List<Move> moves) {
-		if(getOwner(x2, y2) != player) {
+	private void moveAtom(Player player, int x1, int y1, int x2, int y2, List<Move> moves) {
+		if(getOwnerOfCellAtPosition(x2, y2) != player) {
 			fireOnOwnerChange(player, x2, y2);
 		}
 		if (putAtomInternal(player, x2, y2)) {
@@ -172,7 +168,7 @@ public class Field {
 			stable = true;
 			for (int x = 0; x < getWidth(); ++x) {
 				for (int y = 0; y < getHeight(); ++y) {
-					byte count = getAtoms(x, y);
+					byte count = getNumerOfAtomsAtPosition(x, y);
 					if (count > getCapacity(x, y)) {
 						stable = false;
 						spreadAtoms(x, y);
@@ -186,7 +182,7 @@ public class Field {
 		this.listeners.add(l);
 	}
 	
-	private void fireOnAtomAdded(byte player, int x, int y) {
+	private void fireOnAtomAdded(Player player, int x, int y) {
 		for(final FieldListener l : listeners) {
 			l.onAtomAdded(player, x, y);
 		}
@@ -204,7 +200,7 @@ public class Field {
 		}
 	}
 	
-	private void fireOnOwnerChange(byte player, int x, int y) {
+	private void fireOnOwnerChange(Player player, int x, int y) {
 		for(final FieldListener l : listeners) {
 			l.onOwnerChanged(player, x, y);
 		}

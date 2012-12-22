@@ -1,6 +1,6 @@
 package de.maikmerten.chainreaction;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 /**
@@ -10,8 +10,8 @@ import java.util.Set;
 public class Game implements MoveListener {
 	
 	private Field field;
-	private byte player = 1;
-	private Set<Byte> moved = new HashSet<Byte>();
+	private Player player = Player.FIRST;
+	private Set<Player> moved = EnumSet.noneOf(Player.class);
 	private int round = 1;
 
 	public Game(int width, int height) {
@@ -22,7 +22,7 @@ public class Game implements MoveListener {
 		return field;
 	}
 
-	public byte getCurrentPlayer() {
+	public Player getCurrentPlayer() {
 		return player;
 	}
 	
@@ -33,15 +33,15 @@ public class Game implements MoveListener {
 	public void onMoveSelected(int x, int y) {
 		
 		// no further moves if we have a winner
-		if(getWinner() != 0) {
+		if(getWinner() != Player.NONE) {
 			return;
 		}
 		
-		byte owner = field.getOwner(x, y);
+		Player owner = field.getOwnerOfCellAtPosition(x, y);
 	
 		// only allow moves into fields that are either unowned
 		// or belong to the current player
-		if(owner != 0 && owner != player) {
+		if(owner != Player.NONE && owner != player) {
 			return;
 		}
 		
@@ -51,15 +51,15 @@ public class Game implements MoveListener {
 		moved.add(player);
 		++round;
 		// next player
-		player = player == 1 ? (byte) 2 : (byte) 1;
+		player = player == Player.FIRST ? Player.SECOND : Player.FIRST;
 	}
 	
-	public byte getWinner() {
-		byte winner = 0;
-		if(moved.contains((byte)1) && field.getPlayerAtoms((byte)1) == 0) {
-			winner = 2;
-		} else if (moved.contains((byte)2) && field.getPlayerAtoms((byte)2) == 0) {
-			winner = 1;
+	public Player getWinner() {
+		Player winner = Player.NONE;
+		if(moved.contains(Player.FIRST) && field.getPlayerAtoms(Player.FIRST) == 0) {
+			winner = Player.SECOND;
+		} else if (moved.contains(Player.SECOND) && field.getPlayerAtoms(Player.SECOND) == 0) {
+			winner = Player.FIRST;
 		}
 		return winner;
 	}

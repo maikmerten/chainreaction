@@ -1,20 +1,16 @@
 package de.maikmerten.chainreaction.swing;
 
-import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
+import de.maikmerten.chainreaction.Player;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static de.maikmerten.chainreaction.swing.UIField.CELL_SIZE;
 
-
-/**
- * @author jonny
- *
- */
 public class UICell implements UIDrawable {
 	private static final int ATOMS_PER_CELL = 4;
 
@@ -23,7 +19,7 @@ public class UICell implements UIDrawable {
 	private UICellBG background = null;
 	private int count;
 	
-	private byte player;
+	private Player player;
 	
 	private final int x;
 	private final int y;
@@ -32,7 +28,7 @@ public class UICell implements UIDrawable {
 		this.x = x;
 		this.y = y;
 		this.count = 0;
-		this.player = 0;
+		this.player = Player.NONE;
 		atoms = new UIAtom[ATOMS_PER_CELL];
 		leavingAtoms = new ArrayList<List<UIAtom>>(ATOMS_PER_CELL);
 		for(int i = 0; i < ATOMS_PER_CELL; i++) {
@@ -44,12 +40,12 @@ public class UICell implements UIDrawable {
 		return count == 0;
 	}
 	
-	public void setOwner(byte player) {
+	public void setOwner(Player player) {
 		if(this.player == player) {
 			return;
 		}
 		this.player = player;
-		if(player != (byte)0) {
+		if(player != Player.NONE) {
 			this.background = new UICellBG(player);
 		}
 		else {

@@ -1,16 +1,16 @@
 package de.maikmerten.chainreaction.swing;
 
-import java.awt.Color;
+import de.maikmerten.chainreaction.Player;
+
+import java.awt.*;
 import java.io.IOException;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Properties;
 
-/**
- * @author jonny
- *
- */
 public class UIPlayer {
 	private final static Properties props;
-	private final static UIPlayer[] players;
+	private final static Map<Player, UIPlayer> players;
 	
 	static {
 		props = new Properties();
@@ -20,22 +20,22 @@ public class UIPlayer {
 		catch (IOException e) {
 			System.err.println("could not load player properties");
 		}
-		players = new UIPlayer[2];
+		players = new EnumMap<Player, UIPlayer>(Player.class);
 	}
 	
-	private final byte player;
+	private final Player player;
 	private final String propFN;
-	private final Color[] bgColors;
+	private final Map<Player, Color> bgColors;
 	
-	private UIPlayer(byte player) {
+	private UIPlayer(Player player) {
 		this.player = player;
-		this.propFN = props.getProperty("player." + player) + "atom.properties";
-		this.bgColors = new Color[2];
-		this.bgColors[0] = new Color(21, 39, 99);
-		this.bgColors[1] = new Color(120, 0, 0);
+		this.propFN = props.getProperty("player." + player.name()) + "atom.properties";
+		this.bgColors = new EnumMap<Player, Color>(Player.class);
+		this.bgColors.put(Player.FIRST, new Color(21, 39, 99));
+		this.bgColors.put(Player.SECOND, new Color(120, 0, 0));
 	}
 	
-	public byte getPlayer() {
+	public Player getPlayer() {
 		return this.player;
 	}
 	
@@ -44,13 +44,13 @@ public class UIPlayer {
 	}
 	
 	public Color getBackground() {
-		return bgColors[player-1];
+		return bgColors.get(player);
 	}
 	
-	public static UIPlayer getPlayer(byte player) {
-		if(players[player-1] == null) {
-			players[player-1] = new UIPlayer((byte)player);
+	public static UIPlayer getPlayer(Player player) {
+		if(!players.containsKey(player)) {
+			players.put(player, new UIPlayer(player));
 		}
-		return players[player-1];
+		return players.get(player);
 	}
 }
