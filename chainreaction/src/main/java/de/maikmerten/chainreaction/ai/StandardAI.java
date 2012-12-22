@@ -109,6 +109,11 @@ public class StandardAI implements AI {
 		int[] coords = think(field, playerAI, playerOpposing);
 		game.onMoveSelected(coords[0], coords[1]);
 	}
-	
-	
+
+	@Override
+	public String getName() {
+		return "Standard AI";
+	}
+
+
 }
