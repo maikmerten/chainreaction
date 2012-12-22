@@ -3,12 +3,19 @@ package de.maikmerten.chainreaction.swing;
 import de.maikmerten.chainreaction.Game;
 import de.maikmerten.chainreaction.MoveListener;
 import de.maikmerten.chainreaction.Player;
+import de.maikmerten.chainreaction.Settings;
 import de.maikmerten.chainreaction.ai.AI;
 import de.maikmerten.chainreaction.ai.AIThread;
 import de.maikmerten.chainreaction.ai.StandardAI;
+import de.maikmerten.chainreaction.exceptions.ConfigUnreadableException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,11 +38,70 @@ public class UIGame extends JFrame implements MoveListener {
 	private UIField uifield;
 
 	public UIGame() {
+		Settings settings = loadSettings();
 		initGUI();
 		startNewGame();
 		setVisible(true);
 	}
-	
+
+	private Settings loadSettings() {
+		Properties properties = new Properties();
+		try {
+			String configFileName = getConfigurationFileLocation();
+			BufferedInputStream stream = new BufferedInputStream(new FileInputStream(configFileName));
+			properties.load(stream);
+			int delay = Integer.valueOf(properties.getProperty("delay"));
+			return new Settings(delay);
+		} catch (ConfigUnreadableException e) {
+			Settings settingsWithDefaultValues = new Settings();
+			storeSettings(settingsWithDefaultValues);
+			return settingsWithDefaultValues;
+		} catch (IOException e) {
+			System.err.println("Unable to load properties: " + e.getMessage());
+			return new Settings();
+		}
+	}
+
+	private void storeSettings(Settings settings) {
+		String configFileName = getConfigurationFileLocation();
+		Properties properties = new Properties();
+		properties.setProperty("delay", String.valueOf(settings.getDelay()));
+		try {
+			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(configFileName));
+			properties.store(stream, "Settings for Chain Reaction");
+		} catch (IOException | ConfigUnreadableException e) {
+			System.err.println("Unable to store properties: " + e.getMessage());
+		}
+	}
+
+	private String getConfigurationFileLocation() {
+		String homeDir = System.getProperties().getProperty("user.home");
+		String configDir = ".chainReaction";
+		Path path = FileSystems.getDefault().getPath(homeDir, configDir);
+
+		if (!Files.exists(path)) {
+			try {
+				Files.createDirectory(path);
+			} catch (IOException e) {
+				throw new ConfigUnreadableException(e);
+			}
+		}
+		else if (!Files.isDirectory(path)) {
+			System.err.println("Unable to read settings, " + path + " is not a directory!");
+			throw new ConfigUnreadableException();
+		}
+
+		String filename = "settings.properties";
+		path = FileSystems.getDefault().getPath(homeDir, configDir, filename);
+
+		if (Files.exists(path) && !Files.isRegularFile(path)) {
+			System.err.println("Unable to read settings from " + path + ", is not a regular file");
+			throw new ConfigUnreadableException();
+		}
+
+		return path.toString();
+	}
+
 	private void initGUI() {
 //		setUndecorated(true);
 		setTitle("ChainReaction");
