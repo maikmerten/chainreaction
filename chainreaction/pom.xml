@@ -5,10 +5,7 @@
 	<groupId>de.maikmerten</groupId>
 	<artifactId>chainreaction</artifactId>
 	<version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>../exampleAI</module>
-    </modules>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
 	<name>chainreaction</name>
 	<url>http://maven.apache.org</url>
