@@ -7,6 +7,7 @@ import de.maikmerten.chainreaction.ai.StandardAI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +54,7 @@ public class UIGame extends JFrame implements MoveListener {
 
 	void startNewGame() {
 		game = new Game(6, 5, settings);
-		SettingsLoader.loadAIs();
+		List<AI> ais = SettingsLoader.loadAIs();
 		// TODO Use loaded AIs
 		ai = new StandardAI();
 		ai.setGame(game);
