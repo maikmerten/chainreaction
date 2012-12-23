@@ -68,7 +68,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	
 	public final void setGame(Game game) {
 		this.game = game;
-		getField().addFieldListener(new SwingFieldListener(this));
+		getField().addFieldListener(new SwingFieldListener(this, game.getSettings()));
 		initField();
 	}
 

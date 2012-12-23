@@ -1,8 +1,6 @@
 package de.maikmerten.chainreaction.swing;
 
-import de.maikmerten.chainreaction.Game;
-import de.maikmerten.chainreaction.MoveListener;
-import de.maikmerten.chainreaction.Player;
+import de.maikmerten.chainreaction.*;
 import de.maikmerten.chainreaction.ai.AI;
 import de.maikmerten.chainreaction.ai.AIThread;
 import de.maikmerten.chainreaction.ai.StandardAI;
@@ -29,13 +27,15 @@ public class UIGame extends JFrame implements MoveListener {
 	// TODO not thread save.
 	private boolean blockMoves = false;
 	private UIField uifield;
+	private final Settings settings;
 
 	public UIGame() {
+		settings = SettingsLoader.loadSettings();
 		initGUI();
 		startNewGame();
 		setVisible(true);
 	}
-	
+
 	private void initGUI() {
 //		setUndecorated(true);
 		setTitle("ChainReaction");
@@ -52,7 +52,7 @@ public class UIGame extends JFrame implements MoveListener {
 	}
 
 	void startNewGame() {
-		game = new Game(6, 5);
+		game = new Game(6, 5, settings);
 		ai = new StandardAI(game);
 		uifield.setGame(game);
 		blockMoves = false;

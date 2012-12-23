@@ -6,12 +6,14 @@ import java.util.Set;
 public class Game implements MoveListener {
 	
 	private final Field field;
+	private final Settings settings;
 	private Player player = Player.FIRST;
 	private final Set<Player> moved = EnumSet.noneOf(Player.class);
 	private int round = 1;
 
-	public Game(int width, int height) {
-		field = new Field(width, height);
+	public Game(int width, int height, Settings settings) {
+		this.field = new Field(width, height);
+		this.settings = settings;
 	}
 	
 	public Field getField() {
@@ -64,4 +66,7 @@ public class Game implements MoveListener {
 		return winner;
 	}
 
+	public Settings getSettings() {
+		return settings;
+	}
 }
