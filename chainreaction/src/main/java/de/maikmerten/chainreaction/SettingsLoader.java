@@ -1,12 +1,16 @@
 package de.maikmerten.chainreaction;
 
+import de.maikmerten.chainreaction.ai.AI;
 import de.maikmerten.chainreaction.exceptions.ConfigUnreadableException;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Properties;
+import java.util.*;
 
 public class SettingsLoader {
 
@@ -89,6 +93,47 @@ public class SettingsLoader {
 			System.err.println("Unable to read settings from " + path + ", is not a regular file");
 			throw new ConfigUnreadableException();
 		}
+	}
+
+	public static List<AI> loadAIs() {
+		Path configDir = getConfigurationStorageLocation();
+		Path aiDir = FileSystems.getDefault().getPath(configDir.toString(), "AIs");
+
+		if (!Files.exists(aiDir)) {
+			return Collections.emptyList();
+		}
+
+		File[] files = aiDir.toFile().listFiles();
+
+		if (files == null) {
+			return Collections.emptyList();
+		}
+
+		List<URL> urls = new LinkedList<>();
+
+		for (File file : files) {
+			if (file.isFile() && file.getName().endsWith(".jar")) {
+				try {
+					urls.add(file.toURI().toURL());
+				} catch (MalformedURLException e) {
+					System.err.println("Unable to load " + file.getName() + ": " + e.getMessage());
+				}
+			}
+		}
+
+		URL[] urlArray = urls.toArray(new URL[urls.size()]);
+		URLClassLoader loader = new URLClassLoader(urlArray, SettingsLoader.class.getClassLoader());
+
+		List<AI> ais = new ArrayList<>(urls.size());
+
+		ServiceLoader<AI> serviceLoader = ServiceLoader.load(AI.class, loader);
+		Iterator<AI> iterator = serviceLoader.iterator();
+
+		while (iterator.hasNext()) {
+			ais.add(iterator.next());
+		}
+
+		return ais;
 	}
 
 }

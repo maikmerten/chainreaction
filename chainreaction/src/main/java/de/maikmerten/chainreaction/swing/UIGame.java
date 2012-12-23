@@ -53,7 +53,10 @@ public class UIGame extends JFrame implements MoveListener {
 
 	void startNewGame() {
 		game = new Game(6, 5, settings);
-		ai = new StandardAI(game);
+		SettingsLoader.loadAIs();
+		// TODO Use loaded AIs
+		ai = new StandardAI();
+		ai.setGame(game);
 		uifield.setGame(game);
 		blockMoves = false;
 		updateStatus();
