@@ -9,12 +9,13 @@ import java.util.Random;
 public class DummyAI implements AI {
 
 	private Game game;
-	private Random random;
+	private Random random = new Random();
 
 	@Override
 	public void doMove() {
 		Random random = new Random();
-		findNextCoordinates();
+		int[] coords = findNextCoordinates();
+		game.onMoveSelected(coords[0], coords[1]);
 	}
 
 	private int[] findNextCoordinates() {
@@ -23,8 +24,8 @@ public class DummyAI implements AI {
 		int counter = 1000;
 
 		while (counter > 0) {
-			int randomX = random.nextInt(field.getWidth()+1);
-			int randomY = random.nextInt(field.getHeight()+1);
+			int randomX = random.nextInt(field.getWidth());
+			int randomY = random.nextInt(field.getHeight());
 			Player currentOwner = field.getOwnerOfCellAtPosition(randomX, randomY);
 
 			if (currentOwner == game.getCurrentPlayer() || currentOwner == Player.NONE) {
