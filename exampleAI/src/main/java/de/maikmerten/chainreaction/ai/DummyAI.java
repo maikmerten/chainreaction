@@ -2,6 +2,7 @@ package de.maikmerten.chainreaction.ai;
 
 import de.maikmerten.chainreaction.Field;
 import de.maikmerten.chainreaction.Game;
+import de.maikmerten.chainreaction.Player;
 
 import java.util.Random;
 
@@ -24,8 +25,9 @@ public class DummyAI implements AI {
 		while (counter > 0) {
 			int randomX = random.nextInt(field.getWidth()+1);
 			int randomY = random.nextInt(field.getHeight()+1);
+			Player currentOwner = field.getOwnerOfCellAtPosition(randomX, randomY);
 
-			if (field.getOwnerOfCellAtPosition(randomX, randomY) != game.getCurrentPlayer()) {
+			if (currentOwner == game.getCurrentPlayer() || currentOwner == Player.NONE) {
 				int[] coords = new int[2];
 				coords[0] = randomX;
 				coords[1] = randomY;
