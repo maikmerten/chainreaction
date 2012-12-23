@@ -1,11 +1,13 @@
 package de.maikmerten.chainreaction.ai;
 
-/**
- *
- * @author maik
- */
+import de.maikmerten.chainreaction.Game;
+
 public interface AI {
 
 	public void doMove();
+
+	public void setGame(Game game);
+
+	public String getName();
 	
 }

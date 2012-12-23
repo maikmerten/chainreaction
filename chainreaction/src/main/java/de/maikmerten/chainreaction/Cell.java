@@ -46,11 +46,25 @@ class Cell {
 		setNumberOfAtoms((byte)(getNumberOfAtoms() + 1));
 	}
 
+	/**
+	 * @return the {@link Player} who owns this cell.
+	 * May be {@link Player#NONE} but never {@code null}.
+	 */
 	public Player getOwningPlayer() {
 		return owningPlayer;
 	}
 
+	/**
+	 * Sets the owning player for this cell.
+	 *
+	 * @param owningPlayer
+	 *  The {@link Player}, must not but {@code null}.
+	 */
 	public void setOwningPlayer(Player owningPlayer) {
+		if (owningPlayer == null) {
+			throw new IllegalArgumentException("owningPlayer must not be null!");
+		}
+
 		this.owningPlayer = owningPlayer;
 	}
 
