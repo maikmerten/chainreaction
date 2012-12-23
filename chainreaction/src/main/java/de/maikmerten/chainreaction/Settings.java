@@ -2,17 +2,17 @@ package de.maikmerten.chainreaction;
 
 public class Settings {
 
-	private final int delay;
+	private final int reactionDely;
 
 	public Settings() {
-		this.delay = 25;
+		this.reactionDely = 25;
 	}
 
-	public Settings(int delay) {
-		this.delay = delay;
+	public Settings(int reactionDely) {
+		this.reactionDely = reactionDely;
 	}
 
-	public int getDelay() {
-		return delay;
+	public int getReactionDely() {
+		return reactionDely;
 	}
 }

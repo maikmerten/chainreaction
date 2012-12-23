@@ -27,9 +27,10 @@ public class UIGame extends JFrame implements MoveListener {
 	// TODO not thread save.
 	private boolean blockMoves = false;
 	private UIField uifield;
+	private final Settings settings;
 
 	public UIGame() {
-		Settings settings = SettingsLoader.loadSettings();
+		settings = SettingsLoader.loadSettings();
 		initGUI();
 		startNewGame();
 		setVisible(true);
@@ -51,7 +52,7 @@ public class UIGame extends JFrame implements MoveListener {
 	}
 
 	void startNewGame() {
-		game = new Game(6, 5);
+		game = new Game(6, 5, settings);
 		ai = new StandardAI(game);
 		uifield.setGame(game);
 		blockMoves = false;

@@ -3,6 +3,7 @@ package de.maikmerten.chainreaction.swing;
 import de.maikmerten.chainreaction.FieldListener;
 import de.maikmerten.chainreaction.Move;
 import de.maikmerten.chainreaction.Player;
+import de.maikmerten.chainreaction.Settings;
 
 import javax.swing.*;
 import java.util.List;
@@ -18,10 +19,11 @@ public class SwingFieldListener implements FieldListener {
 	private final FieldListener listener;
 	private final ExecutorService execService;
 	// TODO ability to change delay in order to accelerate animation.
-	private final int delay = 10;
+	private final int delay;
 
-	public SwingFieldListener(FieldListener listener) {
+	public SwingFieldListener(FieldListener listener, Settings settings) {
 		this.listener = listener;
+		this.delay = settings.getReactionDely();
 		this.execService = Executors.newSingleThreadExecutor();
 	}
 

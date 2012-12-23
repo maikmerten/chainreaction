@@ -10,6 +10,8 @@ import java.util.Properties;
 
 public class SettingsLoader {
 
+	private static final String REACTION_DELAY = "reaction.delay";
+
 	/**
 	 * Loads the settings stored in the user's home directory.
 	 * If there are no settings, the default values are stores.
@@ -27,7 +29,7 @@ public class SettingsLoader {
 			String configFileName = getConfigurationFileLocation().toString();
 			BufferedInputStream stream = new BufferedInputStream(new FileInputStream(configFileName));
 			properties.load(stream);
-			int delay = Integer.valueOf(properties.getProperty("delay"));
+			int delay = Integer.valueOf(properties.getProperty(REACTION_DELAY));
 			return new Settings(delay);
 		} catch (ConfigUnreadableException e) {
 			Settings settingsWithDefaultValues = new Settings();
@@ -42,7 +44,7 @@ public class SettingsLoader {
 	private static void storeSettings(Settings settings) {
 		String configFileName = getConfigurationFileLocation().toString();
 		Properties properties = new Properties();
-		properties.setProperty("delay", String.valueOf(settings.getDelay()));
+		properties.setProperty(REACTION_DELAY, String.valueOf(settings.getReactionDely()));
 		try {
 			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(configFileName));
 			properties.store(stream, "Settings for Chain Reaction");
