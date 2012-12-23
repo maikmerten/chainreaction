@@ -8,18 +8,17 @@ import java.util.Random;
 
 public class DummyAI implements AI {
 
-	private Game game;
-	private Random random = new Random();
+	private Game game; 
 
 	@Override
 	public void doMove() {
-		Random random = new Random();
 		int[] coords = findNextCoordinates();
 		game.onMoveSelected(coords[0], coords[1]);
 	}
 
 	private int[] findNextCoordinates() {
-		Field field = game.getField();
+		final Field field = game.getField();
+		final Random random = new Random();
 
 		int counter = 1000;
 
