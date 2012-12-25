@@ -90,11 +90,13 @@ public class Field {
 	
 
 	public void putAtom(Player player, int x, int y) {
-		putAtomInternal(player, x, y);
+		final boolean increased = putAtomInternal(player, x, y);
 		if(getNumerOfAtomsAtPosition(x, y) == 1) {
 			fireOnOwnerChange(player, x, y);
 		}
-		fireOnAtomAdded(player, x, y);
+		if(increased) {
+			fireOnAtomAdded(player, x, y);
+		}
 	}
 
 	/**
@@ -107,11 +109,14 @@ public class Field {
 	 * 	X coordinate of the cell
 	 * @param y
 	 * 	Y coordinate of the cell
+	 * @return
+	 * 		whether the number of atoms has been increased, or the maximal size of a cell has been reached.
 	 */
-	private void putAtomInternal(Player player, int x, int y) {
+	private boolean putAtomInternal(Player player, int x, int y) {
 		Cell cell = getCellAtPosition(x, y);
-		cell.increaseNumberOfAtoms();
+		final boolean increased = cell.increaseNumberOfAtoms();
 		cell.setOwningPlayer(player);
+		return increased;
 	}
 	
 	private void clearCellAtPosition(int x, int y) {
@@ -174,8 +179,7 @@ public class Field {
 			fireOnOwnerChange(player, x2, y2);
 		}
 
-		putAtomInternal(player, x2, y2);
-		if (getCellAtPosition(x2, y2).getNumberOfAtoms() <= 4) {
+		if (putAtomInternal(player, x2, y2)) {
 			// move
 			moves.add(new Move(x1, y1, x2, y2));
 		}

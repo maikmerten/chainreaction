@@ -29,12 +29,14 @@ class Cell {
 	 *
 	 * @param numberOfAtoms The new number of atoms for this cell
 	 */
-	void setNumberOfAtoms(byte numberOfAtoms) {
+	private boolean setNumberOfAtoms(byte numberOfAtoms) {
 		if (numberOfAtoms > 4) {
 			this.numberOfAtoms = 4;
+			return false;
 		}
 		else {
 			this.numberOfAtoms = numberOfAtoms;
+			return true;
 		}
 	}
 
@@ -42,8 +44,8 @@ class Cell {
 	 * Increases the number of atoms for this cell by one, if it is lower
 	 * than the maximum capacity.
 	 */
-	public void increaseNumberOfAtoms() {
-		setNumberOfAtoms((byte)(getNumberOfAtoms() + 1));
+	public boolean increaseNumberOfAtoms() {
+		return setNumberOfAtoms((byte)(getNumberOfAtoms() + 1));
 	}
 
 	/**
