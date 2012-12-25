@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
  */
 public class RetroFont {
 	
+	private static final int MINIMAL_FONT_SIZE = 8;
 	BufferedImage font;
 	
 	public RetroFont() {
@@ -48,7 +49,7 @@ public class RetroFont {
 	}
 	
 	public BufferedImage getRetroChar(char c, int fontSize) {
-		fontSize = fontSize < 8 ? 8 : fontSize;
+		fontSize = fontSize < MINIMAL_FONT_SIZE ? MINIMAL_FONT_SIZE : fontSize;
 		
 		final Image img = getRetroChar(c).getScaledInstance(fontSize, fontSize, Image.SCALE_REPLICATE);
 		final BufferedImage bimg = new BufferedImage(img.getWidth(null), img.getHeight(null), font.getType());
@@ -56,11 +57,23 @@ public class RetroFont {
 		return bimg;
 	}
 	
+	public BufferedImage getRetroString(String str, int fontSize) {
+		fontSize = fontSize < MINIMAL_FONT_SIZE ? MINIMAL_FONT_SIZE : fontSize;
+		final BufferedImage bimg = new BufferedImage(fontSize * str.length(), fontSize, font.getType());
+		int i = 0;
+		for(final char c : str.toCharArray()) {
+			final Image img = getRetroChar(c, fontSize);
+			bimg.getGraphics().drawImage(img, i*fontSize, 0, null);
+			i++;
+		}
+		return bimg;
+	}
 	
 	// TODO move to unit test
 	public static void main(String[] args) throws Exception {
 		RetroFont rf = new RetroFont();
 		ImageIO.write(rf.getRetroChar('A', 48), "png", new File("/tmp/test.png"));
+		ImageIO.write(rf.getRetroString("Hello World", 48), "png", new File("/tmp/hello world.png"));
 	}
 	
 	
