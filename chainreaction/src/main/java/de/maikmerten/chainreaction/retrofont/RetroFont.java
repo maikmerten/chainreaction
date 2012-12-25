@@ -1,5 +1,6 @@
 package de.maikmerten.chainreaction.retrofont;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -36,7 +37,7 @@ public class RetroFont {
 	}
 	
 	
-	public BufferedImage getRetroChar(char c) {
+	public BufferedImage getRetroChar(char c, Color color) {
 		int code = (int)c;
 		if(code < 0 || c > 255) {
 			code = (int)'?';
@@ -45,24 +46,35 @@ public class RetroFont {
 		int row = code >> 4;
 		int col = code % 16;
 		
-		return font.getSubimage(col << 3, row << 3, 8, 8);
+		BufferedImage result = font.getSubimage(col << 3, row << 3, 8, 8);
+		for(int x = 0; x < result.getWidth(); ++x) {
+			for(int y = 0; y < result.getHeight(); ++y) {
+				// colorize white pixels
+				if(result.getRGB(x, y) == 0xFFFFFFFF) {
+					result.setRGB(x, y, color.getRGB());
+				}
+			}
+		}
+		
+		
+		return result;
 	}
 	
-	public BufferedImage getRetroChar(char c, int fontSize) {
+	public BufferedImage getRetroChar(char c, Color color, int fontSize) {
 		fontSize = fontSize < MINIMAL_FONT_SIZE ? MINIMAL_FONT_SIZE : fontSize;
 		
-		final Image img = getRetroChar(c).getScaledInstance(fontSize, fontSize, Image.SCALE_REPLICATE);
+		final Image img = getRetroChar(c, color).getScaledInstance(fontSize, fontSize, Image.SCALE_REPLICATE);
 		final BufferedImage bimg = new BufferedImage(img.getWidth(null), img.getHeight(null), font.getType());
 		bimg.getGraphics().drawImage(img, 0, 0, null);
 		return bimg;
 	}
 	
-	public BufferedImage getRetroString(String str, int fontSize) {
+	public BufferedImage getRetroString(String str, Color color, int fontSize) {
 		fontSize = fontSize < MINIMAL_FONT_SIZE ? MINIMAL_FONT_SIZE : fontSize;
 		final BufferedImage bimg = new BufferedImage(fontSize * str.length(), fontSize, font.getType());
 		int i = 0;
 		for(final char c : str.toCharArray()) {
-			final Image img = getRetroChar(c, fontSize);
+			final Image img = getRetroChar(c, color, fontSize);
 			bimg.getGraphics().drawImage(img, i*fontSize, 0, null);
 			i++;
 		}
@@ -72,8 +84,8 @@ public class RetroFont {
 	// TODO move to unit test
 	public static void main(String[] args) throws Exception {
 		RetroFont rf = new RetroFont();
-		ImageIO.write(rf.getRetroChar('A', 48), "png", new File("/tmp/test.png"));
-		ImageIO.write(rf.getRetroString("Hello World", 48), "png", new File("/tmp/hello world.png"));
+		ImageIO.write(rf.getRetroChar('A', Color.GREEN, 48), "png", new File("/tmp/test.png"));
+		ImageIO.write(rf.getRetroString("Hello World", Color.GREEN, 48), "png", new File("/tmp/hello world.png"));
 	}
 	
 	
