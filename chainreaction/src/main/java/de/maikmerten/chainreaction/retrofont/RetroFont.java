@@ -47,19 +47,20 @@ public class RetroFont {
 		return font.getSubimage(col << 3, row << 3, 8, 8);
 	}
 	
-	public BufferedImage getRetroChar(char c, int scalefactor) {
-		scalefactor = scalefactor < 1 ? 1 : scalefactor;
+	public BufferedImage getRetroChar(char c, int fontSize) {
+		fontSize = fontSize < 8 ? 8 : fontSize;
 		
-		Image img = getRetroChar(c).getScaledInstance(8 * scalefactor, 8 * scalefactor, Image.SCALE_REPLICATE);
-		BufferedImage bimg = new BufferedImage(img.getWidth(null), img.getHeight(null), font.getType());
+		final Image img = getRetroChar(c).getScaledInstance(fontSize, fontSize, Image.SCALE_REPLICATE);
+		final BufferedImage bimg = new BufferedImage(img.getWidth(null), img.getHeight(null), font.getType());
 		bimg.getGraphics().drawImage(img, 0, 0, null);
 		return bimg;
 	}
 	
 	
+	// TODO move to unit test
 	public static void main(String[] args) throws Exception {
 		RetroFont rf = new RetroFont();
-		ImageIO.write(rf.getRetroChar('A', 8), "png", new File("/tmp/test.png"));
+		ImageIO.write(rf.getRetroChar('A', 48), "png", new File("/tmp/test.png"));
 	}
 	
 	
