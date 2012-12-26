@@ -51,6 +51,7 @@ public class UICell implements UIDrawable {
 		else {
 			this.background = null;
 		}
+		clear();
 		// TODO do assimilation animation.
 		for(int i = 0; i < count; i++) {
 			putAtomInternal(i);
