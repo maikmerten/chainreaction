@@ -14,11 +14,11 @@ import javax.imageio.ImageIO;
 public class RetroFont {
 	
 	private static final int MINIMAL_FONT_SIZE = 8;
-	BufferedImage font;
+	private final BufferedImage font;
 	
 	public RetroFont() {
 		try {
-			BufferedImage fontimg = ImageIO.read(this.getClass().getResourceAsStream("/retrofont.png"));
+			final BufferedImage fontimg = ImageIO.read(this.getClass().getResourceAsStream("/retrofont.png"));
 			font = new BufferedImage(fontimg.getWidth(), fontimg.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			font.getGraphics().drawImage(fontimg, 0, 0, null);
 			
@@ -31,23 +31,23 @@ public class RetroFont {
 				}
 			}
 		
-		} catch (IOException ex) {
+		} catch (final IOException ex) {
 			throw new RuntimeException("cannot read retro font", ex);
 		}
 	}
 	
 	
-	public BufferedImage getRetroChar(char c, Color color) {
+	public BufferedImage getRetroChar(final char c, final Color color) {
 		int code = (int)c;
 		if(code < 0 || c > 255) {
 			code = (int)'?';
 		}
 		
-		int row = code >> 4;
-		int col = code % 16;
+		final int row = code >> 4;
+		final int col = code % 16;
 		
-		BufferedImage subimg = font.getSubimage(col << 3, row << 3, 8, 8);
-		BufferedImage result = new BufferedImage(subimg.getWidth(), subimg.getHeight(), subimg.getType());
+		final BufferedImage subimg = font.getSubimage(col << 3, row << 3, 8, 8);
+		final BufferedImage result = new BufferedImage(subimg.getWidth(), subimg.getHeight(), subimg.getType());
 		subimg.copyData(result.getRaster());
 		for(int x = 0; x < result.getWidth(); ++x) {
 			for(int y = 0; y < result.getHeight(); ++y) {
@@ -62,7 +62,7 @@ public class RetroFont {
 		return result;
 	}
 	
-	public BufferedImage getRetroChar(char c, Color color, int fontSize) {
+	public BufferedImage getRetroChar(final char c, final Color color, int fontSize) {
 		fontSize = fontSize < MINIMAL_FONT_SIZE ? MINIMAL_FONT_SIZE : fontSize;
 		
 		final Image img = getRetroChar(c, color).getScaledInstance(fontSize, fontSize, Image.SCALE_REPLICATE);
@@ -71,7 +71,7 @@ public class RetroFont {
 		return bimg;
 	}
 	
-	public BufferedImage getRetroString(String str, Color color, int fontSize) {
+	public BufferedImage getRetroString(final String str, final Color color, int fontSize) {
 		fontSize = fontSize < MINIMAL_FONT_SIZE ? MINIMAL_FONT_SIZE : fontSize;
 		final BufferedImage bimg = new BufferedImage(fontSize * str.length(), fontSize, font.getType());
 		int i = 0;
