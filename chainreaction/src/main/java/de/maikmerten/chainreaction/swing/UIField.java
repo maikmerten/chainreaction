@@ -105,15 +105,6 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	// draw the grid.
 	@Override
 	public void draw(Graphics2D g2d) {
-		RenderingHints rh =
-				new RenderingHints(RenderingHints.KEY_ANTIALIASING,
-						RenderingHints.VALUE_ANTIALIAS_ON);
-
-		rh.put(RenderingHints.KEY_RENDERING,
-				RenderingHints.VALUE_RENDER_QUALITY);
-
-		g2d.setRenderingHints(rh);
-		
 		final int fieldWidth = getField().getWidth();
 		final int fieldHeight = getField().getHeight();
 		
@@ -147,6 +138,15 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	public void paint(Graphics g) {
 		super.paint(g);
 		final Graphics2D g2d = (Graphics2D) g;
+		
+		RenderingHints rh =
+				new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+						RenderingHints.VALUE_ANTIALIAS_ON);
+
+		rh.put(RenderingHints.KEY_RENDERING,
+				RenderingHints.VALUE_RENDER_QUALITY);
+
+		g2d.setRenderingHints(rh);
 		
 		// draw elements
 		for(final UIDrawable[] drawableRow : cells) {

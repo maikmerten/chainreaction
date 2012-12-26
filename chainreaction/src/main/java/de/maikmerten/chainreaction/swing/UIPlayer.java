@@ -26,6 +26,7 @@ public class UIPlayer {
 	private final Player player;
 	private final String propFN;
 	private final Map<Player, Color> bgColors;
+	private final Map<Player, Color> fgColors;
 	
 	private UIPlayer(Player player) {
 		this.player = player;
@@ -33,6 +34,10 @@ public class UIPlayer {
 		this.bgColors = new EnumMap<Player, Color>(Player.class);
 		this.bgColors.put(Player.FIRST, new Color(21, 39, 99));
 		this.bgColors.put(Player.SECOND, new Color(120, 0, 0));
+		
+		this.fgColors = new EnumMap<Player, Color>(Player.class);
+		this.fgColors.put(Player.FIRST, new Color(111, 129, 189));
+		this.fgColors.put(Player.SECOND, new Color(210, 90, 90));
 	}
 	
 	public Player getPlayer() {
@@ -45,6 +50,10 @@ public class UIPlayer {
 	
 	public Color getBackground() {
 		return bgColors.get(player);
+	}
+	
+	public Color getForeground() {
+		return fgColors.get(player);
 	}
 	
 	public static UIPlayer getPlayer(Player player) {

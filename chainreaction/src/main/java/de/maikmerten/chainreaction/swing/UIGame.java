@@ -1,15 +1,23 @@
 package de.maikmerten.chainreaction.swing;
 
-import de.maikmerten.chainreaction.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+import de.maikmerten.chainreaction.Game;
+import de.maikmerten.chainreaction.MoveListener;
+import de.maikmerten.chainreaction.Player;
+import de.maikmerten.chainreaction.Settings;
+import de.maikmerten.chainreaction.SettingsLoader;
 import de.maikmerten.chainreaction.ai.AI;
 import de.maikmerten.chainreaction.ai.AIThread;
 import de.maikmerten.chainreaction.ai.StandardAI;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -19,8 +27,8 @@ import java.util.logging.Logger;
 public class UIGame extends JFrame implements MoveListener {
 
 	private static final long serialVersionUID = -2178907135995785292L;
-	
-	private JLabel status;
+	private UIStatus status;
+
 	private Game game;
 	private UISettings uisettings;
 	private AI ai;
@@ -41,25 +49,31 @@ public class UIGame extends JFrame implements MoveListener {
 //		setUndecorated(true);
 		setTitle("ChainReaction");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setLayout(new BorderLayout(5, 5));
+		JPanel contentPane = new JPanel();
+		setContentPane(contentPane);
+		
+		contentPane.setLayout(new BorderLayout(5, 5));
+		contentPane.setBackground(Color.BLACK);
 		
 		uifield = new UIField(this);
-		add(uifield, BorderLayout.CENTER);
+		contentPane.add(uifield, BorderLayout.CENTER);
 		
-		status = new JLabel(" ");
-		add(status, BorderLayout.SOUTH);
+		status = new UIStatus();
+		contentPane.add(status, BorderLayout.SOUTH);
 		uisettings = new UISettings(this);
-		add(uisettings, BorderLayout.NORTH);
+		contentPane.add(uisettings, BorderLayout.NORTH);
 	}
 
 	void startNewGame() {
 		game = new Game(6, 5, settings);
-		List<AI> ais = SettingsLoader.loadAIs();
 		// TODO Use loaded AIs
+//		List<AI> ais = SettingsLoader.loadAIs();
+//		ai = ais.get(0);
 		ai = new StandardAI();
 		ai.setGame(game);
 		uifield.setGame(game);
 		blockMoves = false;
+		status.setGame(game);
 		updateStatus();
 		pack();
 	}
@@ -101,22 +115,7 @@ public class UIGame extends JFrame implements MoveListener {
 	}
 
 	private void updateStatus() {
-		final StringBuilder sb = new StringBuilder();
-
-		if (game.getWinner() != Player.NONE) {
-			sb.append("Player ").append(game.getWinner()).append(" won in round ").append(game.getRound());
-		} else {
-			sb.append("Round ").append(game.getRound()).append(" | Active player: ").append(game.getCurrentPlayer());
-			sb.append(" | Current Score: ").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.FIRST));
-			sb.append(":").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.SECOND));
-		}
-
-		Runnable updateRunner = new Runnable() {
-			public void run() {
-				status.setText(sb.toString());
-			}
-		};
-		SwingUtilities.invokeLater(updateRunner);
+		SwingUtilities.invokeLater(status);
 	}
 
 	public static void main(String[] args) {
