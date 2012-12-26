@@ -46,7 +46,9 @@ public class RetroFont {
 		int row = code >> 4;
 		int col = code % 16;
 		
-		BufferedImage result = font.getSubimage(col << 3, row << 3, 8, 8);
+		BufferedImage subimg = font.getSubimage(col << 3, row << 3, 8, 8);
+		BufferedImage result = new BufferedImage(subimg.getWidth(), subimg.getHeight(), subimg.getType());
+		subimg.copyData(result.getRaster());
 		for(int x = 0; x < result.getWidth(); ++x) {
 			for(int y = 0; y < result.getHeight(); ++y) {
 				// colorize white pixels
