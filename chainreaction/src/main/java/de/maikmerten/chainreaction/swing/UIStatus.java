@@ -7,12 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.beans.Transient;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import de.maikmerten.chainreaction.Game;
@@ -26,7 +22,7 @@ import de.maikmerten.chainreaction.retrofont.RetroFont;
  */
 public class UIStatus extends JPanel implements Runnable {
 
-	private static final int FONT_SIZE = 14;
+	private static final int FONT_SIZE = 16;
 	private static final long serialVersionUID = 8437395162237408047L;
 	private Game game;
 	private Image statusImg;
@@ -76,7 +72,7 @@ public class UIStatus extends JPanel implements Runnable {
 				sb.append("Player ").append(game.getWinner()).append(" won in round ").append(game.getRound());
 			}
 			else {
-				sb.append("Round ").append(game.getRound()).append(" | Active player: ").append(game.getCurrentPlayer());
+				sb.append("Round ").append(game.getRound());
 				sb.append(" | Current Score: ").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.FIRST));
 				sb.append(":").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.SECOND));
 			}
