@@ -81,7 +81,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		if(cells[x][y].isEmpty()) {
 			cells[x][y].setOwner(player);
 		}
-		cells[x][y].addAdtom();
+		cells[x][y].addAtom();
 	}
 
 	@Override

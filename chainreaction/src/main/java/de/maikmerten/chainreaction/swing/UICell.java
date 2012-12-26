@@ -16,7 +16,7 @@ public class UICell implements UIDrawable {
 
 	private final UIAtom[] atoms;
 	private final List<List<UIAtom>> leavingAtoms;
-	private UICellBG background = null;
+	private UICellBG background;
 	private int count;
 	
 	private Player player;
@@ -29,6 +29,7 @@ public class UICell implements UIDrawable {
 		this.y = y;
 		this.count = 0;
 		this.player = Player.NONE;
+		this.background = new UICellBG(player);
 		atoms = new UIAtom[ATOMS_PER_CELL];
 		leavingAtoms = new ArrayList<List<UIAtom>>(ATOMS_PER_CELL);
 		for(int i = 0; i < ATOMS_PER_CELL; i++) {
@@ -45,16 +46,11 @@ public class UICell implements UIDrawable {
 			return;
 		}
 		this.player = player;
-		if(player != Player.NONE) {
-			this.background = new UICellBG(player);
-		}
-		else {
-			this.background = null;
-		}
+		this.background.changeOwner(player);
+		final int storedCount = count;
 		clear();
-		// TODO do assimilation animation.
-		for(int i = 0; i < count; i++) {
-			putAtomInternal(i);
+		for(int i = 0; i < storedCount; i++) {
+			addAtom();
 		}
 	}
 	
@@ -64,7 +60,7 @@ public class UICell implements UIDrawable {
 		}
 	}
 	
-	public void addAdtom() {
+	public void addAtom() {
 		putAtomInternal(count++);
 	}
 	
@@ -75,7 +71,7 @@ public class UICell implements UIDrawable {
 	
 	public void moveTo(final UICell otherCell) {
 		removeAtom();
-		otherCell.addAdtom();
+		otherCell.addAtom();
 	}
 
 	// draw the atoms on the cell.

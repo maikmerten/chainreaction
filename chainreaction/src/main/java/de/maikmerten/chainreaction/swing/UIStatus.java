@@ -77,19 +77,7 @@ public class UIStatus extends JPanel implements Runnable {
 				sb.append(":").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.SECOND));
 			}
 			
-			final Color foreground;
-			switch(game.getCurrentPlayer()) {
-				case FIRST:
-				case SECOND:
-					foreground = UIPlayer.getPlayer(game.getCurrentPlayer()).getForeground();
-					break;
-				case NONE:
-					foreground = Color.WHITE;
-					break;
-				default:
-					throw new IllegalStateException("Should never happen");
-			}
-			
+			final Color foreground = UIPlayer.getPlayer(game.getCurrentPlayer()).getForeground();
 			statusImg = retroFont.getRetroString(sb.toString(), foreground, FONT_SIZE);
 			UIStatus.this.repaint();
 		}

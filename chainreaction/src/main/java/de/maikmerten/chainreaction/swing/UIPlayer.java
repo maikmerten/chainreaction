@@ -11,6 +11,8 @@ import java.util.Properties;
 public class UIPlayer {
 	private final static Properties props;
 	private final static Map<Player, UIPlayer> players;
+	private final static Map<Player, Color> bgColors;
+	private final static Map<Player, Color> fgColors;
 	
 	static {
 		props = new Properties();
@@ -21,23 +23,22 @@ public class UIPlayer {
 			System.err.println("could not load player properties");
 		}
 		players = new EnumMap<Player, UIPlayer>(Player.class);
+		
+		bgColors = new EnumMap<Player, Color>(Player.class);
+		bgColors.put(Player.FIRST, new Color(21, 39, 99));
+		bgColors.put(Player.SECOND, new Color(120, 0, 0));
+		bgColors.put(Player.NONE, Color.BLACK);
+		
+		fgColors = new EnumMap<Player, Color>(Player.class);
+		fgColors.put(Player.FIRST, new Color(111, 129, 189));
+		fgColors.put(Player.SECOND, new Color(210, 90, 90));
+		fgColors.put(Player.NONE, Color.WHITE);
 	}
 	
 	private final Player player;
-	private final String propFN;
-	private final Map<Player, Color> bgColors;
-	private final Map<Player, Color> fgColors;
 	
 	private UIPlayer(Player player) {
 		this.player = player;
-		this.propFN = props.getProperty("player." + player.name()) + "atom.properties";
-		this.bgColors = new EnumMap<Player, Color>(Player.class);
-		this.bgColors.put(Player.FIRST, new Color(21, 39, 99));
-		this.bgColors.put(Player.SECOND, new Color(120, 0, 0));
-		
-		this.fgColors = new EnumMap<Player, Color>(Player.class);
-		this.fgColors.put(Player.FIRST, new Color(111, 129, 189));
-		this.fgColors.put(Player.SECOND, new Color(210, 90, 90));
 	}
 	
 	public Player getPlayer() {
@@ -45,7 +46,15 @@ public class UIPlayer {
 	}
 	
 	public UIAtom createAtom() {
-		return new UIAtom(propFN);
+		switch(player) {
+			case FIRST:
+			case SECOND:
+				return new UIAtom(props.getProperty("player." + player.name()) + "atom.properties");
+			case NONE:
+				throw new UnsupportedOperationException("You cannot create an atom for no player");
+			default:
+				throw new IllegalStateException("This should never happen");
+		}
 	}
 	
 	public Color getBackground() {
