@@ -94,18 +94,7 @@ public class UIStatus extends JPanel implements Runnable {
 					throw new IllegalStateException("Should never happen");
 			}
 			
-			// TODO remove writing the status as a file (after #24 is closed)
-			final BufferedImage bimg = retroFont.getRetroString(sb.toString(), foreground, FONT_SIZE);
-			try {
-				ImageIO.write(bimg, "png", new File("/tmp/status" + game.getRound() + ".png"));
-			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			statusImg = bimg;
-			
+			statusImg = retroFont.getRetroString(sb.toString(), foreground, FONT_SIZE);
 			UIStatus.this.repaint();
 		}
 	}
