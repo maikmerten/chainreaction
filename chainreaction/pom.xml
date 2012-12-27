@@ -23,7 +23,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.maikmerten.chainreaction.swing.UIGame</mainClass>
+							<mainClass>de.freewarepoint.cr.swing.UIGame</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
