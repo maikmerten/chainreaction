@@ -1,8 +1,8 @@
-package de.maikmerten.chainreaction.ai;
+package de.freewarepoint.cr.ai;
 
-import de.maikmerten.chainreaction.Field;
-import de.maikmerten.chainreaction.Game;
-import de.maikmerten.chainreaction.Player;
+import de.freewarepoint.cr.Field;
+import de.freewarepoint.cr.Game;
+import de.freewarepoint.cr.Player;
 
 import java.util.Random;
 
