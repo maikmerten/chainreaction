@@ -70,8 +70,10 @@ class Cell {
 		this.owningPlayer = owningPlayer;
 	}
 
-	public void clear() {
+	/**
+	 * Clears all atoms.
+	 */
+	public void clearAtoms() {
 		numberOfAtoms = 0;
-		owningPlayer = Player.NONE;
 	}
 }

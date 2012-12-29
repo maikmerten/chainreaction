@@ -88,23 +88,31 @@ public class Field {
 		return count;
 	}
 	
-
+	/**
+	 * Increases the atom count of the cell identified by the x and y coordinates by one --
+	 * if the maximum size of cell hasn't been reached -- and alters the owner of the cell 
+	 * to the given {@link Player}, if necessary.
+	 * 
+	 * @param player
+	 * 		the player who puts the atom
+	 * @param x
+	 * 		
+	 * @param y
+	 */
 	public void putAtom(Player player, int x, int y) {
-		final boolean increased = putAtomInternal(player, x, y);
-		if(getNumerOfAtomsAtPosition(x, y) == 1) {
-			fireOnOwnerChange(player, x, y);
+		if(getNumerOfAtomsAtPosition(x, y) > 0 && !getOwnerOfCellAtPosition(x, y).equals(player)) {
+			throw new IllegalStateException("Not allowed to put an atom on a non empty field that is not yours");
 		}
+		setOwningPlayer(player, x, y);
+		final boolean increased = putAtomInternal(x, y);
 		if(increased) {
 			fireOnAtomAdded(player, x, y);
 		}
 	}
 
 	/**
-	 * Increases the atom count of the cell identified by the x and y coordinates by one
-	 * and alters the owner to the given {@link Player}.
+	 * Increases the atom count of the cell identified by the x and y coordinates by one. 
 	 *
-	 * @param player
-	 * 	The new owner of the specified cell.
 	 * @param x
 	 * 	X coordinate of the cell
 	 * @param y
@@ -112,17 +120,34 @@ public class Field {
 	 * @return
 	 * 		whether the number of atoms has been increased, or the maximal size of a cell has been reached.
 	 */
-	private boolean putAtomInternal(Player player, int x, int y) {
-		Cell cell = getCellAtPosition(x, y);
+	private boolean putAtomInternal(int x, int y) {
+		final Cell cell = getCellAtPosition(x, y);
 		final boolean increased = cell.increaseNumberOfAtoms();
-		cell.setOwningPlayer(player);
 		return increased;
 	}
 	
+	
 	private void clearCellAtPosition(int x, int y) {
-		getCellAtPosition(x, y).clear();
+		final Cell cell = getCellAtPosition(x, y);
+		cell.clearAtoms();
 		fireOnCellCleared(x, y);
-		fireOnOwnerChange(Player.NONE, x, y);
+		setOwningPlayer(Player.NONE, x, y);
+	}
+	
+	/**
+	 * Alters the owner to the given {@link Player}, if necessary.
+	 * 
+	 * @param x
+	 * 	X coordinate of the cell
+	 * @param y
+	 * 	Y coordinate of the cell
+	 */
+	private void setOwningPlayer(Player player, int x, int y) {
+		final Cell cell = getCellAtPosition(x, y);
+		if(!cell.getOwningPlayer().equals(player)) {
+			cell.setOwningPlayer(player);
+			fireOnOwnerChange(player, x, y);
+		}
 	}
 
 	byte getCapacityOfCellAtPosition(int x, int y) {
@@ -150,7 +175,7 @@ public class Field {
 	}
 
 	private void spreadAtoms(int x, int y) {
-		Player player = getOwnerOfCellAtPosition(x, y);
+		final Player player = getOwnerOfCellAtPosition(x, y);
 		final List<Move> moves = new LinkedList<Move>();
 		// move left
 		if (x > 0) {
@@ -175,11 +200,9 @@ public class Field {
 	}
 
 	private void moveAtom(Player player, int x1, int y1, int x2, int y2, List<Move> moves) {
-		if(getOwnerOfCellAtPosition(x2, y2) != player) {
-			fireOnOwnerChange(player, x2, y2);
-		}
+		setOwningPlayer(player, x2, y2);
 
-		if (putAtomInternal(player, x2, y2)) {
+		if (putAtomInternal(x2, y2)) {
 			// move
 			moves.add(new Move(x1, y1, x2, y2));
 		}
