@@ -2,7 +2,7 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.maikmerten</groupId>
+	<groupId>de.freewarepoint</groupId>
 	<artifactId>chainreaction</artifactId>
 	<version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
