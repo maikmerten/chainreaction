@@ -45,11 +45,11 @@ public class UIPlayer {
 		return this.player;
 	}
 	
-	public UIAtom createAtom() {
+	public UIAtom createAtom(int x, int y, int width, int height, int pos, long delay) {
 		switch(player) {
 			case FIRST:
 			case SECOND:
-				return new UIAtom(props.getProperty("player." + player.name()) + "atom.properties");
+				return new UIAtom(props.getProperty("player." + player.name()) + "atom.properties", x, y, width, height, pos, delay);
 			case NONE:
 				throw new UnsupportedOperationException("You cannot create an atom for no player");
 			default:

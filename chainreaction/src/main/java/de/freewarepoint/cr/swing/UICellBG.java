@@ -3,6 +3,7 @@ package de.freewarepoint.cr.swing;
 import de.freewarepoint.cr.Player;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 import static de.freewarepoint.cr.swing.UIField.CELL_SIZE;
 
@@ -15,9 +16,12 @@ public class UICellBG implements UIDrawable {
 	private boolean raise = true;
 	private Player player;
 	private Player oldPlayer;
+	private final int x, y;
 
-	public UICellBG(final Player player) {
+	public UICellBG(final int x, final int y, final Player player) {
 		this.player = player;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public void changeOwner(final Player player) {
@@ -31,6 +35,8 @@ public class UICellBG implements UIDrawable {
 
 	@Override
 	public void draw(Graphics2D g2d) {
+		final AffineTransform transform = g2d.getTransform();
+		g2d.translate((x * CELL_SIZE * 2), (y * CELL_SIZE * 2));
 		final long now = System.currentTimeMillis();
 		Color color;
 		if(oldPlayer != null && fadeCounter == fadeCount) {
@@ -76,6 +82,7 @@ public class UICellBG implements UIDrawable {
 		g2d.fillRect(0, 0, (CELL_SIZE*2), (CELL_SIZE*2));
 		
 		g2d.setColor(oldColor);
+		g2d.setTransform(transform);
 	}
 	
 	private int calcCurrFadeColor(final int oldCanal, final int newCanal) {

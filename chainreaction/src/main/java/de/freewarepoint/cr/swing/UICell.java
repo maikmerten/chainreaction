@@ -16,20 +16,20 @@ public class UICell implements UIDrawable {
 
 	private final UIAtom[] atoms;
 	private final List<List<UIAtom>> leavingAtoms;
-	private UICellBG background;
+
 	private int count;
 	
 	private Player player;
 	
-	private final int x;
-	private final int y;
+	private final int x, y, width, height;
 	
-	public UICell(int x, int y) {
+	public UICell(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
+		this.width = width;
+		this.height = height;
 		this.count = 0;
 		this.player = Player.NONE;
-		this.background = new UICellBG(player);
 		atoms = new UIAtom[ATOMS_PER_CELL];
 		leavingAtoms = new ArrayList<List<UIAtom>>(ATOMS_PER_CELL);
 		for(int i = 0; i < ATOMS_PER_CELL; i++) {
@@ -46,43 +46,46 @@ public class UICell implements UIDrawable {
 			return;
 		}
 		this.player = player;
-		this.background.changeOwner(player);
 		final int storedCount = count;
-		clear();
+		if(count > 0) { 
+			clear();
+		}
 		for(int i = 0; i < storedCount; i++) {
-			addAtom();
+			addAtom(0);
 		}
 	}
 	
 	public void clear() {
 		while(count > 0 ) {
-			removeAtom();
+			removeAtom(false);
 		}
 	}
 	
-	public void addAtom() {
-		putAtomInternal(count++);
+	public void addAtom(long delay) {
+		putAtomInternal(count++, delay);
 	}
 	
-	private void removeAtom() {
-		leavingAtoms.get(--count).add(atoms[count].leave());
+	private void removeAtom(boolean explode) {
+		leavingAtoms.get(--count).add(atoms[count]);
+		if(explode) {
+			atoms[count].explode();
+		}
+		else {
+			atoms[count].leave();
+		}
 		atoms[count] = null;
 	}
 	
 	public void moveTo(final UICell otherCell) {
-		removeAtom();
-		otherCell.addAtom();
+		removeAtom(true);
+		otherCell.addAtom(250);
 	}
 
 	// draw the atoms on the cell.
 	@Override
 	public void draw(Graphics2D g2d) {
 		final AffineTransform transform = g2d.getTransform();
-		g2d.translate((double)x, (double)y);
-		
-		if(background != null) {
-			background.draw(g2d);
-		}
+		g2d.translate((x * CELL_SIZE * 2), (y * CELL_SIZE * 2));
 		
 		if(count > 0) {
 			atoms[0].draw(g2d);
@@ -119,7 +122,7 @@ public class UICell implements UIDrawable {
 		}
 	}
 
-	private void putAtomInternal(int cellIndex) {
-		atoms[cellIndex] = UIPlayer.getPlayer(player).createAtom();
+	private void putAtomInternal(int cellIndex, long delay) {
+		atoms[cellIndex] = UIPlayer.getPlayer(player).createAtom(x, y, width, height, cellIndex, delay);
 	}
 }

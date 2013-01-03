@@ -7,8 +7,8 @@ public class UIEnterAnim extends AbstractUIAlphaAnim {
 	private int currCounter = 0;
 	private final UIAnimation anim;
 	
-	public UIEnterAnim(UIAnimation anim) {
-		super(anim);
+	public UIEnterAnim(UIAnimation anim, long delay) {
+		super(anim, delay);
 		this.anim = anim;
 	}
 

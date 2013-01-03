@@ -7,8 +7,14 @@ import java.util.Properties;
 public class UIAtom implements UIAnimation {
 	
 	private UIAnimation anim;
+	private final int x, y, width, height, pos; 
 
-	public UIAtom(final String propertyFile) {
+	public UIAtom(final String propertyFile, int x, int y, int width, int height, int pos, long delay) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.pos = pos;
 		final Properties props = new Properties();
 		try {
 			props.load(this.getClass().getResourceAsStream(propertyFile));
@@ -18,7 +24,7 @@ public class UIAtom implements UIAnimation {
 		}
 		final String animFN = props.getProperty("idle.anim" );
 		final int count = Integer.parseInt(props.getProperty("idle.count"));
-		anim = new UIEnterAnim(new UIImgAnim(animFN, count));
+		anim = new UIEnterAnim(new UIImgAnim(animFN, count), delay);
 	}
 	
 	@Override
@@ -27,9 +33,15 @@ public class UIAtom implements UIAnimation {
 	}
 
 	public UIAtom leave() {
-		anim = new UILeaveAnim(anim);
+		anim = new UILeaveAnim(anim, 0) ;
 		return this;
 	}
+	
+	public UIAtom explode() {
+		anim = new UIExplodeAnim(new UILeaveAnim(anim, 250), x, y, width, height, pos) ;
+		return this;
+	}
+
 
 	@Override
 	public boolean isFinished() {

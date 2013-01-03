@@ -26,6 +26,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	private final MoveListener moveListener;
 	private Game game;
 	private UICell[][] cells;
+	private UICellBG[][] cellBGs;
 	
 	public UIField(MoveListener listener) {
 		this.moveListener = listener;
@@ -60,13 +61,12 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 				(getField().getWidth() * CELL_SIZE * 2) + 3, 
 				(getField().getHeight() * CELL_SIZE * 2) + 3));
 		cells = new UICell[getField().getWidth()][getField().getHeight()];
+		cellBGs = new UICellBG[getField().getWidth()][getField().getHeight()];
 		
 		for(int x = 0; x < getField().getWidth(); x++) {
 			for(int y = 0; y < getField().getHeight(); y++) {
-				
-				cells[x][y] = new UICell(
-						(x * CELL_SIZE * 2), 
-						(y * CELL_SIZE * 2));
+				cells[x][y] = new UICell(x, y, getField().getWidth(), getField().getHeight());
+				cellBGs[x][y] = new UICellBG(x, y, Player.NONE);
 			}
 		}
 	}
@@ -85,8 +85,9 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	public void onAtomAdded(final Player player, final int x, final int y) {
 		if(cells[x][y].isEmpty()) {
 			cells[x][y].setOwner(player);
+			cellBGs[x][y].changeOwner(player);
 		}
-		cells[x][y].addAtom();
+		cells[x][y].addAtom(0);
 	}
 
 	@Override
@@ -99,6 +100,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	@Override
 	public void onOwnerChanged(final Player player, final int x, final int y) {
 		cells[x][y].setOwner(player);
+		cellBGs[x][y].changeOwner(player);
 	}
 
 	@Override
@@ -153,20 +155,27 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 		g2d.setRenderingHints(rh);
 		
-		// draw elements
-		for(final UIDrawable[] drawableRow : cells) {
-			for(final UIDrawable drawable : drawableRow) {
-				if(drawable != null) {
-					drawable.draw(g2d);
-				}
-			}
-		}
+		// draw backgrounds
+		drawCells(g2d, cellBGs);
+		
+		// draw atoms
+		drawCells(g2d, cells);
 		
 		// draw grid
 		draw(g2d);
 		
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
+	}
+
+	private void drawCells(final Graphics2D g2d, UIDrawable[][] drawables) {
+		for(final UIDrawable[] drawableRow : drawables) {
+			for(final UIDrawable drawable : drawableRow) {
+				if(drawable != null) {
+					drawable.draw(g2d);
+				}
+			}
+		}
 	}
 
 	@Override

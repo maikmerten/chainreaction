@@ -7,11 +7,12 @@ import java.awt.image.BufferedImage;
 public abstract class AbstractUIAlphaAnim implements UIAnimation {
 	private static final int DELAY = 25;
 	private final UIAnimation anim;
-	private long lastAnim = System.currentTimeMillis();
+	private long lastAnim;
 	final static int MAX_COUNTER = 20;
 	
-	AbstractUIAlphaAnim(UIAnimation anim) {
+	AbstractUIAlphaAnim(UIAnimation anim, long delay) {
 		this.anim = anim;
+		lastAnim = System.currentTimeMillis() + delay;
 	}
 
 	@Override

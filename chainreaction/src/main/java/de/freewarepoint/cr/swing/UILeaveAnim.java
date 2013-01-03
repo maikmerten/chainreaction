@@ -4,8 +4,8 @@ package de.freewarepoint.cr.swing;
 public class UILeaveAnim extends AbstractUIAlphaAnim {
 	private int currCounter = MAX_COUNTER;
 	
-	public UILeaveAnim(UIAnimation anim) {
-		super(anim);
+	public UILeaveAnim(UIAnimation anim, long delay) {
+		super(anim, delay);
 	}
 
 	@Override
