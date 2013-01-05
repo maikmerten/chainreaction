@@ -2,6 +2,7 @@ package de.freewarepoint.cr.swing;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import static de.freewarepoint.cr.swing.UIField.CELL_SIZE;
 
 
 public class UIExplodeAnim implements UIAnimation {
@@ -27,10 +28,12 @@ public class UIExplodeAnim implements UIAnimation {
 			return translateY;
 		}
 	}
-	public static int DELAY = 25;
-	public static float ACCELERATION = 0.8f; 
+	private static int DELAY = 25;
+	private static double VELOCITY_START = 15f;
+	private static double ACCELERATION = -Math.pow((VELOCITY_START),2)/(2*2*CELL_SIZE); 
 	
 	private long lastAnim = System.currentTimeMillis();
+	private double dist = 0f;
 	private long animCounter = 0;
 	private final UIAnimation anim;
 	private final Direction direction;
@@ -160,9 +163,14 @@ public class UIExplodeAnim implements UIAnimation {
 			final int countOfAnims = ((int)(diff/DELAY));
 			animCounter += countOfAnims;
 		}
-		final double movement = (ACCELERATION/2)*Math.pow(animCounter, 2);
+		double oldDist = dist;
+		dist = (VELOCITY_START * animCounter) + (ACCELERATION/2)*Math.pow(animCounter, 2);
+		if(dist < oldDist) {
+			dist = oldDist;
+		}
+		
 		final AffineTransform transform = g2d.getTransform();
-		g2d.translate((double)(movement*direction.getTranslateX()), (double)movement*direction.getTranslateY());
+		g2d.translate((double)(dist*direction.getTranslateX()), (double)dist*direction.getTranslateY());
 		anim.draw(g2d);
 		g2d.setTransform(transform);
 	}
