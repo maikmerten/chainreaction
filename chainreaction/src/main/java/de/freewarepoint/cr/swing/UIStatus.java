@@ -76,6 +76,7 @@ public class UIStatus extends JPanel implements Runnable {
 				sb.append(" | Current Score: ").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.FIRST));
 				sb.append(":").append(game.getField().getTotalNumberOfAtomsForPlayer(Player.SECOND));
 			}
+			sb.append(" Leave with 'q'.");
 			
 			final Color foreground = UIPlayer.getPlayer(game.getCurrentPlayer()).getForeground();
 			statusImg = retroFont.getRetroString(sb.toString(), foreground, FONT_SIZE);
