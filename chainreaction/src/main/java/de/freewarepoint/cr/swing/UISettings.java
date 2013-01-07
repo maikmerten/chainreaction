@@ -11,17 +11,16 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import de.freewarepoint.cr.ai.AI;
 import de.freewarepoint.retrofont.RetroFont;
 
 /**
  *
  * @author maik
+ * @author jonny
  */
 public class UISettings extends JPanel {
 	
 	private static final long serialVersionUID = -4840442627860470783L;
-	private AI ai = null;
 
     public UISettings(final UIGame game) {
 		super();
@@ -70,14 +69,5 @@ public class UISettings extends JPanel {
             }
         });
         this.add(exitButton);
-	}
-	
-    // TODO remove
-	public boolean againstAI() {
-		return false;
-	}
-	
-	public AI getAI() {
-		return ai;
 	}
 }

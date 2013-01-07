@@ -2,6 +2,7 @@ package de.freewarepoint.cr.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -24,7 +25,6 @@ import de.freewarepoint.cr.Settings;
 import de.freewarepoint.cr.SettingsLoader;
 import de.freewarepoint.cr.ai.AI;
 import de.freewarepoint.cr.ai.AIThread;
-import de.freewarepoint.cr.ai.StandardAI;
 
 /**
  * @author maik
@@ -34,7 +34,7 @@ public class UIGame extends JFrame {
 
 	private static final long serialVersionUID = -2178907135995785292L;
 
-	private UIStatus status;
+	private UIStatus uistatus;
 
 	private Game game;
 
@@ -46,6 +46,7 @@ public class UIGame extends JFrame {
 	private boolean blockMoves = false;
 
 	private UIField uifield;
+	private UIChooseAI uichooseai;
 
 	private final Settings settings;
 
@@ -80,9 +81,11 @@ public class UIGame extends JFrame {
 
 		uifield = new UIField(this);
 		contentPane.add(uifield, BorderLayout.CENTER);
+		
+		uichooseai = new UIChooseAI(this);
 
-		status = new UIStatus();
-		contentPane.add(status, BorderLayout.SOUTH);
+		uistatus = new UIStatus();
+		contentPane.add(uistatus, BorderLayout.SOUTH);
 		
 		uisettings = new UISettings(this);
 		contentPane.add(uisettings, BorderLayout.NORTH);
@@ -104,19 +107,31 @@ public class UIGame extends JFrame {
 	}
 	
 	void showChooseAI() {
-		System.out.println("Chooose Now");
+		getContentPane().remove(uifield);
+		getContentPane().remove(uistatus);
+		getContentPane().add(uichooseai);
+		revalidate();
+		repaint();
+	}
+	
+	void chooseAI(final AI ai) {
+		if(ai != null) {
+			ai.setGame(game);
+		}
+		this.ai = ai;
+		final Container contentPane = getContentPane();
+		contentPane.remove(uichooseai);
+		contentPane.add(uifield, BorderLayout.CENTER);
+		contentPane.add(uistatus, BorderLayout.SOUTH);
+		revalidate();
+		repaint();
 	}
 
 	void startNewGame() {
 		game = new Game(6, 5, settings);
-		// TODO Use loaded AIs
-		// List<AI> ais = SettingsLoader.loadAIs();
-		// ai = ais.get(0);
-		ai = new StandardAI();
-		ai.setGame(game);
 		uifield.setGame(game);
 		blockMoves = false;
-		status.setGame(game);
+		uistatus.setGame(game);
 		updateStatus();
 	}
 
@@ -139,8 +154,7 @@ public class UIGame extends JFrame {
 				game.selectMove(x, y);
 				updateStatus();
 
-				if (game.getWinner() == Player.NONE && game.getCurrentPlayer() == Player.SECOND && uisettings
-						.againstAI()) {
+				if (game.getWinner() == Player.NONE && game.getCurrentPlayer() == Player.SECOND && ai != null) {
 					try {
 						AIThread t = new AIThread(ai, 1500);
 						t.start();
@@ -159,7 +173,7 @@ public class UIGame extends JFrame {
 	}
 
 	private void updateStatus() {
-		SwingUtilities.invokeLater(status);
+		SwingUtilities.invokeLater(uistatus);
 	}
 
 	public static void main(String[] args) {
