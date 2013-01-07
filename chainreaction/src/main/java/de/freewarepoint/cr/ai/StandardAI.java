@@ -103,7 +103,7 @@ public class StandardAI implements AI {
 		Player playerOpposing = playerAI == Player.SECOND ? Player.FIRST : Player.SECOND;
 		
 		int[] coords = think(field, playerAI, playerOpposing);
-		game.onMoveSelected(coords[0], coords[1]);
+		game.selectMove(coords[0], coords[1]);
 	}
 
 	@Override

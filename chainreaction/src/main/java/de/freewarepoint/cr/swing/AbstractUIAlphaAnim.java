@@ -1,7 +1,7 @@
 package de.freewarepoint.cr.swing;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 
 
 public abstract class AbstractUIAlphaAnim implements UIAnimation {
@@ -26,15 +26,10 @@ public abstract class AbstractUIAlphaAnim implements UIAnimation {
 		}
 		int	currCounter = nextCounter(countOfAnims);
 
-		final BufferedImage offlineScreen = new BufferedImage(UIField.CELL_SIZE, UIField.CELL_SIZE,
-				BufferedImage.TYPE_INT_ARGB);
-		final Graphics2D gbi = offlineScreen.createGraphics();
-
 		final AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ((float)currCounter)/MAX_COUNTER);
+		final Graphics2D gbi = (Graphics2D)g2d.create();
 		gbi.setComposite(ac);
 		anim.draw(gbi);
-
-		g2d.drawImage(offlineScreen, 0, 0, null);
 	}
 	
 	protected abstract int nextCounter(int countOfAnims);

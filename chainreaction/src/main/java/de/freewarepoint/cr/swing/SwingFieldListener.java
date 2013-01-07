@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
  *
  */
 public class SwingFieldListener implements FieldListener {
-	private final FieldListener listener;
+	private FieldListener listener;
 	private final ExecutorService execService;
 	// TODO ability to change delay in order to accelerate animation.
 	private final int delay;
@@ -26,13 +26,20 @@ public class SwingFieldListener implements FieldListener {
 		this.delay = settings.getReactionDely();
 		this.execService = Executors.newSingleThreadExecutor();
 	}
+	
+	public void shutDown() {
+		execService.shutdownNow();
+		listener = null;
+	}
 
 	@Override
 	public void onAtomAdded(final Player player, final int x, final int y) {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
-				listener.onAtomAdded(player, x, y);
+				if(listener != null) {
+					listener.onAtomAdded(player, x, y);
+				}
 			}
 
 		}, delay);
@@ -43,7 +50,9 @@ public class SwingFieldListener implements FieldListener {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
-				listener.onAtomsMoved(moves);
+				if(listener != null) {
+					listener.onAtomsMoved(moves);
+				}
 			}
 		}, delay);
 	}
@@ -53,7 +62,9 @@ public class SwingFieldListener implements FieldListener {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
-				listener.onOwnerChanged(player, x, y);
+				if(listener != null) {
+					listener.onOwnerChanged(player, x, y);
+				}
 			}
 		}, 0);
 	}
@@ -63,7 +74,9 @@ public class SwingFieldListener implements FieldListener {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
-				listener.onCellCleared(x, y);
+				if(listener != null) {
+					listener.onCellCleared(x, y);
+				}
 			}
 		}, delay);
 	}

@@ -1,12 +1,15 @@
 package de.freewarepoint.cr;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
-public class Game implements MoveListener {
+public class Game {
 	
 	private final Field field;
 	private final Settings settings;
+	private final List<MoveListener> listeners = new ArrayList<MoveListener>();
 	private Player player = Player.FIRST;
 	private final Set<Player> moved = EnumSet.noneOf(Player.class);
 	private int round = 1;
@@ -28,7 +31,7 @@ public class Game implements MoveListener {
 		return round;
 	}
 	
-	public void onMoveSelected(int x, int y) {
+	public void selectMove(int x, int y) {
 		
 		// no further moves if we have a winner
 		if(getWinner() != Player.NONE) {
@@ -44,6 +47,9 @@ public class Game implements MoveListener {
 		}
 		
 		field.putAtom(player, x, y);
+		
+		fireOnMove(player, x, y);
+		
 		field.react();
 		
 		moved.add(player);
@@ -68,5 +74,15 @@ public class Game implements MoveListener {
 
 	public Settings getSettings() {
 		return settings;
+	}
+	
+	public void addMoveListener(final MoveListener l) {
+		this.listeners.add(l);
+	}
+	
+	private void fireOnMove(Player p, int x, int y) {
+		for(final MoveListener l : listeners) {
+			l.onMove(p, x, y);
+		}
 	}
 }

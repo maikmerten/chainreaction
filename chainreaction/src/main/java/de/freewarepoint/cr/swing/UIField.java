@@ -24,18 +24,20 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 	private final int DELAY = 25;
 
-	private final MoveListener moveListener;
-
 	private Game game;
 
 	private UICell[][] cells;
 
 	private UICellBG[][] cellBGs;
+	
+	private UIAnimation moveAnim = null;
+	private UIAnimation leaveMoveAnim = null;
 
 	private double xRoot, yRoot;
 
-	public UIField(MoveListener listener) {
-		this.moveListener = listener;
+	private SwingFieldListener fieldListener;
+
+	public UIField(final UIGame uiGame) {
 		setBackground(Color.BLACK);
 		setDoubleBuffered(true);
 
@@ -44,18 +46,18 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				int x = (int) ((e.getX() - xRoot) / (CELL_SIZE * 2));
+				double x = ((e.getX() - xRoot) / (CELL_SIZE * 2));
 				if (x < 0 || x >= getField().getWidth()) {
 					e.consume();
 					return;
 				}
-				int y = (int) ((e.getY() - yRoot) / (CELL_SIZE * 2));
+				double y = ((e.getY() - yRoot) / (CELL_SIZE * 2));
 				if (y < 0 || y >= getField().getHeight()) {
 					e.consume();
 					return;
 				}
 
-				moveListener.onMoveSelected(x, y);
+				uiGame.selectMove((int)x, (int)y);
 				e.consume();
 			}
 
@@ -78,7 +80,12 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 	public final void setGame(Game game) {
 		this.game = game;
-		getField().addFieldListener(new SwingFieldListener(this, game.getSettings()));
+		if(fieldListener != null) {
+			fieldListener.shutDown();
+		}
+		fieldListener = new SwingFieldListener(this, game.getSettings());
+		getField().addFieldListener(fieldListener);
+		game.addMoveListener(this);
 		initField();
 	}
 
@@ -125,17 +132,17 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 		// draw vertical lines (coarse)
 		for (int i = 0; i <= (fieldWidth); i++) {
-			g2d.drawLine((2 * i * CELL_SIZE) + 1, 0, (2 * i * CELL_SIZE) + 1, 2 * fieldHeight * CELL_SIZE);
+			g2d.drawLine((2 * i * CELL_SIZE), 0, (2 * i * CELL_SIZE), 2 * fieldHeight * CELL_SIZE);
 		}
 		// draw horizontal lines (coarse)
 		for (int i = 0; i <= (fieldHeight); i++) {
-			g2d.drawLine(0, (2 * i * CELL_SIZE) + 1, 2 * fieldWidth * CELL_SIZE, (2 * i * CELL_SIZE) + 1);
+			g2d.drawLine(0, (2 * i * CELL_SIZE), 2 * fieldWidth * CELL_SIZE, (2 * i * CELL_SIZE));
 		}
 	}
 
 	@Override
-	public void onMoveSelected(int x, int y) {
-		moveListener.onMoveSelected(x, y);
+	public void onMove(Player p, int x, int y) {
+		moveAnim = new UIMoveAnim(x, y, p);
 	}
 
 	@Override
@@ -176,9 +183,32 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 		// draw grid
 		draw(g2d);
+		
+		// draw move anim
+		drawMoveAnim(g2d);
 
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
+	}
+
+	private void drawMoveAnim(final Graphics2D g2d) {
+		if(moveAnim != null) {
+			if(moveAnim.isFinished()) {
+				leaveMoveAnim = new UILeaveAnim(moveAnim, 0);
+				moveAnim = null;
+			}
+			else {
+				moveAnim.draw(g2d);
+			}
+		}
+		if(leaveMoveAnim != null) {
+			if(leaveMoveAnim.isFinished()) {
+				leaveMoveAnim = null;
+			}
+			else {
+				leaveMoveAnim.draw(g2d);
+			}
+		}
 	}
 
 	private void drawCells(final Graphics2D g2d, UIDrawable[][] drawables) {
@@ -198,10 +228,10 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 			long beforeTime, timeDiff, sleep;
 
 			beforeTime = System.currentTimeMillis();
-
+			
 			while (true) {
 				repaint();
-
+				
 				timeDiff = System.currentTimeMillis() - beforeTime;
 				sleep = DELAY - timeDiff;
 

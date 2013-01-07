@@ -21,7 +21,7 @@ public class GameTest {
 	@Test
 	public void testOneMove() {
 		Game game = new Game(6, 6, new Settings());
-		game.onMoveSelected(3, 3);
+		game.selectMove(3, 3);
 		Assert.assertEquals(game.getCurrentPlayer(), Player.SECOND);
 		Assert.assertEquals(game.getField().getTotalNumberOfAtomsForPlayer(Player.FIRST), 1);
 		Assert.assertEquals(game.getField().getTotalNumberOfAtomsForPlayer(Player.SECOND), 0);
@@ -30,9 +30,9 @@ public class GameTest {
 	@Test
 	public void testMoveToInvalidPosition() {
 		Game game = new Game(6, 6, new Settings());
-		game.onMoveSelected(3, 3);
+		game.selectMove(3, 3);
 		Assert.assertEquals(game.getCurrentPlayer(), Player.SECOND);
-		game.onMoveSelected(3, 3);
+		game.selectMove(3, 3);
 		Assert.assertEquals(game.getCurrentPlayer(), Player.SECOND);
 	}
 
@@ -41,28 +41,28 @@ public class GameTest {
 		Game game = new Game(6, 6, new Settings());
 
 		Assert.assertEquals(game.getCurrentPlayer(), Player.FIRST);
-		game.onMoveSelected(2, 2);
+		game.selectMove(2, 2);
 
 		Assert.assertEquals(game.getCurrentPlayer(), Player.SECOND);
-		game.onMoveSelected(3, 2);
+		game.selectMove(3, 2);
 
 		Assert.assertEquals(game.getCurrentPlayer(), Player.FIRST);
-		game.onMoveSelected(2, 2);
+		game.selectMove(2, 2);
 
 		Assert.assertEquals(game.getCurrentPlayer(), Player.SECOND);
-		game.onMoveSelected(5, 5);
+		game.selectMove(5, 5);
 
 		Assert.assertEquals(game.getField().getTotalNumberOfAtomsForPlayer(Player.FIRST), 2);
 		Assert.assertEquals(game.getField().getTotalNumberOfAtomsForPlayer(Player.SECOND), 2);
 
 		Assert.assertEquals(game.getCurrentPlayer(), Player.FIRST);
-		game.onMoveSelected(2, 2);
+		game.selectMove(2, 2);
 
 		Assert.assertEquals(game.getCurrentPlayer(), Player.SECOND);
-		game.onMoveSelected(3, 2);
+		game.selectMove(3, 2);
 
 		Assert.assertEquals(game.getCurrentPlayer(), Player.FIRST);
-		game.onMoveSelected(2, 2);
+		game.selectMove(2, 2);
 
 		Assert.assertEquals(game.getField().getTotalNumberOfAtomsForPlayer(Player.FIRST), 6);
 		Assert.assertEquals(game.getField().getTotalNumberOfAtomsForPlayer(Player.SECOND), 1);

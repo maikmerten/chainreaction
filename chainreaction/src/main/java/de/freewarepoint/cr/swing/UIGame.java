@@ -5,22 +5,20 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.ActionEvent;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import de.freewarepoint.cr.Game;
-import de.freewarepoint.cr.MoveListener;
 import de.freewarepoint.cr.Player;
 import de.freewarepoint.cr.Settings;
 import de.freewarepoint.cr.SettingsLoader;
@@ -32,13 +30,11 @@ import de.freewarepoint.cr.ai.StandardAI;
  * @author maik
  * @author jonny
  */
-public class UIGame extends JFrame implements MoveListener {
+public class UIGame extends JFrame {
 
 	private static final long serialVersionUID = -2178907135995785292L;
 
 	private UIStatus status;
-
-	private static final String EXIT = "Exit";
 
 	private Game game;
 
@@ -53,21 +49,14 @@ public class UIGame extends JFrame implements MoveListener {
 
 	private final Settings settings;
 
-	private Action exit = new AbstractAction(EXIT) {
-
-		private static final long serialVersionUID = 1114904232100740338L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			UIGame.this.dispatchEvent(new WindowEvent(UIGame.this, WindowEvent.WINDOW_CLOSING));
-		}
-	};
-
 	public UIGame() {
 		settings = SettingsLoader.loadSettings();
 		initGUI();
 		startNewGame();
-		final GraphicsDevice screenDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		final GraphicsDevice screenDevice = 
+				GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		this.setResizable(false);
+		this.setAlwaysOnTop(true);
 		this.setVisible(true);
 		if (screenDevice.isFullScreenSupported()) {
 			screenDevice.setFullScreenWindow(this);
@@ -86,17 +75,36 @@ public class UIGame extends JFrame implements MoveListener {
 
 		contentPane.setLayout(new BorderLayout(5, 5));
 		contentPane.setBackground(Color.BLACK);
+		// Add a nice empty border so that the components do not stuck to the screen edges.
+		contentPane.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
 
 		uifield = new UIField(this);
 		contentPane.add(uifield, BorderLayout.CENTER);
 
 		status = new UIStatus();
 		contentPane.add(status, BorderLayout.SOUTH);
+		
 		uisettings = new UISettings(this);
 		contentPane.add(uisettings, BorderLayout.NORTH);
+		
+		final KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		manager.addKeyEventDispatcher(new KeyEventDispatcher() {
 
-		contentPane.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), EXIT);
-		contentPane.getActionMap().put(EXIT, exit);
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_Q) {
+					UIGame.this.dispatchEvent(new WindowEvent(UIGame.this, WindowEvent.WINDOW_CLOSING));
+					e.consume();
+					return true;
+				}
+				return false;
+			}
+			
+		});
+	}
+	
+	void showChooseAI() {
+		System.out.println("Chooose Now");
 	}
 
 	void startNewGame() {
@@ -112,7 +120,7 @@ public class UIGame extends JFrame implements MoveListener {
 		updateStatus();
 	}
 
-	public void onMoveSelected(final int x, final int y) {
+	public void selectMove(final int x, final int y) {
 		if (blockMoves) {
 			return;
 		}
@@ -124,11 +132,11 @@ public class UIGame extends JFrame implements MoveListener {
 			return;
 		}
 
-		Thread moveThread = new Thread() {
+		final Thread moveThread = new Thread() {
 
 			@Override
 			public void run() {
-				game.onMoveSelected(x, y);
+				game.selectMove(x, y);
 				updateStatus();
 
 				if (game.getWinner() == Player.NONE && game.getCurrentPlayer() == Player.SECOND && uisettings

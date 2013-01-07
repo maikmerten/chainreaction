@@ -13,7 +13,7 @@ public class DummyAI implements AI {
 	@Override
 	public void doMove() {
 		int[] coords = findNextCoordinates();
-		game.onMoveSelected(coords[0], coords[1]);
+		game.selectMove(coords[0], coords[1]);
 	}
 
 	private int[] findNextCoordinates() {

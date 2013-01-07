@@ -7,7 +7,7 @@ import java.util.List;
 public class Field {
 
 	private final int width, height;
-	private final ArrayList<FieldListener> listeners = new ArrayList<FieldListener>();
+	private final List<FieldListener> listeners = new ArrayList<FieldListener>();
 	private final List<List<Cell>> rows;
 
 	public Field(int width, int height) {
