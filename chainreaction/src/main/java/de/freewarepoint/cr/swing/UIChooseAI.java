@@ -6,14 +6,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 
+import de.freewarepoint.cr.Player;
 import de.freewarepoint.cr.SettingsLoader;
 import de.freewarepoint.cr.ai.AI;
 import de.freewarepoint.cr.ai.NoneAI;
@@ -30,16 +33,19 @@ public class UIChooseAI extends JPanel {
 	private final RetroFont retroFont;
 	private final JList<AI> aiList;
 
-    public UIChooseAI(final UIGame uigame) {
+    public UIChooseAI(final UIGame uigame, final Player p) {
 		super();
 		setBackground(Color.BLACK);
 		setDoubleBuffered(true);
 		
 		final BorderLayout layout = new BorderLayout(16, 16);
-		
 		this.setLayout(layout);
 		
 		retroFont = new RetroFont();
+		
+		final JLabel playerLabel = new JLabel();
+		playerLabel.setIcon(new ImageIcon(retroFont.getRetroString("Player: " + p, UIPlayer.getPlayer(p).getForeground(), 64)));
+		this.add(playerLabel, BorderLayout.NORTH);
 		
         final JButton chooseButton = new JButton();
         chooseButton.setBorderPainted(false);
@@ -49,10 +55,10 @@ public class UIChooseAI extends JPanel {
             public void actionPerformed( ActionEvent e ) {
                 final AI ai = aiList.getSelectedValue();
                 if(ai == null || ai.getName().equals(new NoneAI().getName())) {
-                	uigame.chooseAI(null);
+                	uigame.chooseAI(p, null);
                 }
                 else {
-                	uigame.chooseAI(ai);
+                	uigame.chooseAI(p, ai);
                 }
             }
         });
@@ -71,7 +77,8 @@ public class UIChooseAI extends JPanel {
         
         final JScrollPane scrollPane = new JScrollPane(aiList);
         scrollPane.setViewportView(aiList);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
         this.add(scrollPane, BorderLayout.CENTER);
 	}
 }

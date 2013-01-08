@@ -1,6 +1,7 @@
 package de.freewarepoint.cr.swing;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -80,7 +81,28 @@ public class UIPlayerStatus extends AbstractUIStatus implements Runnable {
 				}
 			}
 			
-			statusImg = coloredImg.getScaledInstance(coloredImg.getWidth()*6, coloredImg.getHeight()*6, Image.SCALE_REPLICATE);
+			final Image character = coloredImg.getScaledInstance(coloredImg.getWidth()*6, coloredImg.getHeight()*6, Image.SCALE_REPLICATE);
+			// TODO support player names for human players
+			final String name = status.isAIPlayer() ? status.getAI().getName() : "Human";
+			final BufferedImage textImg = retroFont.getRetroString(name, color, FONT_SIZE);
+			
+			final BufferedImage targetImg = new BufferedImage(
+					Math.max(textImg.getWidth(), character.getWidth(null)), 
+					character.getHeight(null)+(FONT_SIZE+2), coloredImg.getType());
+			final Graphics2D graphics = targetImg.createGraphics();
+			
+			final int characterX = textImg.getWidth() > character.getWidth(null) ? ((textImg.getWidth() - character.getWidth(null)) / 2) : 0;
+			graphics.drawImage(character, 
+					characterX, 
+					0, null);
+			
+			final int fontX = character.getWidth(null) > textImg.getWidth() ? ((character.getWidth(null) - textImg.getWidth()) / 2) : 0;
+			graphics.drawImage(textImg, 
+					fontX, 
+					character.getHeight(null) + 2, null);
+			
+			statusImg = targetImg;
+			
 			UIPlayerStatus.this.revalidate();
 			UIPlayerStatus.this.repaint();
 		}

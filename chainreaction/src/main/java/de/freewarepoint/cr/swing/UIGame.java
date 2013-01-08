@@ -46,7 +46,8 @@ public class UIGame extends JFrame {
 	private boolean blockMoves = false;
 
 	private UIField uifield;
-	private UIChooseAI uichooseai;
+	private UIChooseAI uichooseai1;
+	private UIChooseAI uichooseai2;
 
 	private final Settings settings;
 
@@ -56,14 +57,15 @@ public class UIGame extends JFrame {
 		startNewGame();
 		final GraphicsDevice screenDevice = 
 				GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		this.setResizable(false);
-		this.setAlwaysOnTop(true);
-		this.setVisible(true);
 		if (screenDevice.isFullScreenSupported()) {
+			this.setResizable(false);
+			this.setAlwaysOnTop(true);
+			this.setVisible(true);
 			screenDevice.setFullScreenWindow(this);
 			this.validate();
 		}
 		else {
+			this.setVisible(true);
 			this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		}
 	}
@@ -82,7 +84,8 @@ public class UIGame extends JFrame {
 		uifield = new UIField(this);
 		contentPane.add(uifield, BorderLayout.CENTER);
 		
-		uichooseai = new UIChooseAI(this);
+		uichooseai1 = new UIChooseAI(this, Player.FIRST);
+		uichooseai2 = new UIChooseAI(this, Player.SECOND);
 
 		uistatus = new UIStatus();
 		contentPane.add(uistatus, BorderLayout.SOUTH);
@@ -109,28 +112,56 @@ public class UIGame extends JFrame {
 		});
 	}
 	
-	void showChooseAI() {
+	void showChooseAI(final Player p) {
 		getContentPane().remove(uifield);
 		getContentPane().remove(uiplayerstatus);
 		getContentPane().remove(uistatus);
-		getContentPane().add(uichooseai);
+		switch(p) {
+			case FIRST:
+				getContentPane().add(uichooseai1);
+				break;
+			case SECOND:
+				getContentPane().add(uichooseai2);
+				break;
+			default:
+				throw new RuntimeException("Not a valid player: " + p); 
+		}
 		revalidate();
 		repaint();
 	}
 	
-	void chooseAI(final AI ai) {
+	void chooseAI(final Player p, final AI ai) {
 		if(ai != null) {
 			ai.setGame(game);
 		}
 		if(game != null) {
-			// TODO possibility to choose an ai for both players (see issue #13):
-			game.getPlayerStatus(Player.SECOND).setAI(ai);
+			game.getPlayerStatus(p).setAI(ai);
 		}
 		final Container contentPane = getContentPane();
-		contentPane.remove(uichooseai);
+		switch(p) {
+			case FIRST:
+				getContentPane().remove(uichooseai1);
+				break;
+			case SECOND:
+				getContentPane().remove(uichooseai2);
+				break;
+			default:
+				throw new RuntimeException("Not a valid player: " + p); 
+		}
 		contentPane.add(uifield, BorderLayout.CENTER);
 		contentPane.add(uiplayerstatus, BorderLayout.WEST);
 		contentPane.add(uistatus, BorderLayout.SOUTH);
+		if(game != null && game.getCurrentPlayer() == p) {
+			final Thread moveThread = new Thread() {
+
+				@Override
+				public void run() {
+					doAI();
+				}
+			};
+
+			moveThread.start();
+		}
 		revalidate();
 		repaint();
 	}
@@ -163,19 +194,7 @@ public class UIGame extends JFrame {
 				game.selectMove(x, y);
 				updateStatus();
 
-				final PlayerStatus playerStatus = game.getPlayerStatus(game.getCurrentPlayer());
-				if (game.getWinner() == Player.NONE && playerStatus.isAIPlayer()) {
-					try {
-						AIThread t = new AIThread(playerStatus.getAI(), 1500);
-						t.start();
-						t.join();
-					}
-					catch (InterruptedException ex) {
-						Logger.getLogger(UIGame.class.getName()).log(Level.SEVERE, null, ex);
-					}
-					updateStatus();
-				}
-				blockMoves = false;
+				doAI();
 			}
 		};
 
@@ -185,6 +204,22 @@ public class UIGame extends JFrame {
 	private void updateStatus() {
 		SwingUtilities.invokeLater(uistatus);
 		SwingUtilities.invokeLater(uiplayerstatus);
+	}
+
+	private void doAI() {
+		final PlayerStatus playerStatus = game.getPlayerStatus(game.getCurrentPlayer());
+		while (game.getWinner() == Player.NONE && playerStatus.isAIPlayer()) {
+			try {
+				AIThread t = new AIThread(playerStatus.getAI(), 1500);
+				t.start();
+				t.join();
+			}
+			catch (InterruptedException ex) {
+				Logger.getLogger(UIGame.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			updateStatus();
+		}
+		blockMoves = false;
 	}
 
 	public static void main(String[] args) {
