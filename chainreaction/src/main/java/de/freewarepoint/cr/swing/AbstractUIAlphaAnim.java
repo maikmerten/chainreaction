@@ -1,6 +1,7 @@
 package de.freewarepoint.cr.swing;
 
 import java.awt.AlphaComposite;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 
 
@@ -27,9 +28,10 @@ public abstract class AbstractUIAlphaAnim implements UIAnimation {
 		int	currCounter = nextCounter(countOfAnims);
 
 		final AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ((float)currCounter)/MAX_COUNTER);
-		final Graphics2D gbi = (Graphics2D)g2d.create();
-		gbi.setComposite(ac);
-		anim.draw(gbi);
+		Composite oldComposite = g2d.getComposite();
+		g2d.setComposite(ac);
+		anim.draw(g2d);
+		g2d.setComposite(oldComposite);
 	}
 	
 	protected abstract int nextCounter(int countOfAnims);

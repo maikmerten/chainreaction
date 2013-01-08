@@ -1,9 +1,11 @@
 package de.freewarepoint.cr.swing;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.beans.Transient;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -20,11 +22,13 @@ public class UIPlayerStatus extends AbstractUIStatus implements Runnable {
 
 	private static final long serialVersionUID = 8437395162237408047L;
 	private final BufferedImage human, computer;
+	private final static int MAX_WIDTH = 192;
 	
 	public UIPlayerStatus() {
 		super();
 		computer = loadImg("/computer.png");
 		human = loadImg("/human.png");
+		setMinimumSize(new Dimension(MAX_WIDTH, FONT_SIZE));
 	}
 
 	private BufferedImage loadImg(String fn) {
@@ -81,19 +85,25 @@ public class UIPlayerStatus extends AbstractUIStatus implements Runnable {
 				}
 			}
 			
-			final Image character = coloredImg.getScaledInstance(coloredImg.getWidth()*6, coloredImg.getHeight()*6, Image.SCALE_REPLICATE);
+			final Image character = coloredImg.getScaledInstance(coloredImg.getWidth()*7, coloredImg.getHeight()*7, Image.SCALE_REPLICATE);
 			// TODO support player names for human players
 			final String name = status.isAIPlayer() ? status.getAI().getName() : "Human";
-			final BufferedImage textImg = retroFont.getRetroString(name, color, FONT_SIZE);
+			final String text;
+			if((name.length()-1)*FONT_SIZE > MAX_WIDTH) {
+				text = name.substring(0, (MAX_WIDTH/FONT_SIZE)-3) + "...";
+			}
+			else {
+				 text = name;
+			}
+			final BufferedImage textImg	= retroFont.getRetroString(text, color, FONT_SIZE); 
 			
 			final BufferedImage targetImg = new BufferedImage(
 					Math.max(textImg.getWidth(), character.getWidth(null)), 
 					character.getHeight(null)+(FONT_SIZE+2), coloredImg.getType());
 			final Graphics2D graphics = targetImg.createGraphics();
 			
-			final int characterX = textImg.getWidth() > character.getWidth(null) ? ((textImg.getWidth() - character.getWidth(null)) / 2) : 0;
 			graphics.drawImage(character, 
-					characterX, 
+					0, 
 					0, null);
 			
 			final int fontX = character.getWidth(null) > textImg.getWidth() ? ((character.getWidth(null) - textImg.getWidth()) / 2) : 0;
@@ -107,4 +117,16 @@ public class UIPlayerStatus extends AbstractUIStatus implements Runnable {
 			UIPlayerStatus.this.repaint();
 		}
 	}
+
+	@Override
+	@Transient
+	public Dimension getPreferredSize() {
+		final Dimension preferredSize = super.getPreferredSize();
+		if(preferredSize.getWidth() < getMinimumSize().getWidth()) {
+			preferredSize.setSize(getMinimumSize().getWidth(), preferredSize.getHeight());
+		}
+		return preferredSize;
+	}
+	
+	
 }

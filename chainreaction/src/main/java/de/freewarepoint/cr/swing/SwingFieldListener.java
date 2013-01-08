@@ -37,9 +37,7 @@ public class SwingFieldListener implements FieldListener {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
-				if(listener != null) {
-					listener.onAtomAdded(player, x, y);
-				}
+				listener.onAtomAdded(player, x, y);
 			}
 
 		}, delay);
@@ -50,9 +48,7 @@ public class SwingFieldListener implements FieldListener {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
-				if(listener != null) {
-					listener.onAtomsMoved(moves);
-				}
+				listener.onAtomsMoved(moves);
 			}
 		}, delay);
 	}
@@ -62,9 +58,7 @@ public class SwingFieldListener implements FieldListener {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
-				if(listener != null) {
-					listener.onOwnerChanged(player, x, y);
-				}
+				listener.onOwnerChanged(player, x, y);
 			}
 		}, 0);
 	}
@@ -74,14 +68,15 @@ public class SwingFieldListener implements FieldListener {
 		executeDelayed(new Runnable() {
 			@Override
 			public void run() {
-				if(listener != null) {
-					listener.onCellCleared(x, y);
-				}
+				listener.onCellCleared(x, y);
 			}
 		}, delay);
 	}
 	
 	private void executeDelayed(final Runnable run, final long delay) {
+		if(execService.isShutdown()) {
+			return;
+		}
 		execService.submit(new Runnable() {
 			@Override
 			public void run() {

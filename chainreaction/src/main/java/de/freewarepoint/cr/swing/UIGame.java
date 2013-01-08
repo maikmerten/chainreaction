@@ -21,7 +21,6 @@ import javax.swing.WindowConstants;
 
 import de.freewarepoint.cr.Game;
 import de.freewarepoint.cr.Player;
-import de.freewarepoint.cr.PlayerStatus;
 import de.freewarepoint.cr.Settings;
 import de.freewarepoint.cr.SettingsLoader;
 import de.freewarepoint.cr.ai.AI;
@@ -207,10 +206,9 @@ public class UIGame extends JFrame {
 	}
 
 	private void doAI() {
-		final PlayerStatus playerStatus = game.getPlayerStatus(game.getCurrentPlayer());
-		while (game.getWinner() == Player.NONE && playerStatus.isAIPlayer()) {
+		while (game.getWinner() == Player.NONE && game.getPlayerStatus(game.getCurrentPlayer()).isAIPlayer()) {
 			try {
-				AIThread t = new AIThread(playerStatus.getAI(), 1500);
+				AIThread t = new AIThread(game.getPlayerStatus(game.getCurrentPlayer()).getAI(), 1500);
 				t.start();
 				t.join();
 			}
