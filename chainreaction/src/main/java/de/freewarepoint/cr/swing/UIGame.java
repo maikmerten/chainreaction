@@ -21,6 +21,7 @@ import javax.swing.WindowConstants;
 
 import de.freewarepoint.cr.Game;
 import de.freewarepoint.cr.Player;
+import de.freewarepoint.cr.PlayerStatus;
 import de.freewarepoint.cr.Settings;
 import de.freewarepoint.cr.SettingsLoader;
 import de.freewarepoint.cr.ai.AI;
@@ -35,12 +36,11 @@ public class UIGame extends JFrame {
 	private static final long serialVersionUID = -2178907135995785292L;
 
 	private UIStatus uistatus;
+	private UIPlayerStatus uiplayerstatus;
 
 	private Game game;
 
 	private UISettings uisettings;
-
-	private AI ai;
 
 	// TODO not thread save.
 	private boolean blockMoves = false;
@@ -87,6 +87,9 @@ public class UIGame extends JFrame {
 		uistatus = new UIStatus();
 		contentPane.add(uistatus, BorderLayout.SOUTH);
 		
+		uiplayerstatus = new UIPlayerStatus();
+		contentPane.add(uiplayerstatus, BorderLayout.WEST);
+		
 		uisettings = new UISettings(this);
 		contentPane.add(uisettings, BorderLayout.NORTH);
 		
@@ -108,6 +111,7 @@ public class UIGame extends JFrame {
 	
 	void showChooseAI() {
 		getContentPane().remove(uifield);
+		getContentPane().remove(uiplayerstatus);
 		getContentPane().remove(uistatus);
 		getContentPane().add(uichooseai);
 		revalidate();
@@ -118,10 +122,14 @@ public class UIGame extends JFrame {
 		if(ai != null) {
 			ai.setGame(game);
 		}
-		this.ai = ai;
+		if(game != null) {
+			// TODO possibility to choose an ai for both players (see issue #13):
+			game.getPlayerStatus(Player.SECOND).setAI(ai);
+		}
 		final Container contentPane = getContentPane();
 		contentPane.remove(uichooseai);
 		contentPane.add(uifield, BorderLayout.CENTER);
+		contentPane.add(uiplayerstatus, BorderLayout.WEST);
 		contentPane.add(uistatus, BorderLayout.SOUTH);
 		revalidate();
 		repaint();
@@ -132,6 +140,7 @@ public class UIGame extends JFrame {
 		uifield.setGame(game);
 		blockMoves = false;
 		uistatus.setGame(game);
+		uiplayerstatus.setGame(game);
 		updateStatus();
 	}
 
@@ -154,9 +163,10 @@ public class UIGame extends JFrame {
 				game.selectMove(x, y);
 				updateStatus();
 
-				if (game.getWinner() == Player.NONE && game.getCurrentPlayer() == Player.SECOND && ai != null) {
+				final PlayerStatus playerStatus = game.getPlayerStatus(game.getCurrentPlayer());
+				if (game.getWinner() == Player.NONE && playerStatus.isAIPlayer()) {
 					try {
-						AIThread t = new AIThread(ai, 1500);
+						AIThread t = new AIThread(playerStatus.getAI(), 1500);
 						t.start();
 						t.join();
 					}
@@ -174,6 +184,7 @@ public class UIGame extends JFrame {
 
 	private void updateStatus() {
 		SwingUtilities.invokeLater(uistatus);
+		SwingUtilities.invokeLater(uiplayerstatus);
 	}
 
 	public static void main(String[] args) {

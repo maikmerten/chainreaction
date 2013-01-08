@@ -22,7 +22,7 @@ import de.freewarepoint.retrofont.RetroFont;
 
 /**
  *
- * @author maik
+ * @author jonny
  */
 public class UIChooseAI extends JPanel {
 	
@@ -35,8 +35,7 @@ public class UIChooseAI extends JPanel {
 		setBackground(Color.BLACK);
 		setDoubleBuffered(true);
 		
-		final BorderLayout layout = new BorderLayout(5, 5);
-		layout.setHgap(16);
+		final BorderLayout layout = new BorderLayout(16, 16);
 		
 		this.setLayout(layout);
 		

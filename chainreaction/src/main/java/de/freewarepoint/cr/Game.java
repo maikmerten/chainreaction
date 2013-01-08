@@ -2,7 +2,9 @@ package de.freewarepoint.cr;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Game {
@@ -12,11 +14,17 @@ public class Game {
 	private final List<MoveListener> listeners = new ArrayList<MoveListener>();
 	private Player player = Player.FIRST;
 	private final Set<Player> moved = EnumSet.noneOf(Player.class);
+	private final Map<Player, PlayerStatus> playerStatus;
 	private int round = 1;
 
 	public Game(int width, int height, Settings settings) {
 		this.field = new Field(width, height);
 		this.settings = settings;
+		playerStatus = new HashMap<>();
+		// init player status.
+		for(final Player player : Player.values()) {
+			playerStatus.put(player, new PlayerStatus(player));
+		}
 	}
 	
 	public Field getField() {
@@ -25,6 +33,10 @@ public class Game {
 
 	public Player getCurrentPlayer() {
 		return player;
+	}
+	
+	public PlayerStatus getPlayerStatus(Player player) {
+		return playerStatus.get(player);
 	}
 	
 	public int getRound() {
