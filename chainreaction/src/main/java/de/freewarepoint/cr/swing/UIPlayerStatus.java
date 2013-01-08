@@ -85,7 +85,7 @@ public class UIPlayerStatus extends AbstractUIStatus implements Runnable {
 				}
 			}
 			
-			final Image character = coloredImg.getScaledInstance(coloredImg.getWidth()*7, coloredImg.getHeight()*7, Image.SCALE_REPLICATE);
+			final Image playerImg = coloredImg.getScaledInstance(coloredImg.getWidth()*7, coloredImg.getHeight()*7, Image.SCALE_REPLICATE);
 			// TODO support player names for human players
 			final String name = status.isAIPlayer() ? status.getAI().getName() : "Human";
 			final String text;
@@ -98,18 +98,18 @@ public class UIPlayerStatus extends AbstractUIStatus implements Runnable {
 			final BufferedImage textImg	= retroFont.getRetroString(text, color, FONT_SIZE); 
 			
 			final BufferedImage targetImg = new BufferedImage(
-					Math.max(textImg.getWidth(), character.getWidth(null)), 
-					character.getHeight(null)+(FONT_SIZE+2), coloredImg.getType());
+					Math.max(textImg.getWidth(), playerImg.getWidth(null)), 
+					playerImg.getHeight(null)+(FONT_SIZE+2), coloredImg.getType());
 			final Graphics2D graphics = targetImg.createGraphics();
 			
-			graphics.drawImage(character, 
+			graphics.drawImage(playerImg, 
 					0, 
 					0, null);
 			
-			final int fontX = character.getWidth(null) > textImg.getWidth() ? ((character.getWidth(null) - textImg.getWidth()) / 2) : 0;
+			final int fontX = playerImg.getWidth(null) > textImg.getWidth() ? ((playerImg.getWidth(null) - textImg.getWidth()) / 2) : 0;
 			graphics.drawImage(textImg, 
 					fontX, 
-					character.getHeight(null) + 2, null);
+					playerImg.getHeight(null) + 2, null);
 			
 			statusImg = targetImg;
 			
