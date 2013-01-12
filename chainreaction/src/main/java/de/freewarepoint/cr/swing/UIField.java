@@ -6,12 +6,16 @@ import de.freewarepoint.cr.FieldListener;
 import de.freewarepoint.cr.Game;
 import de.freewarepoint.cr.Move;
 import de.freewarepoint.cr.MoveListener;
+import de.freewarepoint.retrofont.RetroFont;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jonny
@@ -36,10 +40,12 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	private double xRoot, yRoot;
 
 	private SwingFieldListener fieldListener;
+	private Map<Player, Image> winImgs;
 
 	public UIField(final UIGame uiGame) {
 		setBackground(Color.BLACK);
 		setDoubleBuffered(true);
+		setIgnoreRepaint(true);
 
 		// Get to know as a cell is clicked.
 		addMouseListener(new MouseAdapter() {
@@ -62,6 +68,24 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 			}
 
 		});
+		
+		final RetroFont retroFont = new RetroFont();
+		winImgs = new HashMap<Player, Image>();
+		winImgs.put(Player.FIRST, createWinImage(retroFont, Player.FIRST));
+		winImgs.put(Player.SECOND, createWinImage(retroFont, Player.SECOND));
+	}
+
+	private BufferedImage createWinImage(final RetroFont retroFont, final Player player) {
+		final BufferedImage winStr = retroFont.getRetroString("Player " + (player.ordinal() + 1) + " WINS!", 
+				UIPlayer.getPlayer(player).getForeground(), 64);
+		final BufferedImage clickStr = retroFont.getRetroString("Click into the game field to start the next game.", 
+				UIPlayer.getPlayer(player).getForeground(), 16);
+		final BufferedImage bimg = new BufferedImage(winStr.getWidth(), winStr.getHeight() + clickStr.getHeight() + 2, 
+				BufferedImage.TYPE_INT_RGB);
+		final Graphics2D g2d = bimg.createGraphics();
+		g2d.drawImage(winStr, 0, 0, null);
+		g2d.drawImage(clickStr, (winStr.getWidth()/2) - (clickStr.getWidth()/2), winStr.getHeight() + 2, null);
+		return bimg;
 	}
 
 	private void initField() {
@@ -186,6 +210,14 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		
 		// draw move anim
 		drawMoveAnim(g2d);
+		
+		if(game.getWinner() != Player.NONE) {
+			// draw Winner
+			final Image img = winImgs.get(game.getWinner());
+			g2d.drawImage(img, 
+					((getField().getWidth() * 2 * CELL_SIZE)/2) - (img.getWidth(null)/2), 
+					((getField().getHeight() * 2 * CELL_SIZE)/2) - (img.getHeight(null)/2), null);
+		}
 
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();

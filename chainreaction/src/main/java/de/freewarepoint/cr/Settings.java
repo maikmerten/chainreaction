@@ -2,17 +2,17 @@ package de.freewarepoint.cr;
 
 public class Settings {
 
-	private final int reactionDely;
+	private final int reactionDelay;
 
 	public Settings() {
-		this.reactionDely = 100;
+		this.reactionDelay = 100;
 	}
 
-	public Settings(int reactionDely) {
-		this.reactionDely = reactionDely;
+	public Settings(int reactionDelay) {
+		this.reactionDelay = reactionDelay;
 	}
 
-	public int getReactionDely() {
-		return reactionDely;
+	public int getReactionDelay() {
+		return reactionDelay;
 	}
 }

@@ -48,7 +48,7 @@ public class SettingsLoader {
 	private static void storeSettings(Settings settings) {
 		String configFileName = getConfigurationFileLocation().toString();
 		Properties properties = new Properties();
-		properties.setProperty(REACTION_DELAY, String.valueOf(settings.getReactionDely()));
+		properties.setProperty(REACTION_DELAY, String.valueOf(settings.getReactionDelay()));
 		try {
 			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(configFileName));
 			properties.store(stream, "Settings for Chain Reaction");

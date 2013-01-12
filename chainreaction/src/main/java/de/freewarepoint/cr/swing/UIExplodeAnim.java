@@ -28,7 +28,7 @@ public class UIExplodeAnim implements UIAnimation {
 			return translateY;
 		}
 	}
-	private static int DELAY = 25;
+	private static int DELAY = 40;
 	private static double VELOCITY_START = 15f;
 	private static double ACCELERATION = -Math.pow((VELOCITY_START),2)/(2*2*CELL_SIZE); 
 	

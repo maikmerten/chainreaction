@@ -1,6 +1,7 @@
 package de.freewarepoint.retrofont;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -67,19 +68,29 @@ public class RetroFont {
 		
 		final Image img = getRetroChar(c, color).getScaledInstance(fontSize, fontSize, Image.SCALE_REPLICATE);
 		final BufferedImage bimg = new BufferedImage(img.getWidth(null), img.getHeight(null), font.getType());
-		bimg.getGraphics().drawImage(img, 0, 0, null);
+		bimg.createGraphics().drawImage(img, 0, 0, null);
 		return bimg;
 	}
 	
 	public BufferedImage getRetroString(final String str, final Color color, int fontSize) {
 		fontSize = fontSize < MINIMAL_FONT_SIZE ? MINIMAL_FONT_SIZE : fontSize;
 		final BufferedImage bimg = new BufferedImage(fontSize * str.length(), fontSize, font.getType());
+		final Graphics2D g2d = bimg.createGraphics();
 		int i = 0;
 		for(final char c : str.toCharArray()) {
 			final Image img = getRetroChar(c, color, fontSize);
-			bimg.getGraphics().drawImage(img, i*fontSize, 0, null);
+			g2d.drawImage(img, i*fontSize, 0, null);
 			i++;
 		}
+		return bimg;
+	}
+	
+	public BufferedImage getRetroString(final String str, final Color color, final Color bg, int fontSize) {
+		final BufferedImage bimg = new BufferedImage(fontSize * str.length(), fontSize+2, font.getType());
+		final Graphics2D g2d = bimg.createGraphics();
+		g2d.setColor(bg);
+		g2d.fillRect(0, 0, bimg.getWidth(), bimg.getHeight());
+		g2d.drawImage(getRetroString(str, color, fontSize), 0, 1, null);
 		return bimg;
 	}
 	

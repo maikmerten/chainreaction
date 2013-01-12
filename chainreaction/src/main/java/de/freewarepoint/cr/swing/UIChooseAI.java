@@ -44,13 +44,15 @@ public class UIChooseAI extends JPanel {
 		retroFont = new RetroFont();
 		
 		final JLabel playerLabel = new JLabel();
-		playerLabel.setIcon(new ImageIcon(retroFont.getRetroString("Player: " + p, UIPlayer.getPlayer(p).getForeground(), 64)));
+		playerLabel.setIcon(new ImageIcon(retroFont.getRetroString("Player: " + (p.ordinal() + 1), UIPlayer.getPlayer(p).getForeground(), 64)));
 		this.add(playerLabel, BorderLayout.NORTH);
 		
         final JButton chooseButton = new JButton();
         chooseButton.setBorderPainted(false);
         chooseButton.setContentAreaFilled(false);
-        chooseButton.setIcon(new ImageIcon(retroFont.getRetroString("OK", Color.WHITE, 32)));
+        final String str = "OK";
+		chooseButton.setIcon(new ImageIcon(retroFont.getRetroString(str, Color.WHITE, 32)));
+		chooseButton.setPressedIcon(new ImageIcon(retroFont.getRetroString(str, Color.BLACK, Color.WHITE, 32)));
         chooseButton.addActionListener(new ActionListener() {
             public void actionPerformed( ActionEvent e ) {
                 final AI ai = aiList.getSelectedValue();

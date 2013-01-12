@@ -10,6 +10,8 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +26,6 @@ import de.freewarepoint.cr.Player;
 import de.freewarepoint.cr.Settings;
 import de.freewarepoint.cr.SettingsLoader;
 import de.freewarepoint.cr.ai.AI;
-import de.freewarepoint.cr.ai.AIThread;
 
 /**
  * @author maik
@@ -36,13 +37,13 @@ public class UIGame extends JFrame {
 
 	private UIStatus uistatus;
 	private UIPlayerStatus uiplayerstatus;
+	private final ExecutorService execService;
 
 	private Game game;
 
 	private UISettings uisettings;
 
-	// TODO not thread save.
-	private boolean blockMoves = false;
+	private volatile boolean blockMoves = false;
 
 	private UIField uifield;
 	private UIChooseAI uichooseai1;
@@ -52,6 +53,7 @@ public class UIGame extends JFrame {
 
 	public UIGame() {
 		settings = SettingsLoader.loadSettings();
+		this.execService = Executors.newSingleThreadExecutor();
 		initGUI();
 		startNewGame();
 		final GraphicsDevice screenDevice = 
@@ -150,71 +152,92 @@ public class UIGame extends JFrame {
 		contentPane.add(uifield, BorderLayout.CENTER);
 		contentPane.add(uiplayerstatus, BorderLayout.WEST);
 		contentPane.add(uistatus, BorderLayout.SOUTH);
-		if(game != null && game.getCurrentPlayer() == p) {
-			final Thread moveThread = new Thread() {
+		if(ai != null && game != null && game.getCurrentPlayer() == p) {
+			this.execService.submit(new Runnable() {
 
 				@Override
 				public void run() {
 					doAI();
 				}
-			};
-
-			moveThread.start();
+				
+			});
 		}
+		updateStatus();
 		revalidate();
 		repaint();
 	}
 
 	void startNewGame() {
+		final Game oldGame = game;
 		game = new Game(6, 5, settings);
+		if(oldGame != null) {
+			for(final Player player : Player.values()) {
+				final AI ai = oldGame.getPlayerStatus(player).getAI();
+				if(ai != null) {					
+					ai.setGame(game);
+					game.getPlayerStatus(player).setAI(ai);
+				}
+			}
+		}
 		uifield.setGame(game);
-		blockMoves = false;
 		uistatus.setGame(game);
 		uiplayerstatus.setGame(game);
+		uisettings.setGame(game);
 		updateStatus();
+		if(game.getPlayerStatus(game.getCurrentPlayer()).isAIPlayer()) {
+			execService.submit(new Runnable() {
+
+				@Override
+				public void run() {
+					doAI();
+				}
+				
+			});
+		}
+		else {
+			blockMoves = false;
+		}
 	}
 
 	public void selectMove(final int x, final int y) {
 		if (blockMoves) {
 			return;
 		}
-
-		blockMoves = true;
-
-		if (game.getWinner() != Player.NONE) {
-			startNewGame();
-			return;
-		}
-
-		final Thread moveThread = new Thread() {
+		execService.submit(new Runnable() {
 
 			@Override
 			public void run() {
+				
+
+				if (game.getWinner() != Player.NONE) {
+					startNewGame();
+					return;
+				}
+				
 				game.selectMove(x, y);
 				updateStatus();
 
 				doAI();
 			}
-		};
-
-		moveThread.start();
+		});
 	}
 
 	private void updateStatus() {
 		SwingUtilities.invokeLater(uistatus);
 		SwingUtilities.invokeLater(uiplayerstatus);
+		SwingUtilities.invokeLater(uisettings);
 	}
 
 	private void doAI() {
+		blockMoves = true;
 		while (game.getWinner() == Player.NONE && game.getPlayerStatus(game.getCurrentPlayer()).isAIPlayer()) {
 			try {
-				AIThread t = new AIThread(game.getPlayerStatus(game.getCurrentPlayer()).getAI(), 1500);
-				t.start();
-				t.join();
-			}
+				Thread.sleep(2000);
+			} 
 			catch (InterruptedException ex) {
 				Logger.getLogger(UIGame.class.getName()).log(Level.SEVERE, null, ex);
 			}
+			game.getPlayerStatus(game.getCurrentPlayer()).getAI().doMove();
 			updateStatus();
 		}
 		blockMoves = false;

@@ -9,13 +9,14 @@ import java.awt.*;
  */
 public abstract class AbstractUIImgAnim implements UIAnimation {
 	private final Image[] images;
-	private static final int DELAY = 50;
+	private static final int DELAY = 40;
 	private long lastAnim;
 	private int animCounter = 0;
 	private final int animCount;
 
 	AbstractUIImgAnim(final String fileName, final int animCount) {
 		images = initAnimImages(fileName, animCount);
+		lastAnim = System.currentTimeMillis();
 		this.animCount = images.length;
 	}
 

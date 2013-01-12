@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 
 
 public abstract class AbstractUIAlphaAnim implements UIAnimation {
-	private static final int DELAY = 25;
+	private static final int DELAY = 40;
 	private final UIAnimation anim;
 	private long lastAnim;
 	final static int MAX_COUNTER = 20;

@@ -23,7 +23,7 @@ public class SwingFieldListener implements FieldListener {
 
 	public SwingFieldListener(FieldListener listener, Settings settings) {
 		this.listener = listener;
-		this.delay = settings.getReactionDely();
+		this.delay = settings.getReactionDelay();
 		this.execService = Executors.newSingleThreadExecutor();
 	}
 	

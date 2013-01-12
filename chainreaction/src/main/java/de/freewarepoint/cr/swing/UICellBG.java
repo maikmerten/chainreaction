@@ -8,8 +8,8 @@ import java.awt.geom.AffineTransform;
 import static de.freewarepoint.cr.swing.UIField.CELL_SIZE;
 
 public class UICellBG implements UIDrawable {
-	private static final int DELAY = 50;
-	private final int animCount = 50, brightness = 75, fadeCount = 20;
+	private static final int DELAY = 40;
+	private final int animCount = 80, brightness = 75, fadeCount = 40;
 
 	private int animCounter = 0, fadeCounter = 0;
 	private long lastAnim = System.currentTimeMillis();
@@ -53,7 +53,6 @@ public class UICellBG implements UIDrawable {
 		else {
 			color = UIPlayer.getPlayer(player).getBackground();
 		}
-
 		
 		if((now - lastAnim) > DELAY) {
 			final int anims = (int)(now - lastAnim)/DELAY;
@@ -63,12 +62,13 @@ public class UICellBG implements UIDrawable {
 					fadeCounter = fadeCount;
 				}
 			}
-			animCounter = (animCounter + (raise ? anims : - anims)) % animCount;
+			animCounter = (animCounter + (raise ? anims : - anims));
 			animCounter = animCounter < 0 ? 0 : animCounter;
+			animCounter = animCounter > animCount ? animCount : animCounter;
 			if(player.equals(Player.NONE)) {
 				raise = false;
 			}
-			else if(raise ? animCounter == (animCount-1) : animCounter == 0) {
+			else if(raise ? animCounter >= (animCount-1) : animCounter == 0) {
 				raise = !raise;
 			}
 			lastAnim = now;
@@ -76,7 +76,7 @@ public class UICellBG implements UIDrawable {
 		final Color oldColor = g2d.getColor();
 
 		float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), new float[3]);
-		hsb[2] += (animCounter*((float)brightness/animCount)/255);
+		hsb[2] += ((animCounter*((float)brightness/animCount))/255);
 		g2d.setColor(new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2])));
 		
 		g2d.fillRect(0, 0, (CELL_SIZE*2), (CELL_SIZE*2));
@@ -87,6 +87,5 @@ public class UICellBG implements UIDrawable {
 	
 	private int calcCurrFadeColor(final int oldCanal, final int newCanal) {
 		return oldCanal + (fadeCounter * (newCanal - oldCanal)) / (fadeCount-1);
-		
 	}
 }
