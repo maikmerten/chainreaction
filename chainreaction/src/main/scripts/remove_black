@@ -1,0 +1,8 @@
+#!/bin/bash
+in_file=$1
+out_file=$2
+convert $in_file -alpha on -transparent "#000000" no-green.png
+convert no-green.png -channel matte -separate +matte matte.png
+convert matte.png -blur 0x1 blur-matte.png
+#convert blur-matte.png -negate -evaluate multiply 2 -negate feather-mask.png
+convert $in_file  blur-matte.png +matte -compose CopyOpacity -composite -brightness-contrast +25 $out_file

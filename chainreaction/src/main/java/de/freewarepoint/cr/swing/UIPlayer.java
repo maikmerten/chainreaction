@@ -1,27 +1,25 @@
 package de.freewarepoint.cr.swing;
 
-import de.freewarepoint.cr.Player;
-
-import java.awt.*;
-import java.io.IOException;
+import java.awt.Color;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Properties;
+
+import de.freewarepoint.cr.Player;
 
 public class UIPlayer {
-	private final static Properties props;
+//	private final static Properties props;
 	private final static Map<Player, UIPlayer> players;
 	private final static Map<Player, Color> bgColors;
 	private final static Map<Player, Color> fgColors;
 	
 	static {
-		props = new Properties();
-		try {
-			props.load(UIPlayer.class.getResourceAsStream("/player.properties"));
-		}
-		catch (IOException e) {
-			System.err.println("could not load player properties");
-		}
+//		props = new Properties();
+//		try {
+//			props.load(UIPlayer.class.getResourceAsStream("/player.properties"));
+//		}
+//		catch (IOException e) {
+//			System.err.println("could not load player properties");
+//		}
 		players = new EnumMap<Player, UIPlayer>(Player.class);
 		
 		bgColors = new EnumMap<Player, Color>(Player.class);
@@ -49,7 +47,7 @@ public class UIPlayer {
 		switch(player) {
 			case FIRST:
 			case SECOND:
-				return new UIAtom(props.getProperty("player." + player.name()) + "atom.properties", x, y, width, height, pos, delay);
+				return new UIAtom("/atom/atom.properties", x, y, width, height, pos, delay, player);
 			case NONE:
 				throw new UnsupportedOperationException("You cannot create an atom for no player");
 			default:

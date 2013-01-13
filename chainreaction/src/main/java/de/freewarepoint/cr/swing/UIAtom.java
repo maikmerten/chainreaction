@@ -4,12 +4,14 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Properties;
 
+import de.freewarepoint.cr.Player;
+
 public class UIAtom implements UIAnimation {
 	
 	private UIAnimation anim;
 	private final int x, y, width, height, pos; 
 
-	public UIAtom(final String propertyFile, int x, int y, int width, int height, int pos, long delay) {
+	public UIAtom(final String propertyFile, int x, int y, int width, int height, int pos, long delay, Player player) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -24,7 +26,8 @@ public class UIAtom implements UIAnimation {
 		}
 		final String animFN = props.getProperty("idle.anim" );
 		final int count = Integer.parseInt(props.getProperty("idle.count"));
-		anim = new UIEnterAnim(new UIImgAnim(animFN, count), delay);
+		final String bgFN = props.getProperty("bg." + player.ordinal());
+		anim = new UIEnterAnim(new UIImgAnim(animFN, count, bgFN), delay);
 	}
 	
 	@Override
