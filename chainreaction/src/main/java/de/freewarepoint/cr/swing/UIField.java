@@ -212,12 +212,14 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		drawMoveAnim(g2d);
 		
 		if(game.getWinner() != Player.NONE) {
+			// TODO wrap into enter alpha anim in order to fade it in.
 			// draw Winner
 			final Image img = winImgs.get(game.getWinner());
 			g2d.drawImage(img, 
 					((getField().getWidth() * 2 * CELL_SIZE)/2) - (img.getWidth(null)/2), 
 					((getField().getHeight() * 2 * CELL_SIZE)/2) - (img.getHeight(null)/2), null);
 		}
+		// TODO add a 'new game' logo that fades in and out.
 
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
