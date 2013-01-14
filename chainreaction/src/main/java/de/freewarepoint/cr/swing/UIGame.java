@@ -189,7 +189,7 @@ public class UIGame extends JFrame {
 			@Override
 			public void run() {
 				if(game != null) {
-					uifield.setNewGame(game);
+					uifield.setNewGameAnim(game);
 				}
 			}
 			
@@ -241,7 +241,7 @@ public class UIGame extends JFrame {
 			@Override
 			public void run() {
 				if(game != null && game.getWinner() != Player.NONE) {
-					uifield.setWon(game.getWinner());
+					uifield.setWonAnim(game.getWinner());
 				}
 			}
 			

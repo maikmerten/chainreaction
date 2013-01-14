@@ -37,8 +37,8 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	
 	private UIAnimation moveAnim = null, 
 			leaveMoveAnim = null, 
-			won = null, 
-			newGame = null; 
+			wonAnim = null, 
+			newGameAnim = null; 
 
 	private double xRoot, yRoot;
 
@@ -222,19 +222,19 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		drawMoveAnim(g2d);
 		
 		// draw 'player has won'
-		if(won != null && !won.isFinished()) {
-			won.draw(g2d);
+		if(wonAnim != null && !wonAnim.isFinished()) {
+			wonAnim.draw(g2d);
 		}
 		else {
-			won = null;
+			wonAnim = null;
 		}
 		
 		// draw 'new game'
-		if(newGame != null && !newGame.isFinished()) {
-			newGame.draw(g2d);
+		if(newGameAnim != null && !newGameAnim.isFinished()) {
+			newGameAnim.draw(g2d);
 		}
 		else {
-			newGame = null;
+			newGameAnim = null;
 		}
 
 		Toolkit.getDefaultToolkit().sync();
@@ -271,21 +271,21 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		}
 	}
 	
-	public void setWon(final Player player) {
-		won = new UIEnterAnim(new UIImgDrawable(winImgs.get(player), 
+	public void setWonAnim(final Player player) {
+		wonAnim = new UIEnterAnim(new UIImgDrawable(winImgs.get(player), 
 				(getField().getWidth() * 2 * CELL_SIZE), 
 				(getField().getHeight() * 2 * CELL_SIZE)), 0);
 	}
 	
-	public void setNewGame(Game game) {
-		if(won != null) {
-			won = new UILeaveAnim(won, 0);
+	public void setNewGameAnim(Game game) {
+		if(wonAnim != null) {
+			wonAnim = new UILeaveAnim(wonAnim, 0);
 		}
 		final BufferedImage newGameTextImg = createTextImgWithSubtitle(new RetroFont(), 
 				Color.WHITE, 
 				"New Game", 
 				getPlayerName(game, Player.FIRST) + " vs. " + getPlayerName(game, Player.SECOND));
-		newGame = new UILeaveAnim(new UIEnterAnim(new UIImgDrawable(
+		newGameAnim = new UILeaveAnim(new UIEnterAnim(new UIImgDrawable(
 				newGameTextImg, 
 				(getField().getWidth() * 2 * CELL_SIZE), 
 				(getField().getHeight() * 2 * CELL_SIZE)), 0), 2500);
