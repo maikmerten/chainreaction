@@ -184,6 +184,16 @@ public class UIGame extends JFrame {
 		uiplayerstatus.setGame(game);
 		uisettings.setGame(game);
 		updateStatus();
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				if(game != null) {
+					uifield.setNewGame(game);
+				}
+			}
+			
+		});
 		if(game.getPlayerStatus(game.getCurrentPlayer()).isAIPlayer()) {
 			execService.submit(new Runnable() {
 
@@ -226,6 +236,16 @@ public class UIGame extends JFrame {
 		SwingUtilities.invokeLater(uistatus);
 		SwingUtilities.invokeLater(uiplayerstatus);
 		SwingUtilities.invokeLater(uisettings);
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				if(game != null && game.getWinner() != Player.NONE) {
+					uifield.setWon(game.getWinner());
+				}
+			}
+			
+		});
 	}
 
 	private void doAI() {

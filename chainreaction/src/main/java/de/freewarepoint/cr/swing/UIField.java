@@ -6,6 +6,7 @@ import de.freewarepoint.cr.FieldListener;
 import de.freewarepoint.cr.Game;
 import de.freewarepoint.cr.Move;
 import de.freewarepoint.cr.MoveListener;
+import de.freewarepoint.cr.PlayerStatus;
 import de.freewarepoint.retrofont.RetroFont;
 
 import javax.swing.*;
@@ -34,8 +35,10 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 	private UICellBG[][] cellBGs;
 	
-	private UIAnimation moveAnim = null;
-	private UIAnimation leaveMoveAnim = null;
+	private UIAnimation moveAnim = null, 
+			leaveMoveAnim = null, 
+			won = null, 
+			newGame = null; 
 
 	private double xRoot, yRoot;
 
@@ -76,10 +79,17 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	}
 
 	private BufferedImage createWinImage(final RetroFont retroFont, final Player player) {
-		final BufferedImage winStr = retroFont.getRetroString("Player " + (player.ordinal() + 1) + " WINS!", 
-				UIPlayer.getPlayer(player).getForeground(), 64);
-		final BufferedImage clickStr = retroFont.getRetroString("Click into the game field to start the next game.", 
-				UIPlayer.getPlayer(player).getForeground(), 16);
+		return createTextImgWithSubtitle(retroFont, 
+				UIPlayer.getPlayer(player).getForeground(), 
+				"Player " + (player.ordinal() + 1) + " WINS!", 
+				"Click into the game field to start the next game.");
+	}
+	
+	private BufferedImage createTextImgWithSubtitle(final RetroFont retroFont, final Color foreground, final String title, final String subTitle) {
+		final BufferedImage winStr = retroFont.getRetroString(title, 
+				foreground, 64);
+		final BufferedImage clickStr = retroFont.getRetroString(subTitle, 
+				foreground, 16);
 		final BufferedImage bimg = new BufferedImage(winStr.getWidth(), winStr.getHeight() + clickStr.getHeight() + 2, 
 				BufferedImage.TYPE_INT_RGB);
 		final Graphics2D g2d = bimg.createGraphics();
@@ -211,15 +221,21 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		// draw move anim
 		drawMoveAnim(g2d);
 		
-		if(game.getWinner() != Player.NONE) {
-			// TODO wrap into enter alpha anim in order to fade it in.
-			// draw Winner
-			final Image img = winImgs.get(game.getWinner());
-			g2d.drawImage(img, 
-					((getField().getWidth() * 2 * CELL_SIZE)/2) - (img.getWidth(null)/2), 
-					((getField().getHeight() * 2 * CELL_SIZE)/2) - (img.getHeight(null)/2), null);
+		// draw 'player has won'
+		if(won != null && !won.isFinished()) {
+			won.draw(g2d);
 		}
-		// TODO add a 'new game' logo that fades in and out.
+		else {
+			won = null;
+		}
+		
+		// draw 'new game'
+		if(newGame != null && !newGame.isFinished()) {
+			newGame.draw(g2d);
+		}
+		else {
+			newGame = null;
+		}
 
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
@@ -245,7 +261,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		}
 	}
 
-	private void drawCells(final Graphics2D g2d, UIDrawable[][] drawables) {
+	private void drawCells(final Graphics2D g2d, final UIDrawable[][] drawables) {
 		for (final UIDrawable[] drawableRow : drawables) {
 			for (final UIDrawable drawable : drawableRow) {
 				if (drawable != null) {
@@ -253,6 +269,31 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 				}
 			}
 		}
+	}
+	
+	public void setWon(final Player player) {
+		won = new UIEnterAnim(new UIImgDrawable(winImgs.get(player), 
+				(getField().getWidth() * 2 * CELL_SIZE), 
+				(getField().getHeight() * 2 * CELL_SIZE)), 0);
+	}
+	
+	public void setNewGame(Game game) {
+		if(won != null) {
+			won = new UILeaveAnim(won, 0);
+		}
+		final BufferedImage newGameTextImg = createTextImgWithSubtitle(new RetroFont(), 
+				Color.WHITE, 
+				"New Game", 
+				getPlayerName(game, Player.FIRST) + " vs. " + getPlayerName(game, Player.SECOND));
+		newGame = new UILeaveAnim(new UIEnterAnim(new UIImgDrawable(
+				newGameTextImg, 
+				(getField().getWidth() * 2 * CELL_SIZE), 
+				(getField().getHeight() * 2 * CELL_SIZE)), 0), 2500);
+	}
+	
+	private String getPlayerName(Game game, Player player) {
+		final PlayerStatus playerStatus = game.getPlayerStatus(player);
+		return playerStatus.isAIPlayer() ? playerStatus.getAI().getName() : "Human";
 	}
 
 	@Override
