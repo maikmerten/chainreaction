@@ -132,6 +132,7 @@ public class UIGame extends JFrame {
 	}
 	
 	void chooseAI(final Player p, final AI ai) {
+		startNewGame();
 		if(ai != null) {
 			ai.setGame(game);
 		}
