@@ -69,7 +69,13 @@ public class Game {
 		// next player
 		player = player == Player.FIRST ? Player.SECOND : Player.FIRST;
 	}
-	
+
+	/**
+	 * Determines the winner of this game.
+	 *
+	 * @return
+	 *      The winner of the game or {@link Player#NONE} if there is no winner yet.
+	 */
 	public Player getWinner() {
 		Player winner;
 
