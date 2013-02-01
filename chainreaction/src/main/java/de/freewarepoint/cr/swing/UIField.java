@@ -27,7 +27,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 
 	static final int CELL_SIZE = 64;
 
-	private final int DELAY = 25;
+	private static final int DELAY = 25;
 
 	private Game game;
 
@@ -73,7 +73,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 		});
 		
 		final RetroFont retroFont = new RetroFont();
-		winImgs = new HashMap<Player, Image>();
+		winImgs = new HashMap<>();
 		winImgs.put(Player.FIRST, createWinImage(retroFont, Player.FIRST));
 		winImgs.put(Player.SECOND, createWinImage(retroFont, Player.SECOND));
 	}

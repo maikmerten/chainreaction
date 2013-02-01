@@ -31,7 +31,7 @@ public class UICell implements UIDrawable {
 		this.count = 0;
 		this.player = Player.NONE;
 		atoms = new UIAtom[ATOMS_PER_CELL];
-		leavingAtoms = new ArrayList<List<UIAtom>>(ATOMS_PER_CELL);
+		leavingAtoms = new ArrayList<>(ATOMS_PER_CELL);
 		for(int i = 0; i < ATOMS_PER_CELL; i++) {
 			leavingAtoms.add(new LinkedList<UIAtom>());
 		}

@@ -11,7 +11,7 @@ public class Game {
 	
 	private final Field field;
 	private final Settings settings;
-	private final List<MoveListener> listeners = new ArrayList<MoveListener>();
+	private final List<MoveListener> listeners = new ArrayList<>();
 	private Player player = Player.FIRST;
 	private final Set<Player> moved = EnumSet.noneOf(Player.class);
 	private final Map<Player, PlayerStatus> playerStatus;

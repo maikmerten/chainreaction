@@ -28,9 +28,9 @@ public class UIExplodeAnim implements UIAnimation {
 			return translateY;
 		}
 	}
-	private static int DELAY = 40;
-	private static double VELOCITY_START = 15f;
-	private static double ACCELERATION = -Math.pow((VELOCITY_START),2)/(2*2*CELL_SIZE); 
+	private static final int DELAY = 40;
+	private static final double VELOCITY_START = 15f;
+	private static final double ACCELERATION = -Math.pow((VELOCITY_START),2)/(2*2*CELL_SIZE);
 	
 	private long lastAnim = System.currentTimeMillis();
 	private double dist = 0f;
@@ -170,7 +170,7 @@ public class UIExplodeAnim implements UIAnimation {
 		}
 		
 		final AffineTransform transform = g2d.getTransform();
-		g2d.translate((double)(dist*direction.getTranslateX()), (double)dist*direction.getTranslateY());
+		g2d.translate((dist*direction.getTranslateX()), dist*direction.getTranslateY());
 		anim.draw(g2d);
 		g2d.setTransform(transform);
 	}

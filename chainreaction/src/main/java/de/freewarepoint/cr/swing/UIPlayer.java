@@ -20,14 +20,14 @@ public class UIPlayer {
 //		catch (IOException e) {
 //			System.err.println("could not load player properties");
 //		}
-		players = new EnumMap<Player, UIPlayer>(Player.class);
+		players = new EnumMap<>(Player.class);
 		
-		bgColors = new EnumMap<Player, Color>(Player.class);
+		bgColors = new EnumMap<>(Player.class);
 		bgColors.put(Player.FIRST, new Color(21, 39, 99));
 		bgColors.put(Player.SECOND, new Color(120, 0, 0));
 		bgColors.put(Player.NONE, Color.BLACK);
 		
-		fgColors = new EnumMap<Player, Color>(Player.class);
+		fgColors = new EnumMap<>(Player.class);
 		fgColors.put(Player.FIRST, new Color(111, 129, 189));
 		fgColors.put(Player.SECOND, new Color(210, 90, 90));
 		fgColors.put(Player.NONE, Color.WHITE);

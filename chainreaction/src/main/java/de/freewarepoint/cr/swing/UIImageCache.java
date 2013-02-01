@@ -10,7 +10,7 @@ class UIImageCache {
 	private final static Map<String, Image> imageCache;
 	
 	static {
-		imageCache = new HashMap<String, Image>(100);
+		imageCache = new HashMap<>(100);
 	}
 
 	public static Image loadImage(final String fileFN) {

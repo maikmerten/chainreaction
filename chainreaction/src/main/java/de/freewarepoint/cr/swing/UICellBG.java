@@ -9,7 +9,9 @@ import static de.freewarepoint.cr.swing.UIField.CELL_SIZE;
 
 public class UICellBG implements UIDrawable {
 	private static final int DELAY = 40;
-	private final int animCount = 80, brightness = 75, fadeCount = 40;
+	private static final int ANIM_COUNT = 80;
+	private static final int BRIGHTNESS = 75;
+	private static final int FADE_COUNT = 40;
 
 	private int animCounter = 0, fadeCounter = 0;
 	private long lastAnim = System.currentTimeMillis();
@@ -39,7 +41,7 @@ public class UICellBG implements UIDrawable {
 		g2d.translate((x * CELL_SIZE * 2), (y * CELL_SIZE * 2));
 		final long now = System.currentTimeMillis();
 		Color color;
-		if(oldPlayer != null && fadeCounter == fadeCount) {
+		if(oldPlayer != null && fadeCounter == FADE_COUNT) {
 			oldPlayer = null;
 		}
 		if(oldPlayer != null) {
@@ -58,17 +60,17 @@ public class UICellBG implements UIDrawable {
 			final int anims = (int)(now - lastAnim)/DELAY;
 			if(oldPlayer != null) {
 				fadeCounter = (fadeCounter + anims);
-				if(fadeCounter > fadeCount) {
-					fadeCounter = fadeCount;
+				if(fadeCounter > FADE_COUNT) {
+					fadeCounter = FADE_COUNT;
 				}
 			}
 			animCounter = (animCounter + (raise ? anims : - anims));
 			animCounter = animCounter < 0 ? 0 : animCounter;
-			animCounter = animCounter > animCount ? animCount : animCounter;
+			animCounter = animCounter > ANIM_COUNT ? ANIM_COUNT : animCounter;
 			if(player.equals(Player.NONE)) {
 				raise = false;
 			}
-			else if(raise ? animCounter >= (animCount-1) : animCounter == 0) {
+			else if(raise ? animCounter >= (ANIM_COUNT -1) : animCounter == 0) {
 				raise = !raise;
 			}
 			lastAnim = now;
@@ -76,7 +78,7 @@ public class UICellBG implements UIDrawable {
 		final Color oldColor = g2d.getColor();
 
 		float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), new float[3]);
-		hsb[2] += ((animCounter*((float)brightness/animCount))/255);
+		hsb[2] += ((animCounter*((float) BRIGHTNESS / ANIM_COUNT))/255);
 		g2d.setColor(new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2])));
 		
 		g2d.fillRect(0, 0, (CELL_SIZE*2), (CELL_SIZE*2));
@@ -86,6 +88,6 @@ public class UICellBG implements UIDrawable {
 	}
 	
 	private int calcCurrFadeColor(final int oldCanal, final int newCanal) {
-		return oldCanal + (fadeCounter * (newCanal - oldCanal)) / (fadeCount-1);
+		return oldCanal + (fadeCounter * (newCanal - oldCanal)) / (FADE_COUNT -1);
 	}
 }

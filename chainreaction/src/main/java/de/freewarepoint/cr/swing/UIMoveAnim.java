@@ -9,7 +9,8 @@ import static de.freewarepoint.cr.swing.UIField.CELL_SIZE;
 
 public class UIMoveAnim implements UIAnimation {
 	private static final int DELAY = 25;
-	private final int animCount = 25, brightness = 125;
+	private static final int ANIM_COUNT = 25;
+	private static final int  BRIGHTNESS = 125;
 
 	private int animCounter = 0;
 	private long lastAnim = System.currentTimeMillis();
@@ -32,15 +33,15 @@ public class UIMoveAnim implements UIAnimation {
 		if((now - lastAnim) > DELAY) {
 			final int anims = (int)(now - lastAnim)/DELAY;
 			animCounter += anims;
-			if(animCounter > animCount) {
-				animCounter = animCount;
+			if(animCounter > ANIM_COUNT) {
+				animCounter = ANIM_COUNT;
 			}
 			lastAnim = now;
 		}
 		final Color oldColor = g2d.getColor();
 
 		float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), new float[3]);
-		hsb[2] += (animCounter*((float)brightness/animCount)/255);
+		hsb[2] += (animCounter*((float) BRIGHTNESS / ANIM_COUNT)/255);
 		g2d.setColor(new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2])));
 		
 		g2d.setStroke(new BasicStroke(8));
@@ -56,6 +57,6 @@ public class UIMoveAnim implements UIAnimation {
 
 	@Override
 	public boolean isFinished() {
-		return animCounter == animCount;
+		return animCounter == ANIM_COUNT;
 	}
 }

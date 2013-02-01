@@ -7,15 +7,15 @@ import java.util.List;
 public class Field {
 
 	private final int width, height;
-	private final List<FieldListener> listeners = new ArrayList<FieldListener>();
+	private final List<FieldListener> listeners = new ArrayList<>();
 	private final List<List<Cell>> rows;
 
 	public Field(int width, int height) {
 		this.width = width;
 		this.height = height;
-		rows = new ArrayList<List<Cell>>(height);
+		rows = new ArrayList<>(height);
 		for (int y = 0; y < height; y++) {
-			List<Cell> row = new ArrayList<Cell>(width);
+			List<Cell> row = new ArrayList<>(width);
 			for (int x = 0; x < width; x++) {
 				row.add(x, new Cell());
 			}
@@ -96,8 +96,9 @@ public class Field {
 	 * @param player
 	 * 		the player who puts the atom
 	 * @param x
-	 * 		
+	 * 		the horizontal position
 	 * @param y
+	 *      the vertical position
 	 */
 	public void putAtom(Player player, int x, int y) {
 		if(getNumerOfAtomsAtPosition(x, y) > 0 && !getOwnerOfCellAtPosition(x, y).equals(player)) {
@@ -122,8 +123,7 @@ public class Field {
 	 */
 	private boolean putAtomInternal(int x, int y) {
 		final Cell cell = getCellAtPosition(x, y);
-		final boolean increased = cell.increaseNumberOfAtoms();
-		return increased;
+		return cell.increaseNumberOfAtoms();
 	}
 	
 	
@@ -176,7 +176,7 @@ public class Field {
 
 	private void spreadAtoms(int x, int y) {
 		final Player player = getOwnerOfCellAtPosition(x, y);
-		final List<Move> moves = new LinkedList<Move>();
+		final List<Move> moves = new LinkedList<>();
 		// move left
 		if (x > 0) {
 			moveAtom(player, x, y, x - 1, y, moves);

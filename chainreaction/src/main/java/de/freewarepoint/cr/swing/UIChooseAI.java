@@ -30,7 +30,6 @@ import de.freewarepoint.retrofont.RetroFont;
 public class UIChooseAI extends JPanel {
 	
 	private static final long serialVersionUID = -4840442627860470783L;
-	private final RetroFont retroFont;
 	private final JList<AI> aiList;
 
     public UIChooseAI(final UIGame uigame, final Player p) {
@@ -40,11 +39,12 @@ public class UIChooseAI extends JPanel {
 		
 		final BorderLayout layout = new BorderLayout(16, 16);
 		this.setLayout(layout);
-		
-		retroFont = new RetroFont();
+
+	    final RetroFont retroFont = new RetroFont();
 		
 		final JLabel playerLabel = new JLabel();
-		playerLabel.setIcon(new ImageIcon(retroFont.getRetroString("Player: " + (p.ordinal() + 1), UIPlayer.getPlayer(p).getForeground(), 64)));
+		playerLabel.setIcon(new ImageIcon(
+				retroFont.getRetroString("Player: " + (p.ordinal() + 1), UIPlayer.getPlayer(p).getForeground(), 64)));
 		this.add(playerLabel, BorderLayout.NORTH);
 		
         final JButton chooseButton = new JButton();
