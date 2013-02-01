@@ -9,12 +9,20 @@ import java.util.List;
 
 public class TournamentRunner {
 
+	private static final int DEFAULT_NUMBER_OF_ROUNDS = 100;
+
 	public static void main(String[] commandLineArguments) {
+		int numberOfRounds = DEFAULT_NUMBER_OF_ROUNDS;
+
+		if (commandLineArguments.length == 1) {
+			numberOfRounds = Integer.parseInt(commandLineArguments[0]);
+		}
+
 		final List<AI> ais = new LinkedList<>();
 		ais.add(new StandardAI());
 		ais.addAll(SettingsLoader.loadAIs());
 
-		Tournament tournament = new Tournament(ais);
+		Tournament tournament = new Tournament(ais, numberOfRounds);
 		tournament.startTournament();
 	}
 

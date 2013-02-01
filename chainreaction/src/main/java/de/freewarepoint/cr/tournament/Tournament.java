@@ -11,12 +11,12 @@ import java.util.Set;
 
 class Tournament {
 
-	private static final int NUMBER_OF_ROUNDS = 100;
-
 	private final List<AI> ais;
+	private final int numberOfRounds;
 
-	public Tournament(List<AI> ais) {
+	public Tournament(List<AI> ais, int numberOfRounds) {
 		this.ais = ais;
+		this.numberOfRounds = numberOfRounds;
 	}
 
 	public void startTournament() {
@@ -24,10 +24,10 @@ class Tournament {
 		Settings settings = SettingsLoader.loadSettings();
 		for (PairOfAis pair : pairs) {
 			Match match = new Match(pair, settings);
-			match.run(NUMBER_OF_ROUNDS);
+			match.run(numberOfRounds);
 		}
 
-		StatisticsPrinter statisticsPrinter = new StatisticsPrinter(pairs, NUMBER_OF_ROUNDS);
+		StatisticsPrinter statisticsPrinter = new StatisticsPrinter(pairs, numberOfRounds);
 		statisticsPrinter.printStatistics();
 	}
 
