@@ -22,6 +22,12 @@ public class TournamentRunner {
 		ais.add(new StandardAI());
 		ais.addAll(SettingsLoader.loadAIs());
 
+		if (ais.size() < 2) {
+			String aiDir = SettingsLoader.getAIPath().toString();
+			System.err.println("Unable to find additional AIs for tournament. Please add them to " + aiDir);
+			System.exit(1);
+		}
+
 		Tournament tournament = new Tournament(ais, numberOfRounds);
 		tournament.startTournament();
 	}

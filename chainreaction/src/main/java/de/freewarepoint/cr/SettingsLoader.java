@@ -96,8 +96,7 @@ public class SettingsLoader {
 	}
 
 	public static List<AI> loadAIs() {
-		Path configDir = getConfigurationStorageLocation();
-		Path aiDir = FileSystems.getDefault().getPath(configDir.toString(), "AIs");
+		Path aiDir = getAIPath();
 
 		if (!Files.exists(aiDir)) {
 			return Collections.emptyList();
@@ -134,6 +133,11 @@ public class SettingsLoader {
 		}
 
 		return ais;
+	}
+
+	public static Path getAIPath() {
+		Path configDir = getConfigurationStorageLocation();
+		return FileSystems.getDefault().getPath(configDir.toString(), "AIs");
 	}
 
 }
