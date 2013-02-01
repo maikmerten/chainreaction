@@ -8,17 +8,17 @@ import de.freewarepoint.cr.ai.AI;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class Match {
+class Match {
 
-	final Map<Player, AI> ais;
-	final Settings settings;
+	private final PairOfAis pairOfAis;
+	private final Settings settings;
 
-	Match(Map<Player, AI> ais, Settings settings) {
-		this.ais = ais;
+	Match(PairOfAis pairOfAis, Settings settings) {
+		this.pairOfAis = pairOfAis;
 		this.settings = settings;
 	}
 
-	public Map<Player, Integer> run(int numberOfRounds) {
+	public void run(int numberOfRounds) {
 		Map<Player, Integer> results = new EnumMap<>(Player.class);
 		results.put(Player.FIRST, 0);
 		results.put(Player.SECOND, 0);
@@ -30,7 +30,8 @@ public class Match {
 			numberOfRounds--;
 		}
 
-		return results;
+		pairOfAis.setGamesWonForAI(Player.FIRST, results.get(Player.FIRST));
+		pairOfAis.setGamesWonForAI(Player.SECOND, results.get(Player.SECOND));
 	}
 
 
@@ -39,7 +40,7 @@ public class Match {
 		Player currentPlayer = Player.FIRST;
 
 		while (game.getWinner() == Player.NONE) {
-			AI currentAI = ais.get(currentPlayer);
+			AI currentAI = pairOfAis.getAI(currentPlayer);
 			currentAI.setGame(game);
 			currentAI.doMove();
 		}
