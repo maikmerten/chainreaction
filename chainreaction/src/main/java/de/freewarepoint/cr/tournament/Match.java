@@ -12,10 +12,12 @@ class Match {
 
 	private final PairOfAis pairOfAis;
 	private final Settings settings;
+	private Player startingPlayer;
 
 	Match(PairOfAis pairOfAis, Settings settings) {
 		this.pairOfAis = pairOfAis;
 		this.settings = settings;
+		this.startingPlayer = Player.FIRST;
 	}
 
 	public void run(int numberOfRounds) {
@@ -37,7 +39,7 @@ class Match {
 
 	private Player evaluateOneGame() {
 		Game game = new Game(6, 5, settings);
-		Player currentPlayer = Player.FIRST;
+		Player currentPlayer = startingPlayer;
 
 		while (game.getWinner() == Player.NONE) {
 			AI currentAI = pairOfAis.getAI(currentPlayer);
@@ -45,7 +47,18 @@ class Match {
 			currentAI.doMove();
 		}
 
+		switchPlayers();
+
 		return game.getWinner();
+	}
+
+	private void switchPlayers() {
+		if (startingPlayer == Player.FIRST) {
+			startingPlayer = Player.SECOND;
+		}
+		else {
+			startingPlayer = Player.FIRST;
+		}
 	}
 
 }

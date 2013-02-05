@@ -15,7 +15,18 @@ public class TournamentRunner {
 		int numberOfRounds = DEFAULT_NUMBER_OF_ROUNDS;
 
 		if (commandLineArguments.length == 1) {
-			numberOfRounds = Integer.parseInt(commandLineArguments[0]);
+			try {
+				numberOfRounds = Integer.parseInt(commandLineArguments[0]);
+			}
+			catch (NumberFormatException nfe) {
+				System.out.println("Usage: TournamentRunner [even number of rounds per match]");
+				System.exit(0);
+			}
+		}
+
+		if ((numberOfRounds % 2) != 0) {
+			System.err.println("Specified number of rounds per match is not even!");
+			System.exit(1);
 		}
 
 		final List<AI> ais = new LinkedList<>();
