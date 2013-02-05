@@ -24,11 +24,11 @@ import de.freewarepoint.retrofont.RetroFont;
 public class UISettings extends JPanel implements Runnable {
 	
 	private static final long serialVersionUID = -4840442627860470783L;
-	private JButton chooseAI1Button;
-	private JButton chooseAI2Button;
+	private final JButton chooseAI1Button;
+	private final JButton chooseAI2Button;
 	
 	private Game game;
-	private RetroFont retroFont;
+	private final RetroFont retroFont;
 
     public UISettings(final UIGame game) {
 		super();

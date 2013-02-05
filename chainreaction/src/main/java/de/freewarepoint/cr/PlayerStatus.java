@@ -18,11 +18,7 @@ public class PlayerStatus {
 	public AI getAI() {
 		return ai;
 	}
-	
-	public Player getPlayer() {
-		return player;
-	}
-	
+
 	public boolean isAIPlayer() {
 		return ai != null;
 	}

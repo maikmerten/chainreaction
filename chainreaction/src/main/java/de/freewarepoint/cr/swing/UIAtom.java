@@ -35,14 +35,12 @@ public class UIAtom implements UIAnimation {
 		anim.draw(g2d);
 	}
 
-	public UIAtom leave() {
+	public void leave() {
 		anim = new UILeaveAnim(anim, 0) ;
-		return this;
 	}
 	
-	public UIAtom explode() {
+	public void explode() {
 		anim = new UIExplodeAnim(new UILeaveAnim(anim, 250), x, y, width, height, pos) ;
-		return this;
 	}
 
 

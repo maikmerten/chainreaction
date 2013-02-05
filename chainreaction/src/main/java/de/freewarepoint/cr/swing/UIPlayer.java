@@ -38,11 +38,7 @@ public class UIPlayer {
 	private UIPlayer(Player player) {
 		this.player = player;
 	}
-	
-	public Player getPlayer() {
-		return this.player;
-	}
-	
+
 	public UIAtom createAtom(int x, int y, int width, int height, int pos, long delay) {
 		switch(player) {
 			case FIRST:

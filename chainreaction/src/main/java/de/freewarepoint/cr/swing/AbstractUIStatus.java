@@ -21,13 +21,13 @@ import de.freewarepoint.retrofont.RetroFont;
  */
 public abstract class AbstractUIStatus extends JPanel implements Runnable {
 
-	protected static final int FONT_SIZE = 16;
+	static final int FONT_SIZE = 16;
 	private static final long serialVersionUID = 8437395162237408047L;
-	protected Game game;
-	protected Image statusImg;
-	protected RetroFont retroFont;
+	Game game;
+	Image statusImg;
+	final RetroFont retroFont;
 	
-	public AbstractUIStatus() {
+	AbstractUIStatus() {
 		setBackground(Color.BLACK);
 		setDoubleBuffered(true);
 		retroFont = new RetroFont();

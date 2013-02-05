@@ -38,7 +38,7 @@ public class RetroFont {
 	}
 	
 	
-	public BufferedImage getRetroChar(final char c, final Color color) {
+	BufferedImage getRetroChar(final char c, final Color color) {
 		int code = (int)c;
 		if(code < 0 || c > 255) {
 			code = (int)'?';
@@ -63,7 +63,7 @@ public class RetroFont {
 		return result;
 	}
 	
-	public BufferedImage getRetroChar(final char c, final Color color, int fontSize) {
+	BufferedImage getRetroChar(final char c, final Color color, int fontSize) {
 		fontSize = fontSize < MINIMAL_FONT_SIZE ? MINIMAL_FONT_SIZE : fontSize;
 		
 		final Image img = getRetroChar(c, color).getScaledInstance(fontSize, fontSize, Image.SCALE_REPLICATE);

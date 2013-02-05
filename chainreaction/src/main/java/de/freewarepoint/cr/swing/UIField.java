@@ -43,7 +43,7 @@ public class UIField extends JPanel implements Runnable, FieldListener, MoveList
 	private double xRoot, yRoot;
 
 	private SwingFieldListener fieldListener;
-	private Map<Player, Image> winImgs;
+	private final Map<Player, Image> winImgs;
 
 	public UIField(final UIGame uiGame) {
 		setBackground(Color.BLACK);
