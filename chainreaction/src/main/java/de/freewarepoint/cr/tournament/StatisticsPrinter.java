@@ -55,20 +55,37 @@ class StatisticsPrinter {
 
 	private void printStatisticsForPair(PairOfAis pair) {
 		String totalGames = "Total Games";
+
 		String firstPlayerName = pair.getAI(Player.FIRST).getName();
 		String secondPlayerName = pair.getAI(Player.SECOND).getName();
 
-		System.out.println(totalGames + DELIMITER + firstPlayerName + DELIMITER + secondPlayerName);
+		Player firstDisplayedPlayer;
+		Player secondDisplayedPlayer;
+
+		if (firstPlayerName.compareTo(secondPlayerName) > 0) {
+			firstDisplayedPlayer = Player.SECOND;
+			secondDisplayedPlayer = Player.FIRST;
+		}
+		else {
+			firstDisplayedPlayer = Player.FIRST;
+			secondDisplayedPlayer = Player.SECOND;
+		}
+
+		String firstDisplayedPlayerName = pair.getAI(firstDisplayedPlayer).getName();
+		String secondDisplayedPlayerName = pair.getAI(secondDisplayedPlayer).getName();
+
+		System.out.println(totalGames + DELIMITER + firstDisplayedPlayerName + DELIMITER + secondDisplayedPlayerName);
 
 		String alignedTotalCount = alignValue(numberOfRounds, totalGames);
-		String alignedFirstPlayerWins = alignValue(pair.getGamesWonForAI(Player.FIRST), firstPlayerName);
-		String alignedSecondPlayerWins = alignValue(pair.getGamesWonForAI(Player.SECOND), secondPlayerName);
+		String alignedFirstPlayerWins =
+				alignValue(pair.getGamesWonForAI(firstDisplayedPlayer), firstDisplayedPlayerName);
+		String alignedSecondPlayerWins =
+				alignValue(pair.getGamesWonForAI(secondDisplayedPlayer), secondDisplayedPlayerName);
 
 		System.out.println(alignedTotalCount + DELIMITER + alignedFirstPlayerWins
 				+ DELIMITER + alignedSecondPlayerWins);
 
 		System.out.println();
-
 	}
 
 	private static String alignValue(int value, String compareString) {
