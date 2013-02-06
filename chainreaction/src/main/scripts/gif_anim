@@ -1,0 +1,18 @@
+#!/bin/bash
+# execute me in the dir 'src/main/resources/atom' please!
+mkdir gif
+cd gif
+cp ../bg_$1.png bg.png
+cp ../idle_*.png .
+mkdir ovl
+# overlay electrons on background
+find . -maxdepth 1 -name idle_*.png -print | sed 's=.*/==' | while read file; do composite -gravity center $file.png  bg.png  ovl/$file.png; done
+cd ovl
+# remove leading 'idle_'
+
+# insert leading zeros
+for a in [0-9]*.png; do mv $a `printf %04d.%s ${a%.*} ${a##*.}`; done
+# convert to gif
+convert -delay 4 -dispose Previous -loop 0 *.png atom_$1.gif
+# have a look at the hilariuos results
+firefox atom_$1.gif
