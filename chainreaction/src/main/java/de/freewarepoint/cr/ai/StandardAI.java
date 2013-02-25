@@ -7,8 +7,6 @@ import de.freewarepoint.cr.UtilMethods;
 
 import java.util.Random;
 
-import org.junit.internal.matchers.IsCollectionContaining;
-
 /**
  *
  * @author maik
@@ -20,7 +18,7 @@ public class StandardAI implements AI {
 
 	private int[] think(Field f, Player playerAI, Player playerOpposing) {
 		Random r = new Random();
-		int opposingAtoms = util.countTotalNumberOfAtomsForPlayer(f, playerOpposing);
+		int opposingAtoms = util.countOwnedAtoms(f, playerOpposing);
 		int score = Integer.MIN_VALUE;
 		int[] coords = new int[2];
 		for(int x = 0; x < f.getWidth(); ++x) {
@@ -43,8 +41,8 @@ public class StandardAI implements AI {
 			util.placeAtom(fieldAI, x, y, playerAI);
 			util.reactField(fieldAI);
 			int tmp = util.countPlayerCells(fieldAI, playerAI);
-			tmp += util.countTotalNumberOfAtomsForPlayer(fieldAI, playerAI);
-			tmp += opposingAtoms - util.countTotalNumberOfAtomsForPlayer(fieldAI, playerOpposing);
+			tmp += util.countOwnedAtoms(fieldAI, playerAI);
+			tmp += opposingAtoms - util.countOwnedAtoms(fieldAI, playerOpposing);
 			tmp += util.isCornerCell(fieldAI, x, y) ? 1 : 0;
 			tmp += util.countCriticalFieldsForPlayer(fieldAI, playerAI) * 2;
 			tmp -= util.computeDangerForCell(fieldAI, x, y, playerAI) * 4;

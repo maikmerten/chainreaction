@@ -1,7 +1,5 @@
 package de.freewarepoint.cr;
 
-import org.junit.internal.matchers.IsCollectionContaining;
-
 /**
  * This class serves as adapter for jABC strategies as well as util class for methods that interact with the game or
  * need access to them.
@@ -141,6 +139,20 @@ public class UtilMethods {
 	}
 	
 	/**
+	 * Checks if a given player can place an atom on a given cell of a given field. This is possible if it belongs to
+	 * the player or to nobody.
+	 * 
+	 * @param field The {@link Field} containing the {@link Cell} for which the condition will be checked.
+	 * @param x The x-coordinate of the cell.
+	 * @param y The y-coordinate of the cell.
+	 * @param player The player to check the condition for.
+	 * @return <code>true</code> if the placement of an atom is possible on the given field, <code>false</code> otherwise.
+	 */
+	public boolean isPlacementPossible(Field field, int x, int y, Player player) {
+		return belongsToPlayer(field, x, y, player) || field.getOwnerOfCellAtPosition(x, y) == Player.NONE;
+	}
+	
+	/**
 	 * Checks if a cell has exactly one atom less than it takes to make it react.
 	 * 
 	 * @param field The {@link Field} containing the {@link Cell} for which the condition will be checked. 
@@ -159,14 +171,12 @@ public class UtilMethods {
 	 * @param player The player whose atoms will be counted.
 	 * @return The amount of atoms on the field owned by the player.
 	 */
-	public int countTotalNumberOfAtomsForPlayer(Field field, Player player) {
+	public int countOwnedAtoms(Field field, Player player) {
 		return field.getTotalNumberOfAtomsForPlayer(player);
 	}
 	
 	/**
 	 * Creates a copy of a given {@link Field}.
-	 * 
-	 * @see Field#getCopy()
 	 * 
 	 * @param field The field to be copied.
 	 * @return A copy of the field.
@@ -175,17 +185,35 @@ public class UtilMethods {
 		return field.getCopy();
 	}
 
-	
+	/**
+	 * TODO: Javadoc - reacts after placement?
+	 * 
+	 * @param field
+	 * @param x
+	 * @param y
+	 * @param player
+	 */
 	public void placeAtom(Field field, int x, int y, Player player) {
 		field.putAtom(player, x, y);
 	}
 	
-	
+	/**
+	 * Causes a given {@link Field} to react, triggering every cell that reached its capacity to spread its atoms to
+	 * neighbour fields.
+	 * 
+	 * @param field The field for which the reaction will be triggered.
+	 */
 	public void reactField(Field field) {
 		field.react();
 	}
 	
-	
+	/**
+	 * Counts the amount of cells on a given {@link Field} that are owned by a given player.
+	 * 
+	 * @param field The field that contains the cells.
+	 * @param player The owner for whom the cells will be counted.
+	 * @return The amount of cells on the field that are owned by the player.
+	 */
 	public int countPlayerCells(Field field, Player player) {
 		return field.getPlayerFields(player);
 	}
