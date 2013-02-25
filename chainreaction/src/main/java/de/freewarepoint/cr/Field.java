@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The game field, representing the board on which the single {@link Cell}s are placed.
+ */
 public class Field {
 
 	private final int width, height;

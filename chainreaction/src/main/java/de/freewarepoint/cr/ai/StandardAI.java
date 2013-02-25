@@ -3,8 +3,11 @@ package de.freewarepoint.cr.ai;
 import de.freewarepoint.cr.Field;
 import de.freewarepoint.cr.Game;
 import de.freewarepoint.cr.Player;
+import de.freewarepoint.cr.UtilMethods;
 
 import java.util.Random;
+
+import org.junit.internal.matchers.IsCollectionContaining;
 
 /**
  *
@@ -13,88 +16,42 @@ import java.util.Random;
 public class StandardAI implements AI {
 
 	private Game game;
-	
-	private int countCritical(Field f, Player player) {
-		int result = 0;
-		for(int x = 0; x < f.getWidth(); ++x) {
-			for(int y = 0; y < f.getHeight(); ++y) {
-				Player owner = f.getOwnerOfCellAtPosition(x, y);
-				if(owner == player && f.isCritical(x, y)) {
-					++result;
-				}
-			}
-		}
-		
-		return result;
-	}
-	
-	
-	private int computeDanger(Field f, Player player, int x, int y) {
-		int danger = 0;
-		
-		if (x > 0 && f.getOwnerOfCellAtPosition(x - 1, y) != player && f.isCritical(x - 1, y)) {
-			++danger;
-		}
-		if( x < (f.getWidth()) - 1 && f.getOwnerOfCellAtPosition(x + 1, y) != player && f.isCritical(x + 1, y)) {
-			++danger;
-		}
+	private UtilMethods util = new UtilMethods();
 
-		if (y > 0 && f.getOwnerOfCellAtPosition(x, y - 1) != player && f.isCritical(x, y - 1)) {
-			++danger;
-		}
-		if( y < (f.getHeight() - 1) && f.getOwnerOfCellAtPosition(x, y + 1) != player && f.isCritical(x, y + 1)) {
-			++danger;
-		}
-
-		return danger;
-	}
-	
-	
-	private int countEndangeredFields(Field f, Player player) {
-		int endangered = 0;
-		
-		for(int x = 0; x < f.getWidth(); ++x) {
-			for(int y = 0; y < f.getHeight(); ++y) {
-				Player owner = f.getOwnerOfCellAtPosition(x, y);
-				if(owner == player && computeDanger(f, player, x, y) > 0) {
-					++endangered;
-				}
-			}
-		}
-		
-		return endangered;
-	}
-	
-	
 	private int[] think(Field f, Player playerAI, Player playerOpposing) {
 		Random r = new Random();
-		int opposingAtoms = f.getTotalNumberOfAtomsForPlayer(playerOpposing);
+		int opposingAtoms = util.countTotalNumberOfAtomsForPlayer(f, playerOpposing);
 		int score = Integer.MIN_VALUE;
 		int[] coords = new int[2];
 		for(int x = 0; x < f.getWidth(); ++x) {
 			for(int y = 0; y < f.getHeight(); ++y) {
-				Player owner = f.getOwnerOfCellAtPosition(x, y);
-				if(owner == Player.NONE || owner == playerAI) {
-					Field fieldAI = f.getCopy();
-					fieldAI.putAtom(playerAI, x, y);
-					fieldAI.react();
-					int tmp = fieldAI.getPlayerFields(playerAI);
-					tmp += fieldAI.getTotalNumberOfAtomsForPlayer(playerAI);
-					tmp += opposingAtoms - fieldAI.getTotalNumberOfAtomsForPlayer(playerOpposing);
-					tmp += ((x == 0 || x == fieldAI.getWidth() - 1) && (y == 0 || y == fieldAI.getHeight() - 1)) ? 1 : 0;
-					tmp += countCritical(fieldAI, playerAI) * 2;
-					tmp -= computeDanger(fieldAI, playerAI, x, y) * 4;
-					tmp -= countEndangeredFields(fieldAI, playerAI);
-					if(tmp > score || (r.nextBoolean() && tmp >= score)) {
-						score = tmp;
-						coords[0] = x;
-						coords[1] = y;
-					}
+				int cellvalue = calculateCellValue(f, x, y, playerAI, playerOpposing, opposingAtoms);
+				if(cellvalue > score || (r.nextBoolean() && cellvalue >= score)) {
+					score = cellvalue;
+					coords[0] = x;
+					coords[1] = y;
 				}
 			}
 		}
-		
 		return coords;
+	}
+	
+	private int calculateCellValue(Field f, int x, int y, Player playerAI, Player playerOpposing, int opposingAtoms) {
+		Player owner = f.getOwnerOfCellAtPosition(x, y);
+		if(owner == Player.NONE || owner == playerAI) {
+			Field fieldAI = util.getCopyOfField(f);
+			util.placeAtom(fieldAI, x, y, playerAI);
+			util.reactField(fieldAI);
+			int tmp = util.countPlayerCells(fieldAI, playerAI);
+			tmp += util.countTotalNumberOfAtomsForPlayer(fieldAI, playerAI);
+			tmp += opposingAtoms - util.countTotalNumberOfAtomsForPlayer(fieldAI, playerOpposing);
+			tmp += util.isCornerCell(fieldAI, x, y) ? 1 : 0;
+			tmp += util.countCriticalFieldsForPlayer(fieldAI, playerAI) * 2;
+			tmp -= util.computeDangerForCell(fieldAI, x, y, playerAI) * 4;
+			tmp -= util.countEndangeredFields(fieldAI, playerAI);
+			return tmp;
+		}
+		return 0;
 	}
 
 	public void doMove() {
@@ -115,6 +72,4 @@ public class StandardAI implements AI {
 	public String getName() {
 		return "Standard AI";
 	}
-
-
 }
