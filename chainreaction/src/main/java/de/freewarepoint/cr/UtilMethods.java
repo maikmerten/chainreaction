@@ -7,7 +7,7 @@ package de.freewarepoint.cr;
  * @author kuehn
  */
 public class UtilMethods {
-
+	
 	/**
 	 * Iterates over every {@link Cell} of a {@link Field} and adds up the amount of cells that are critical.
 	 * 
@@ -41,7 +41,7 @@ public class UtilMethods {
 		int result = 0;
 		for(int x = 0; x < field.getWidth(); ++x) {
 			for(int y = 0; y < field.getHeight(); ++y) {
-				if(belongsToPlayer(field, x, y, player) && isCriticalCell(field, x, y)) {
+				if(isOwner(field, x, y, player) && isCriticalCell(field, x, y)) {
 					++result;
 				}
 			}
@@ -83,7 +83,7 @@ public class UtilMethods {
 	 * @return <code>true</code> if the cell belongs to the parameterized player and has a critical neighbour cell owned by the opposing player, <code>false</code> otherwise.
 	 */
 	public boolean isEndangered(Field field, int x, int y, Player player) {
-		return belongsToPlayer(field, x, y, player) && (computeDangerForCell(field, x, y, player) > 0);
+		return isOwner(field, x, y, player) && (computeDangerForCell(field, x, y, player) > 0);
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class UtilMethods {
 	 * @return <code>true</code> if the cell is critical and not owned by the parameterized player, <code>false</code> otherwise.
 	 */
 	public boolean isCriticalEnemyCell(Field field, int x, int y, Player player) {
-		return (!(belongsToPlayer(field, x, y, player)) && isCriticalCell(field, x, y));
+		return (!(isOwner(field, x, y, player)) && isCriticalCell(field, x, y));
 	}
 	
 	/**
@@ -134,7 +134,7 @@ public class UtilMethods {
 	 * @param player The owner of the cell.
 	 * @return <code>true</code> if the cell belongs to the parameterized player, <code>false</code> otherwise.
 	 */
-	public boolean belongsToPlayer(Field field, int x, int y, Player player) {
+	public boolean isOwner(Field field, int x, int y, Player player) {
 		return field.getOwnerOfCellAtPosition(x, y) == player;
 	}
 	
@@ -149,7 +149,7 @@ public class UtilMethods {
 	 * @return <code>true</code> if the placement of an atom is possible on the given field, <code>false</code> otherwise.
 	 */
 	public boolean isPlacementPossible(Field field, int x, int y, Player player) {
-		return belongsToPlayer(field, x, y, player) || field.getOwnerOfCellAtPosition(x, y) == Player.NONE;
+		return isOwner(field, x, y, player) || field.getOwnerOfCellAtPosition(x, y) == Player.NONE;
 	}
 	
 	/**
