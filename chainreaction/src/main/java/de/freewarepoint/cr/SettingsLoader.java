@@ -1,16 +1,27 @@
 package de.freewarepoint.cr;
 
-import de.freewarepoint.cr.ai.AI;
-import de.freewarepoint.cr.exceptions.ConfigUnreadableException;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+import java.util.ServiceLoader;
+
+import de.freewarepoint.cr.ai.AI;
+import de.freewarepoint.cr.exceptions.ConfigUnreadableException;
 
 public class SettingsLoader {
 
@@ -96,6 +107,8 @@ public class SettingsLoader {
 	}
 
 	public static List<AI> loadAIs() {
+//		WeldContainer weld = new Weld().initialize();
+		
 		Path aiDir = getAIPath();
 
 		if (!Files.exists(aiDir)) {
@@ -121,8 +134,15 @@ public class SettingsLoader {
 		}
 
 		URL[] urlArray = urls.toArray(new URL[urls.size()]);
-		URLClassLoader loader = new URLClassLoader(urlArray, SettingsLoader.class.getClassLoader());
-
+		for(URL u: urlArray) {
+			System.out.println(u);
+		}
+		
+		URLClassLoader loader = new URLClassLoader(urlArray, 
+				SettingsLoader.class.getClassLoader());
+		
+		Thread.currentThread().setContextClassLoader(loader);
+		
 		List<AI> ais = new ArrayList<>(urls.size());
 
 		ServiceLoader<AI> serviceLoader = ServiceLoader.load(AI.class, loader);
