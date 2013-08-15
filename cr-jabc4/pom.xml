@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.freewarepoint</groupId>
+	<artifactId>cr-jabc4</artifactId>
+	<version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+	<name>chainreaction for jabc4</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+	<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+	    <version>2.8</version>
+            <executions>
+                <execution>
+                    <id>copy-dependencies</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        <overWriteReleases>false</overWriteReleases>
+                        <overWriteSnapshots>false</overWriteSnapshots>
+                        <overWriteIfNewer>true</overWriteIfNewer>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.4</version>
+	    <configuration>
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <classpathPrefix>lib/</classpathPrefix>
+                        <mainClass>de.freewarepoint.cr.swing.UIGame</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.freewarepoint</groupId>
+                        <artifactId>chainreaction</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+                        <groupId>org.jboss.weld.se</groupId>
+                        <artifactId>weld-se-core</artifactId>
+                        <version>2.0.2.Final</version>
+                </dependency>
+
+                <!-- basic & math -->
+                <dependency>
+                        <groupId>de.jabc</groupId>
+                        <artifactId>jabc4-basic</artifactId>
+                        <version>5.8</version>
+                </dependency>
+		<!-- chainreaction & KI graphs -->
+                <dependency>
+                        <groupId>de.jabc</groupId>
+                        <artifactId>cr-strategies</artifactId>
+                        <version>4.18</version>
+                        <exclusions>
+                                <exclusion>
+                                        <groupId>de.freewarepoint</groupId>
+                                        <artifactId>chainreaction</artifactId>
+                                </exclusion>
+                        </exclusions>
+                </dependency>
+	</dependencies>
+</project>
