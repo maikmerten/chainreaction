@@ -107,7 +107,6 @@ public class SettingsLoader {
 	}
 
 	public static List<AI> loadAIs() {
-//		WeldContainer weld = new Weld().initialize();
 		
 		Path aiDir = getAIPath();
 
@@ -133,21 +132,19 @@ public class SettingsLoader {
 			}
 		}
 
-		URL[] urlArray = urls.toArray(new URL[urls.size()]);
+		URL[] urlArray = urls.toArray(new URL[urls.size()]);	
+		
 		for(URL u: urlArray) {
-			System.out.println(u);
+			System.out.println("Found "+u);
 		}
 		
-		URLClassLoader loader = new URLClassLoader(urlArray, 
-				SettingsLoader.class.getClassLoader());
-		
+		URLClassLoader loader = new URLClassLoader(urlArray, SettingsLoader.class.getClassLoader());
 		Thread.currentThread().setContextClassLoader(loader);
+		ServiceLoader<AI> serviceLoader = ServiceLoader.load(AI.class, loader);
 		
 		List<AI> ais = new ArrayList<>(urls.size());
-
-		ServiceLoader<AI> serviceLoader = ServiceLoader.load(AI.class, loader);
 		Iterator<AI> iterator = serviceLoader.iterator();
-
+		
 		while (iterator.hasNext()) {
 			ais.add(iterator.next());
 		}

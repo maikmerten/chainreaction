@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import de.freewarepoint.cr.CellCoordinateTuple;
 import de.freewarepoint.cr.EvalField;
 import de.freewarepoint.cr.Field;
@@ -47,34 +49,50 @@ public abstract class ExportedGraphAI implements AI {
 		int height = field.getHeight();
 		evaluationResult = new EvalField(width, height);
 		
+		Exception exception = null;
 		for (int i = 0; i < width*height; i++) {
 			int x = i%width;
 			int y = i/width;
 			if (UtilMethods.isPlacementPossible(fieldcopy, x, y, player)) {
-				// let AI graph decide how valuable placement would be
-				String result = execute(fieldcopy, x, y, player);
+
+				String result = "";
+				try {
+					// let AI graph decide how valuable placement would be
+					result = execute(fieldcopy, x, y, player);
+				}
+				catch (Exception e) {
+					exception = e;
+				}
+
 				Integer cellValue = null;
-				
 				if (result.equals("erfolgreich")) {
 					// took the branch erfolgreich, so access the calculated cell value
 					cellValue = getResult();
 				}
-				
+
 				if (cellValue == null || cellValue < 0) {
 					// in case the Erfolgreich branch has not been taken or a value <0 has been assigned
 					cellValue = 0;
 				}
-				
+
 				evaluationResult.setValueAt(x, y, cellValue);
-			} else {
+			}
+			else {
 				// invalid move, forbid placement
 				evaluationResult.setValueAt(x, y, -1);
 			}
 		}
-		
+		if (exception != null) {
+			exception.printStackTrace();
+			showErrorMessage(exception);
+		}
 		chooseBestCell();
 		
 		game.selectMove(bestXCoord, bestYCoord);
+	}
+	
+	private void showErrorMessage(Exception e) {
+		JOptionPane.showMessageDialog(null, "This AI has thrown a "+e.getClass().getName()+" exception. It will continue to play randomly. The full stacktrace was printed to the terminal.", "Error while executing", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**

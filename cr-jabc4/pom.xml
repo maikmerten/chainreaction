@@ -4,7 +4,7 @@
 
 	<groupId>de.freewarepoint</groupId>
 	<artifactId>cr-jabc4</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
     <packaging>jar</packaging>
 
 	<name>chainreaction for jabc4</name>
@@ -57,29 +57,22 @@
 		<dependency>
 			<groupId>de.freewarepoint</groupId>
                         <artifactId>chainreaction</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
                         <groupId>org.jboss.weld.se</groupId>
                         <artifactId>weld-se-core</artifactId>
                         <version>2.0.2.Final</version>
                 </dependency>
-
-                <!-- basic & math -->
-                <dependency>
-                        <groupId>de.jabc</groupId>
-                        <artifactId>jabc4-basic</artifactId>
-                        <version>5.8</version>
-                </dependency>
 		<!-- chainreaction & KI graphs -->
                 <dependency>
                         <groupId>de.jabc</groupId>
                         <artifactId>cr-strategies</artifactId>
-                        <version>4.18</version>
+                        <version>4.20</version>
                         <exclusions>
                                 <exclusion>
-                                        <groupId>de.freewarepoint</groupId>
-                                        <artifactId>chainreaction</artifactId>
+                                        <groupId>de.jabc</groupId>
+                                        <artifactId>jabc-chainreaction</artifactId>
                                 </exclusion>
                         </exclusions>
                 </dependency>
