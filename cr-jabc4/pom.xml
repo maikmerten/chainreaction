@@ -68,7 +68,7 @@
                 <dependency>
                         <groupId>de.jabc</groupId>
                         <artifactId>cr-strategies-java-nocdi</artifactId>
-                        <version>5.2</version>
+                        <version>5.3</version>
                         <exclusions>
                                 <exclusion>
                                         <groupId>de.jabc</groupId>
