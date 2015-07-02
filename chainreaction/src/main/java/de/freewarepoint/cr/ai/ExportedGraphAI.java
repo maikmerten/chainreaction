@@ -44,13 +44,13 @@ public abstract class ExportedGraphAI implements AI {
 	public void doMove() {
 		player = game.getCurrentPlayer();
 		field = game.getField();
-		fieldcopy = UtilMethods.getCopyOfField(field);
 		int width = field.getWidth();
 		int height = field.getHeight();
 		evaluationResult = new EvalField(width, height);
 		
 		Exception exception = null;
 		for (int i = 0; i < width*height; i++) {
+			fieldcopy = UtilMethods.getCopyOfField(field);
 			int x = i%width;
 			int y = i/width;
 			if (UtilMethods.isPlacementPossible(fieldcopy, x, y, player)) {

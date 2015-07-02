@@ -70,7 +70,7 @@ public class SettingsLoader {
 
 	private static Path getConfigurationStorageLocation() {
 		String homeDir = System.getProperties().getProperty("user.home");
-		String configDir = ".chainReaction";
+		String configDir = ".cr";
 		return FileSystems.getDefault().getPath(homeDir, configDir);
 	}
 

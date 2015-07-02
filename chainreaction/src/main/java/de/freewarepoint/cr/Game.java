@@ -47,6 +47,8 @@ public class Game {
 		
 		// no further moves if we have a winner
 		if(getWinner() != Player.NONE) {
+			// XXX This is bad. Change ME!
+			System.err.println("Player '" + player + "' tried invalid move (Player '" + getWinner() + " already won): x: " + x + ", y: " + y);
 			return;
 		}
 		
@@ -55,6 +57,8 @@ public class Game {
 		// only allow moves into fields that are either unowned
 		// or belong to the current player
 		if(owner != Player.NONE && owner != player) {
+			// XXX This is bad. Change ME!
+			System.err.println("Player '" + player + "' Tried invalid move: x: " + x + ", y: " + y);
 			return;
 		}
 		

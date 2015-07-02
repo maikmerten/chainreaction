@@ -4,7 +4,7 @@
 
 	<groupId>de.freewarepoint</groupId>
 	<artifactId>cr-jabc4</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.2</version>
     <packaging>jar</packaging>
 
 	<name>chainreaction for jabc4</name>
