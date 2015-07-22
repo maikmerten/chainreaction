@@ -14,6 +14,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+<parent>
+                <groupId>de.ls5</groupId>
+                <artifactId>ls5-parent</artifactId>
+                <version>17</version>
+        </parent>
+
 
 	<build>
 		<plugins>
@@ -50,4 +56,16 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+<repositories>
+                <repository>
+                        <id>vulturius-webdav</id>
+                        <name>jABC Repository</name>
+                        <url>http://vulturius.cs.tu-dortmund.de/maven</url>
+                        <layout>default</layout>
+                        <snapshots>
+                                <enabled>true</enabled>
+                        </snapshots>
+                </repository>
+        </repositories>
 </project>
