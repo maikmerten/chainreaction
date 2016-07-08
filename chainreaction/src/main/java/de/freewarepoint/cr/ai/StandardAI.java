@@ -47,9 +47,9 @@ public class StandardAI implements AI {
 			tmp += util.countCriticalFieldsForPlayer(fieldAI, playerAI) * 2;
 			tmp -= util.computeDangerForCell(fieldAI, x, y, playerAI) * 4;
 			tmp -= util.countEndangeredFields(fieldAI, playerAI);
-			return tmp;
+			return (tmp < 0 ? 0 : tmp);
 		}
-		return 0;
+		return -1;
 	}
 
 	public void doMove() {
