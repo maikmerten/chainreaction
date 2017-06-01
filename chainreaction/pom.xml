@@ -14,13 +14,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-<parent>
-                <groupId>de.ls5</groupId>
-                <artifactId>ls5-parent</artifactId>
-                <version>17</version>
-        </parent>
-
-
+	
 	<build>
 		<plugins>
 			<plugin>
