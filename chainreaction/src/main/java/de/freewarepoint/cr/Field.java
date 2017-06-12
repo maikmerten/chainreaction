@@ -56,7 +56,7 @@ public class Field {
 		row.set(x, cell);
 	}
 
-	byte getNumerOfAtomsAtPosition(int x, int y) {
+	public byte getNumerOfAtomsAtPosition(int x, int y) {
 		return getCellAtPosition(x, y).getNumberOfAtoms();
 	}
 
